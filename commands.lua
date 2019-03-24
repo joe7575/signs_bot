@@ -23,11 +23,6 @@ local I,_ = dofile(MP.."/intllib.lua")
 
 local lib = signs_bot.lib
 
-local BUSY = 1
-local OK = 2
-local STOP = 3
-local ERROR = 4
-
 local tPos2Dir = {l = "l", r = "r", L = "l", R = "l", f = "f", F = "f"}
 local tPos2Dirs = {
 	["2"] = {"l","r"}, ["3"] = {"l","f","r"}, l = {"l"}, r = {"r"}, 
@@ -37,6 +32,7 @@ local tValidLevels = {["-1"] = -1, ["0"] = 0, ["+1"] = 1}
 
 
 local tCommands = {}
+local SortedKeys = {}
 
 local function check_cmnd_block(pos, mem, meta)
 	local cmnd = meta:get_string("signs_bot_cmnd")
@@ -44,7 +40,9 @@ local function check_cmnd_block(pos, mem, meta)
 		if meta:get_int("err_code") ~= 0 then -- code not valid?
 			return false
 		end
-		if mem.robot_param2 ~= lib.get_node_lvm(pos).param2 then -- wrong sign direction?
+		local node = lib.get_node_lvm(pos)
+		
+		if node.name ~= "signs_bot:box" and mem.robot_param2 ~= node.param2 then -- wrong sign direction?
 			return false
 		end
 		-- read code
@@ -57,7 +55,7 @@ local function check_cmnd_block(pos, mem, meta)
 	return false
 end
 
-local function no_cmnd_block(pos, mem)
+local function no_cmnd_block(mem)
 	local pos1 = lib.next_pos(mem.robot_pos, mem.robot_param2)
 	local meta = M(pos1)
 	if check_cmnd_block(pos1, mem, meta) then
@@ -85,19 +83,20 @@ end
 function signs_bot.register_botcommand(name, def)
 	tCommands[name] = def
 	tCommands[name].name = name
+	SortedKeys[#SortedKeys+1] = name
 end
 
 
 signs_bot.register_botcommand("move", {
 	params = "<steps>",	
-	description = I("Move the robot 1..9 steps forward. Default: 1"),
+	description = I("Move the robot 1..9 steps forward.\nDefault value: 1"),
 	check = function(steps)
 		steps = tonumber(steps)
 		return steps > 0 and steps < 10
 	end,
 	func = function(base_pos, mem, steps)
 		steps = tonumber(steps)
-		if no_cmnd_block(base_pos, mem) then
+		if no_cmnd_block(mem) then
 			local new_pos = signs_bot.move_robot(mem.robot_pos, mem.robot_param2)
 			if new_pos then  -- not blocked?
 				mem.robot_pos = new_pos
@@ -165,7 +164,7 @@ signs_bot.register_botcommand("turn_off", {
 	
 signs_bot.register_botcommand("pause", {
 	params = "<sec>",	
-	description = I("Stop the robot for <sec> seconds (1..9999)"),
+	description = I("Stop the robot for <sec> seconds\n(1..9999)"),
 	check = function(sec)
 		sec = tonumber(sec or 1)
 		return sec > 0 and sec < 10000
@@ -254,7 +253,7 @@ signs_bot.register_botcommand("add_item", {
 	
 signs_bot.register_botcommand("place_item", {
 	params = "<slot> <pos> <lvl>",	
-	description = I("Place an item from the item inventory\non the specified position (<pos> <lvl>)"..
+	description = I("Place an item from the item inventory\non the specified position\n"..
 		"<slot> is the inventory slot (1..8)\n"..
 		"<pos> is one of: l   f   r   2   3\n"..
 		"<lvl> is one of: -1   0   +1"),
@@ -278,7 +277,7 @@ signs_bot.register_botcommand("place_item", {
 	
 signs_bot.register_botcommand("dig_item", {
 	params = "<slot> <pos> <lvl>",	
-	description = I("Dig an item on the specified position (<pos> <lvl>)\n and add it to the item inventory\n"..
+	description = I("Dig an item on the specified position\n and add it to the item inventory\n"..
 		"<slot> is the inventory slot (1..8)\n"..
 		"<pos> is one of: l   f   r   2   3\n"..
 		"<lvl> is one of: -1   0   +1"),
@@ -302,21 +301,24 @@ signs_bot.register_botcommand("dig_item", {
 	
 signs_bot.register_botcommand("rotate_item", {
 	params = "<pos> <lvl> <steps>",	
-	description = I("Rotate an item on the specified position (<pos> <lvl>)\n"..
+	description = I("Rotate an item on the specified position\n"..
 		"<pos> is one of:  l   f   r   2   3\n"..
 		"<lvl> is one of:  -1   0   +1\n"..
 		"<steps> is one of:  1   2   3"),
 	check = function(pos, lvl, steps)
 		local dir = tPos2Dir[pos]
 		local level = tValidLevels[lvl]
-		steps = tValidRotSteps[steps]
-		return dirs and level and steps
+		steps = tonumber(steps)
+		if not steps or steps < 1 or steps > 4 then
+			return false
+		end
+		return dir and level
 	end,
 	func = function(base_pos, mem, pos, lvl, steps)
 		local dir = tPos2Dir[pos]
 		local level = tValidLevels[lvl]
-		steps = tValidRotSteps[steps]
-		signs_bot.rotate_item(base_pos, mem.robot_pos, mem.robot_param2, pos, level, steps)
+		steps = tonumber(steps)
+		signs_bot.rotate_item(base_pos, mem.robot_pos, mem.robot_param2, dir, level, steps)
 		return true
 	end,
 })
@@ -332,6 +334,21 @@ signs_bot.register_botcommand("place_sign", {
 	func = function(base_pos, mem, slot)
 		slot = tonumber(slot)
 		signs_bot.place_sign(base_pos, mem.robot_pos, mem.robot_param2, slot)
+		return true
+	end,
+})
+	
+signs_bot.register_botcommand("place_sign_behind", {
+	params = "<slot>",	
+	description = I("Place a sign behind the robot\ntaken from the signs inventory\n"..
+		"<slot> is the inventory slot (1..4)"),
+	check = function(slot)
+		slot = tonumber(slot)
+		return slot and slot > 0 and slot < 5
+	end,
+	func = function(base_pos, mem, slot)
+		slot = tonumber(slot)
+		signs_bot.place_sign_behind(base_pos, mem.robot_pos, mem.robot_param2, slot)
 		return true
 	end,
 })
@@ -355,7 +372,7 @@ signs_bot.register_botcommand("dig_sign", {
 signs_bot.register_botcommand("trash_sign", {
 	params = "<slot>",	
 	description = I("Dig the sign in front of the robot\n"..
-		"and add the cleared sign to the item iventory.\n"..
+		"and add the cleared sign to\nthe item iventory.\n"..
 		"<slot> is the inventory slot (1..8)"),
 	check = function(slot)
 		slot = tonumber(slot)
@@ -372,7 +389,7 @@ signs_bot.register_botcommand("stop_robot", {
 	params = "",	
 	description = I("Stop the robot."),
 	func = function(base_pos, mem, slot)
-		signs_bot.dig_sign(base_pos, mem.robot_pos, mem.robot_param2, slot)
+		mem.lCmnd = {"stop_robot"}
 		return true
 	end,
 })
@@ -381,10 +398,9 @@ function signs_bot.check_commands(pos, text)
 	--local idx = 1
 	for idx,line in ipairs(string.split(text, "\n", true)) do
 		local cmnd, param1, param2, param3 = unpack(string.split(line, " "))
-		print(cmnd)
 		if cmnd ~= "--" and cmnd ~= nil then -- No comment or empty line?
 			if tCommands[cmnd] then
-				if not tCommands[cmnd].check(param1, param2, param3) then
+				if tCommands[cmnd].check and not tCommands[cmnd].check(param1, param2, param3) then
 					return false, I("Parameter error in line ")..idx..":\n"..
 					cmnd.." "..tCommands[cmnd].params
 				end
@@ -414,3 +430,16 @@ function signs_bot.run_next_command(base_pos, mem)
 	end
 	return res
 end	
+
+function signs_bot.get_help_text()
+	local tbl = {}
+	for idx,cmnd in ipairs(SortedKeys) do
+		local item = tCommands[cmnd]
+		tbl[#tbl+1] = item.name.." "..item.params
+		local text = string.gsub(item.description, "\n", "\n  -- ")
+		tbl[#tbl+1] = "  -- "..text
+	end
+	return table.concat(tbl, "\n")
+end	
+	
+	

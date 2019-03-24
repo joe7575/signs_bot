@@ -32,7 +32,7 @@ local Face2Dir = {[0]=
 	{x=0,  y=1,  z=0}
 }
 
-local Dir2Offs = {r=1, f=0, l=3}
+local Dir2Offs = {r=1, f=0, l=3, b=2}
 
 
 -- Determine the next robot position based on the robot position, 
@@ -44,7 +44,7 @@ end
 -- Determine the work position based on the robot position, 
 -- the robot param2, and the dir: l(eft), r(ight), f(ront)
 function signs_bot.lib.work_pos(pos, param2, dir)
-	if dir ~= "f" then
+	if dir == "r" or dir == "l" then
 		pos = vector.add(pos, Face2Dir[param2])
 	end
 	param2 = (param2 + Dir2Offs[dir]) % 4
@@ -100,30 +100,38 @@ function signs_bot.lib.check_pos(posA, posB)
 	return false
 end
 
-function signs_bot.lib.is_air_like(base_pos, pos)
+function signs_bot.lib.is_air_like(pos)
 	local node = get_node_lvm(pos)
 	if minetest.registered_nodes[node.name].walkable then
 		return false
 	end
 	return true
 end
+local is_air_like = signs_bot.lib.is_air_like
 
 function signs_bot.lib.is_simple_node(node)
 	-- don't remove nodes with some intelligence
 	return node.name ~= "air" and not minetest.registered_nodes[node.name].after_dig_node
 end	
 
-function signs_bot.lib.after_set_node(robot_pos, pos, itemstack, owner, param2)
+function signs_bot.lib.place_node(robot_pos, pos, itemstack, owner, param2)
 	local name = itemstack:get_name()
+	print("place_node", name)
 	local def = minetest.registered_nodes[name]
-	if def.on_place then
-		local under = next_pos(pos, param2)
-		local pointed_thing = {type="node", under=under, above=pos}
-		local fake_player = fake_player(pos, owner)
-		--def.on_place(itemstack, fake_player, pointed_thing)
-		if pcall(def.on_place, itemstack, fake_player, pointed_thing) then return end
+	if not def then
+		return false
 	end
-	if def.paramtype2 == "wallmounted" then
+--	if def.on_place then
+--		local under = next_pos(pos, param2)
+--		if is_air_like(under) then
+--			under = {x=pos.x, y=pos.y-1, z=pos.z}
+--		end
+--		local pointed_thing = {type="node", under=under, above=pos}
+--		local fake_player = fake_player(pos, owner)
+--		--def.on_place(itemstack, fake_player, pointed_thing)
+--		if pcall(def.on_place, itemstack, fake_player, pointed_thing) then return end
+--	end
+	if def and def.paramtype2 == "wallmounted" then
 		local dir = minetest.facedir_to_dir(param2)
 		local wdir = minetest.dir_to_wallmounted(dir)
 		minetest.set_node(pos, {name=name, param2=wdir})

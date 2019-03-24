@@ -19,15 +19,6 @@ local M = minetest.get_meta
 
 local lib = signs_bot.lib
 
-local NUM_ITEMS = 8
-
--- Convert command pos into internal dirs
-local tPos2Dir = {l = "l", r = "r", L = "l", R = "l", f = "f", F = "f"}
-local tPos2Dirs = {["2"] = {"l","r"}, ["3"] = {"l","f","r"}, l = {"l"}, r = {"r"}, L = {"l"}, R = {"l"}, f = {"f"}, F = {"f"}}
-local tValidLevels = {["-1"] = -1, ["0"] = 0, ["+1"] = 1}
-local tValidSlots = {["1"] = 1, ["2"] = 2, ["3"] = 3, ["4"] = 4, ["5"] = 5, ["6"] = 6, ["7"] = 7, ["8"] = 8}
-local tValidSteps = {["1"] = 1, ["2"] = 2, ["3"] = 3}
-
 local tRotations = {
 	[0] = {8,20,4},
 	[1] = {16,20,12},
@@ -90,7 +81,7 @@ end
 -- From robot to chest
 function signs_bot.robot_add(base_pos, robot_pos, param2, num, slot)
 	local pos1 = lib.next_pos(robot_pos, param2)
-	if lib.not_protected(base_pos, pos1) and not lib.is_air_like(base_pos, pos1) then
+	if lib.not_protected(base_pos, pos1) and not lib.is_air_like(pos1) then
 		local src_inv, src_list = get_own_inv(base_pos)
 		local dst_inv, dst_list = get_other_inv(pos1)
 		local taken, rest, src_slot = lib.get_inv_items(src_inv, src_list, slot, num)
@@ -110,10 +101,10 @@ function signs_bot.place_item(base_pos, robot_pos, param2, slot, dirs, level)
 	for _,dir in ipairs(dirs) do
 		local pos1, p2 = lib.work_pos(robot_pos, param2, dir)
 		pos1.y = pos1.y + level
-		if lib.not_protected(base_pos, pos1) and lib.is_air_like(base_pos, pos1) then
+		if lib.not_protected(base_pos, pos1) and lib.is_air_like(pos1) then
 			local taken = lib.get_inv_item(base_pos, slot)
 			if taken then
-				lib.after_set_node(robot_pos, pos1, taken, M(base_pos):get_string("owner"), p2)
+				lib.place_node(robot_pos, pos1, taken, M(base_pos):get_string("owner"), p2)
 			end
 		end
 	end
@@ -131,8 +122,8 @@ function signs_bot.dig_item(base_pos, robot_pos, param2, slot, dirs, level)
 	end
 end
 
-function signs_bot.rotate_item(base_pos, robot_pos, param2, pos, level, steps)
-	local pos1 = lib.work_pos(robot_pos, param2, pos)
+function signs_bot.rotate_item(base_pos, robot_pos, param2, dir, level, steps)
+	local pos1 = lib.work_pos(robot_pos, param2, dir)
 	pos1.y = pos1.y + level
 	local node = lib.get_node_lvm(pos1)
 	if lib.not_protected(base_pos, pos1) and lib.is_simple_node(node) then

@@ -63,6 +63,8 @@ local function move_to_output(pos)
 		
 		meta:set_string("cmnd", temp_meta:get_string("cmnd"))
 		meta:set_string("description", temp_meta:get_string("description"))
+		meta:set_string("err_msg", temp_meta:get_string("err_msg"))
+		meta:set_int("err_code", temp_meta:get_int("err_code"))
 		
 		inp_stack:clear()
 		inv:set_stack("inp", 1, inp_stack)
@@ -116,11 +118,4 @@ minetest.register_node("signs_bot:duplicator", {
 	groups = {cracky = 1},
 	sounds = default.node_sound_metal_defaults(),
 })
-
-
---minetest.register_craft({
---	type = "shapeless",
---	output = "signs_bot:robot",
---	recipe = {"smartline:controller"}
---})
 

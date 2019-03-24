@@ -122,7 +122,11 @@ end
 
 local function node_timer(pos, elapsed)
 	local mem = tubelib2.get_mem(pos)
-	return signs_bot.run_next_command(pos, mem)
+	local t = minetest.get_us_time()
+	local res = signs_bot.run_next_command(pos, mem)
+	t = minetest.get_us_time() - t
+	print("node_timer", t)
+	return res
 end
 
 local function on_receive_fields(pos, formname, fields, player)

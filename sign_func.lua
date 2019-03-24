@@ -25,62 +25,32 @@ local lib = signs_bot.lib
 
 local HELP = I([[Robot Commands
  
-Robot move commands:
-    move <steps>
-    turn_left
-    turn_right
-    turn_back
-    backward  
-    move_up
-    move_down
-    pause <sec>
-    stop  
-    turn_off
-  
-Node inventory related commands:
-    take_item <slot>
-    add_item <slot>  
-  
-Item related commands:
-    place_item <slot> <pos> <lvl>
-    dig_item <slot> <pos> <lvl>
-    pick_item <slot>
-    drop_item <slot>
-	rotate_item <pos> <lvl> <steps>
+The robot can place and dig items on
+positions specified via <pos> and <lvl>.
+<pos> is one of:
+    f - in front of the robot
+    l - left from the front position
+    r - right from the front position
+    2 - both sides (left and right)
+    3 - all three positions in front of the robot
+<lvl> is one of:
+    -1 - one level below the robot height
+     0 - robot y-position
+    +1 - one level above the robot height
 
-Signs related commands:
-    place_sign <slot>
-    dig_sign <slot>
-    place_sign_behind <slot>
-    trash_sign <slot>  
-	
-Farming related commands:
-    cut_tree
-    pick flowers
-    harvest_crops
-	
---------------------------------------------------
-Legend:
-<pos>...Positions (in front of the Robot):
-    l - left
-    r - right
-    f - front
-    2 - both sides (l+r)
-    3 - all 3 pos (l+f+r)
-  
-<slot>...Robot inventory slot (1..8) or (1..4)
-              for signs inventory
-  
-<lvl>...placement level based on Robot 
-            position: -1, 0, +1
-			
-<steps>..rotation steps of placed nodes (1..3)			
-OR:
-<steps>..robot movement steps (1..100)
+Supported commands:
+
 ]])
 
-HELP = minetest.formspec_escape(HELP):gsub("\n", ", ")
-local lHelp = string.split(HELP, ",")
+local lHelp = {}
+local sHelp = ""
+local function gen_help_text()
+	local text = HELP..signs_bot.get_help_text()
+	text = minetest.formspec_escape(text)
+	sHelp = text:gsub("\n", ", ")
+	lHelp = string.split(sHelp, ",")
+end
+minetest.after(2, gen_help_text)
 
 
 local function formspec1(meta)
@@ -107,7 +77,7 @@ local function formspec2()
 	default.gui_bg_img..
 	default.gui_slots..
 	"tabheader[0,0;tab;"..I("Commands,Help")..";2;;true]"..
-	"table[0.1,0.1;8.6,7.2;help;"..HELP..";1]"..
+	"table[0.1,0.1;8.6,7.2;help;"..sHelp..";1]"..
 	"button[3.5,7.5;2,1;copy;"..I("Copy").."]"
 end
 
@@ -248,7 +218,38 @@ end
 function signs_bot.place_sign(base_pos, robot_pos, param2, slot)
 	local pos1 = lib.work_pos(robot_pos, param2, "f")
 	if lib.not_protected(base_pos, pos1) then
-		if lib.is_air_like(base_pos, pos1) then
+		if lib.is_air_like(pos1) then
+			local sign = get_inv_sign(base_pos, slot)
+			if sign then
+				local meta = sign:get_meta()
+				local cmnd = meta:get_string("cmnd")
+				local err_code = meta:get_int("err_code")
+				local err_msg =  meta:get_string("err_msg")
+				local name = meta:get_string("description")
+				minetest.set_node(pos1, {name=sign:get_name(), param2=param2})
+				local under = {x=pos1.x, y=pos1.y-1, z=pos1.z}
+				local pointed_thing = {type="node", under=under, above=pos1}
+				minetest.registered_nodes[sign:get_name()].after_place_node(pos1, nil, sign, pointed_thing)
+				--pcall(minetest.after_place_node, pos1, nil, sign, pointed_thing)
+				meta = M(pos1)
+				meta:set_string("signs_bot_cmnd", cmnd)
+				meta:set_int("err_code", err_code)
+				meta:set_string("err_msg", err_msg)
+				meta:set_string("sign_name", name)
+				return true
+			else
+				signs_bot.output(base_pos, I("Error: Signs inventory empty"))
+				return false
+			end
+		end
+	end
+	return false
+end
+
+function signs_bot.place_sign_behind(base_pos, robot_pos, param2, slot)
+	local pos1 = lib.work_pos(robot_pos, param2, "b")
+	if lib.not_protected(base_pos, pos1) then
+		if lib.is_air_like(pos1) then
 			local sign = get_inv_sign(base_pos, slot)
 			if sign then
 				local meta = sign:get_meta()
