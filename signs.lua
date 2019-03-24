@@ -67,56 +67,56 @@ end
 
 register_sign({
 	name = "sign_right", 
-	description = I("Sign turn right"), 
+	description = I('Sign "turn right"'), 
 	commands = "turn_right", 
 	image = "signs_bot_sign_right.png",
 })
 
 register_sign({
 	name = "sign_left", 
-	description = I("Sign turn left "), 
+	description = I('Sign "turn left"'), 
 	commands = "turn_left", 
 	image = "signs_bot_sign_left.png",
 })
 
 register_sign({
 	name = "sign_take", 
-	description = I("Sign take item"), 
-	commands = "take_item\nturn_back", 
+	description = I('Sign "take item"'), 
+	commands = "take_item 99\nturn_around", 
 	image = "signs_bot_sign_take.png",
 })
 
 register_sign({
 	name = "sign_add", 
-	description = I("Sign add item"), 
-	commands = "add_item\nturn_back", 
+	description = I('Sign "add item"'), 
+	commands = "add_item 99\nturn_around", 
 	image = "signs_bot_sign_add.png",
 })
 
 register_sign({
 	name = "sign_stop", 
-	description = I("Sign stop"), 
+	description = I('Sign "stop"'), 
 	commands = "stop", 
 	image = "signs_bot_sign_stop.png",
 })
 
 register_sign({
 	name = "sign_tree", 
-	description = I("Sign cut tree"), 
-	commands = "cut_tree\npause 10\ncollect_items\nturn_back", 
+	description = I('Sign "cut tree"'), 
+	commands = "cut_tree\npause 10\ncollect_items\nturn_around", 
 	image = "signs_bot_sign_tree.png",
 })
 
 register_sign({
 	name = "sign_crops", 
-	description = I("Sign harvest crops"), 
-	commands = "harvest_crops\nturn_back", 
+	description = I('Sign "harvest crops"'), 
+	commands = "harvest_crops\nturn_around", 
 	image = "signs_bot_sign_crops.png",
 })
 
 register_sign({
 	name = "sign_flowers", 
-	description = I("Sign pick flowers"), 
-	commands = "pick_flowers\nturn_back", 
+	description = I('Sign "pick flowers"'), 
+	commands = "pick_flowers\nturn_around", 
 	image = "signs_bot_sign_flowers.png",
 })

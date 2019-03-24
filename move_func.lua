@@ -19,6 +19,7 @@ local M = minetest.get_meta
 
 local lib = signs_bot.lib
 
+
 -- Positions to check:
 --     3
 --  [R]1  

@@ -25,7 +25,7 @@ local lib = signs_bot.lib
 
 local CYCLE_TIME = 1
 
-local function output(pos, text)
+function signs_bot.output(pos, text)
 	local meta = minetest.get_meta(pos)
 	text = meta:get_string("output") .. "\n" .. (text or "")
 	text = text:sub(-500,-1)
@@ -109,34 +109,20 @@ local function start_robot(pos)
 	return true
 end
 
-function signs_bot.stop_robot(pos)
-	local mem = tubelib2.get_mem(pos)
-	local meta = minetest.get_meta(pos)
+function signs_bot.stop_robot(base_pos, mem)
+	local meta = minetest.get_meta(base_pos)
 	local number = meta:get_string("number")
 	mem.running = false
 	mem.lCmnd = nil
-	minetest.get_node_timer(pos):stop()
+	minetest.get_node_timer(base_pos):stop()
 	meta:set_string("infotext", I("Robot Box ")..number..I(": stopped"))
-	meta:set_string("formspec", formspec1(pos, mem))
+	meta:set_string("formspec", formspec1(base_pos, mem))
 	signs_bot.remove_robot(mem.robot_pos)
 end
 
 local function node_timer(pos, elapsed)
 	local mem = tubelib2.get_mem(pos)
-	local cmnd
-	if mem.lCmnd and next(mem.lCmnd) then
-		cmnd = table.remove(mem.lCmnd, 1)
-	else
-		cmnd = "move"
-	end
-	
-	print(cmnd)
-	local res, err = signs_bot.command(pos, mem, cmnd)
-	if err then
-		error(pos, err)
-		return false
-	end
-	return res
+	return signs_bot.run_next_command(pos, mem)
 end
 
 local function on_receive_fields(pos, formname, fields, player)
@@ -155,7 +141,7 @@ local function on_receive_fields(pos, formname, fields, player)
 	elseif fields.start == I("Start") then
 		start_robot(pos)
 	elseif fields.stop == I("Stop") then
-		signs_bot.stop_robot(pos)
+		signs_bot.stop_robot(pos, mem)
 	end
 end
 

@@ -22,7 +22,6 @@ local MP = minetest.get_modpath("signs_bot")
 local I,_ = dofile(MP.."/intllib.lua")
 
 local lib = signs_bot.lib
-local tValidSlots = {["1"] = 1, ["2"] = 2, ["3"] = 3, ["4"] = 4}
 
 local HELP = I([[Robot Commands
  
@@ -87,6 +86,7 @@ local lHelp = string.split(HELP, ",")
 local function formspec1(meta)
 	local cmnd = meta:get_string("signs_bot_cmnd")
 	local name = meta:get_string("sign_name")
+	local err_msg = meta:get_string("err_msg")
 	cmnd = minetest.formspec_escape(cmnd)
 	name = minetest.formspec_escape(name)
 	return "size[9,8]"..
@@ -94,10 +94,11 @@ local function formspec1(meta)
 	default.gui_bg_img..
 	default.gui_slots..
 	"tabheader[0,0;tab;"..I("Commands,Help")..";1;;true]"..
-	"field[0.3,0.5;8,1;name;"..I("Sign name:")..";"..name.."]"..
+	"field[0.3,0.5;9,1;name;"..I("Sign name:")..";"..name.."]"..
 	"textarea[0.3,1.2;9,7.2;cmnd;;"..cmnd.."]"..
-	"button_exit[2.5,7.5;2,1;cancel;"..I("Cancel").."]"..
-	"button[4.5,7.5;2,1;save;"..I("Save").."]"
+	"label[0.3,7.5;"..err_msg.."]"..
+	"button_exit[5,7.5;2,1;cancel;"..I("Cancel").."]"..
+	"button[7,7.5;2,1;check;"..I("Check").."]"
 end
 
 local function formspec2()
@@ -114,14 +115,26 @@ local function trim(s)
   return (s:gsub("^%s*(.-)%s*$", "%1"))
 end
 
-local function append_line(meta, line)
+local function append_line(pos, meta, line)
 	line = trim(line or "") 
 	local text = meta:get_string("signs_bot_cmnd").."\n"..line
 	meta:set_string("signs_bot_cmnd", text)
+	local res,err_msg = signs_bot.check_commands(pos, text)
+	meta:set_int("err_code", res and 0 or 1) -- zero means OK
+	meta:set_string("err_msg", err_msg)
 end	
 	
+local function check_and_store(pos, meta, fields)	
+	meta:set_string("signs_bot_cmnd", fields.cmnd)
+	meta:set_string("sign_name", fields.name)
+	local res,err_msg = signs_bot.check_commands(pos, fields.cmnd)
+	meta:set_int("err_code", res and 0 or 1) -- zero means OK
+	meta:set_string("err_msg", err_msg)
+	meta:set_string("formspec", formspec1(meta))
+end
+
 minetest.register_node("signs_bot:sign_cmnd", {
-	description = I("Robot Command Sign"),
+	description = I('Sign "command"'),
 	drawtype = "nodebox",
 	inventory_image = "signs_bot_sign_cmnd.png",
 	node_box = {
@@ -146,36 +159,33 @@ minetest.register_node("signs_bot:sign_cmnd", {
 		if imeta:get_string("description") ~= ""  then
 			nmeta:set_string("signs_bot_cmnd", imeta:get_string("cmnd"))
 			nmeta:set_string("sign_name", imeta:get_string("description"))
+			nmeta:set_string("err_msg", imeta:get_string("err_msg"))
+			nmeta:set_int("err_code", imeta:get_int("err_code"))
 		else
-			nmeta:set_string("sign_name", I("Sign commands"))
+			nmeta:set_string("sign_name", I('Sign "command"'))
 			nmeta:set_string("signs_bot_cmnd", I("-- enter or copy commands from help page"))
+			nmeta:set_int("err_code", 0)
 		end
 		nmeta:set_string("formspec", formspec1(nmeta))
 	end,
 	
 	on_receive_fields = function(pos, formname, fields, player)
 		local meta = minetest.get_meta(pos)
-		if fields.save then
-			meta:set_string("signs_bot_cmnd", fields.cmnd)
-			meta:set_string("sign_name", fields.name)
-			meta:set_string("formspec", formspec1(meta))
+		if fields.check then
+			check_and_store(pos, meta, fields)
 		elseif fields.key_enter_field then
-			meta:set_string("signs_bot_cmnd", fields.cmnd)
-			meta:set_string("sign_name", fields.name)
-			meta:set_string("formspec", formspec1(meta))
+			check_and_store(pos, meta, fields)
 		elseif fields.copy then
-			append_line(meta, lHelp[meta:get_int("help_pos")])
+			append_line(pos, meta, lHelp[meta:get_int("help_pos")])
 		elseif fields.tab == "1" then
 			meta:set_string("formspec", formspec1(meta))
 		elseif fields.tab == "2" then
-			meta:set_string("signs_bot_cmnd", fields.cmnd)
-			meta:set_string("sign_name", fields.name)
+			check_and_store(pos, meta, fields)
 			meta:set_string("formspec", formspec2(meta))
 		elseif fields.help then
 			local evt = minetest.explode_table_event(fields.help)
-			print(dump(evt))
 			if evt.type == "DCL" then
-				append_line(meta, lHelp[tonumber(evt.row)])
+				append_line(pos, meta, lHelp[tonumber(evt.row)])
 			elseif evt.type == "CHG" then
 				meta:set_int("help_pos", tonumber(evt.row))
 			end
@@ -186,10 +196,14 @@ minetest.register_node("signs_bot:sign_cmnd", {
 		if not minetest.is_protected(pos, digger:get_player_name()) then
 			local nmeta = minetest.get_meta(pos)
 			local cmnd = nmeta:get_string("signs_bot_cmnd")
+			local err_code = nmeta:get_int("err_code")
+			local err_msg = nmeta:get_string("err_msg")
 			local name = nmeta:get_string("sign_name")
 			local sign = ItemStack("signs_bot:sign_cmnd")
 			local smeta = sign:get_meta()
 			smeta:set_string("cmnd", cmnd)
+			smeta:set_int("err_code", err_code)
+			smeta:set_string("err_msg", err_msg)
 			smeta:set_string("description", name)
 			minetest.remove_node(pos)
 			local inv = minetest.get_inventory({type="player", name=digger:get_player_name()})
@@ -206,18 +220,19 @@ minetest.register_node("signs_bot:sign_cmnd", {
 })
 
 
--- Get one sign from the robot inventory
+-- Get one sign from the robot signs inventory
 local function get_inv_sign(base_pos, slot)
 	local inv = minetest.get_inventory({type="node", pos=base_pos})
-	local stack = inv:get_stack("sign", slot or 1)
+	local stack = inv:get_stack("sign", slot)
 	local taken = stack:take_item(1)
 	if taken:get_count() == 1 then
 		inv:set_stack("sign", slot, stack)
 		return taken
 	end
+	signs_bot.output(base_pos, I("Error: Signs inventory slot is empty"))
 end
 			
--- Put one sign into the robot inventory
+-- Put one sign into the robot signs inventory
 local function put_inv_sign(base_pos, slot, item)
 	local inv = minetest.get_inventory({type="node", pos=base_pos})
 	local stack = inv:get_stack("sign", slot)
@@ -226,68 +241,76 @@ local function put_inv_sign(base_pos, slot, item)
 		inv:set_stack("sign", slot, stack)
 		return true
 	end
-	return false
-end
-
--- Put one sign into the robot inventory
-local function put_inv_main(base_pos, slot, item)
-	local inv = minetest.get_inventory({type="node", pos=base_pos})
-	local stack = inv:get_stack("main", slot)
-	local leftovers = stack:add_item(item)
-	if leftovers:get_count() == 0 then
-		inv:set_stack("main", slot, stack)
-		return true
-	end
+	signs_bot.output(base_pos, I("Error: Signs inventory slot is full"))
 	return false
 end
 
 function signs_bot.place_sign(base_pos, robot_pos, param2, slot)
-	local owner = M(base_pos):get_string("owner")
-	slot = tValidSlots[slot]
 	local pos1 = lib.work_pos(robot_pos, param2, "f")
-	if not minetest.is_protected(pos1, owner) and lib.is_air_like(pos1) then
-		local sign = get_inv_sign(base_pos, slot)
-		if sign then
-			local meta = sign:get_meta()
-			local cmnd = meta:get_string("cmnd")
-			local name = meta:get_string("description")
-			minetest.set_node(pos1, {name=sign:get_name(), param2=param2})
-			local under = {x=pos1.x, y=pos1.y-1, z=pos1.z}
-			local pointed_thing = {type="node", under=under, above=pos1}
-			minetest.registered_nodes[sign:get_name()].after_place_node(pos1, nil, sign, pointed_thing)
-			--pcall(minetest.after_place_node, pos1, nil, sign, pointed_thing)
-			M(pos1):set_string("signs_bot_cmnd", cmnd)
-			M(pos1):set_string("sign_name", name)
+	if lib.not_protected(base_pos, pos1) then
+		if lib.is_air_like(base_pos, pos1) then
+			local sign = get_inv_sign(base_pos, slot)
+			if sign then
+				local meta = sign:get_meta()
+				local cmnd = meta:get_string("cmnd")
+				local err_code = meta:get_int("err_code")
+				local err_msg =  meta:get_string("err_msg")
+				local name = meta:get_string("description")
+				minetest.set_node(pos1, {name=sign:get_name(), param2=param2})
+				local under = {x=pos1.x, y=pos1.y-1, z=pos1.z}
+				local pointed_thing = {type="node", under=under, above=pos1}
+				minetest.registered_nodes[sign:get_name()].after_place_node(pos1, nil, sign, pointed_thing)
+				--pcall(minetest.after_place_node, pos1, nil, sign, pointed_thing)
+				meta = M(pos1)
+				meta:set_string("signs_bot_cmnd", cmnd)
+				meta:set_int("err_code", err_code)
+				meta:set_string("err_msg", err_msg)
+				meta:set_string("sign_name", name)
+				return true
+			else
+				signs_bot.output(base_pos, I("Error: Signs inventory empty"))
+				return false
+			end
 		end
 	end
+	return false
 end
 
 function signs_bot.dig_sign(base_pos, robot_pos, param2, slot)
-	local owner = M(base_pos):get_string("owner")
-	slot = tValidSlots[slot]
 	local pos1 = lib.work_pos(robot_pos, param2, "f")
-	local cmnd = M(pos1):get_string("signs_bot_cmnd")
-	local name = M(pos1):get_string("sign_name")
-	if slot and not minetest.is_protected(pos1, owner) and cmnd ~= "" then
+	local meta =  M(pos1)
+	local cmnd = meta:get_string("signs_bot_cmnd")
+	local err_code = meta:get_int("err_code")
+	local name = meta:get_string("sign_name")
+	if cmnd == "" then
+		signs_bot.output(base_pos, I("Error: No sign available"))
+		return false
+	end
+	if lib.not_protected(base_pos, pos1) then
 		local node = lib.get_node_lvm(pos1)
 		local sign = ItemStack(node.name)
 		local meta = sign:get_meta()
 		meta:set_string("description", name)
 		meta:set_string("cmnd", cmnd)
+		meta:set_int("err_code", err_code)
 		minetest.remove_node(pos1)
 		return put_inv_sign(base_pos, slot, sign)
 	end
+	return false
 end
 
 function signs_bot.trash_sign(base_pos, robot_pos, param2, slot)
-	local owner = M(base_pos):get_string("owner")
-	slot = tValidSlots[slot]
 	local pos1 = lib.work_pos(robot_pos, param2, "f")
 	local cmnd = M(pos1):get_string("signs_bot_cmnd")
-	if slot and not minetest.is_protected(pos1, owner) and cmnd ~= "" then
+	if cmnd == "" then
+		signs_bot.output(base_pos, I("Error: No sign available"))
+		return false
+	end
+	if lib.not_protected(base_pos, pos1) then
 		local node = lib.get_node_lvm(pos1)
 		local sign = ItemStack("signs_bot:sign_cmnd")
 		minetest.remove_node(pos1)
-		return put_inv_main(base_pos, slot, sign)
+		return lib.put_inv_item(base_pos, slot, sign)
 	end
+	return false
 end

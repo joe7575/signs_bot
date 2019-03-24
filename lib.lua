@@ -17,6 +17,10 @@ local S = function(pos) if pos then return minetest.pos_to_string(pos) end end
 local P = minetest.string_to_pos
 local M = minetest.get_meta
 
+-- Load support for intllib.
+local MP = minetest.get_modpath("signs_bot")
+local I,_ = dofile(MP.."/intllib.lua")
+
 signs_bot.lib = {}
 
 local Face2Dir = {[0]=
@@ -96,9 +100,12 @@ function signs_bot.lib.check_pos(posA, posB)
 	return false
 end
 
-function signs_bot.lib.is_air_like(pos)
+function signs_bot.lib.is_air_like(base_pos, pos)
 	local node = get_node_lvm(pos)
-	return not minetest.registered_nodes[node.name].walkable
+	if minetest.registered_nodes[node.name].walkable then
+		return false
+	end
+	return true
 end
 
 function signs_bot.lib.is_simple_node(node)
@@ -123,4 +130,91 @@ function signs_bot.lib.after_set_node(robot_pos, pos, itemstack, owner, param2)
 	else
 		minetest.set_node(pos, {name=name, param2=param2})
 	end
+end
+
+function signs_bot.lib.not_protected(base_pos, pos)
+	local owner = M(base_pos):get_string("owner")
+	if minetest.is_protected(pos, owner) then
+		signs_bot.output(base_pos, I("Error: Protected or invalid position"))
+		return false
+	end
+	return true
+end
+
+--
+-- Determine inventory slot number if not predefined
+--
+local function get_not_empty_slot(inv, listname)
+	for idx,stack in ipairs(inv:get_list(listname)) do
+		if stack:get_count() > 0 then
+			return idx
+		end
+	end
+end
+
+-- Determine next not-full inventory list number
+local function get_not_full_slot(inv, listname, item)
+	for idx,stack in ipairs(inv:get_list(listname)) do
+		if stack:item_fits(item) then
+			return idx
+		end
+	end
+end
+
+
+--
+-- Get/put exactly one item from/to the robot inventory and
+-- generate an error if not possible.
+-- 
+function signs_bot.lib.get_inv_item(base_pos, slot)
+	local inv = minetest.get_inventory({type="node", pos=base_pos})
+	local stack = inv:get_stack("main", slot or get_not_empty_slot(inv, "main"))
+	local taken = stack:take_item(1)
+	if taken:get_count() == 1 then
+		inv:set_stack("main", slot, stack)
+		return taken
+	end
+	signs_bot.output(base_pos, I("Error: Item inventory is empty"))
+end
+			
+function signs_bot.lib.put_inv_item(base_pos, slot, item)
+	local inv = minetest.get_inventory({type="node", pos=base_pos})
+	slot = slot or get_not_full_slot(inv, "main", item)
+	if slot then
+		local stack = inv:get_stack("main", slot)
+		local leftovers = stack:add_item(item)
+		if leftovers:get_count() == 0 then
+			inv:set_stack("main", slot, stack)
+			return true
+		end
+	end
+	signs_bot.output(base_pos, I("Error: Item inventory is full"))
+	return false
+end
+
+--
+-- Try to get/put a number of items from/to any kind of inventory.
+--
+function signs_bot.lib.get_inv_items(src_inv, src_list, slot, num)
+	slot = slot or get_not_empty_slot(src_inv, src_list)
+	if slot then
+		local stack = src_inv:get_stack(src_list, slot)
+		local taken = stack:take_item(num)
+		return taken, stack, slot
+	end
+end	
+
+function signs_bot.lib.put_inv_items(dst_inv, dst_list, slot, taken)
+	slot = slot or get_not_full_slot(dst_inv, dst_list, taken)
+	if slot then
+		local stack = dst_inv:get_stack(dst_list, slot)
+		stack:add_item(taken)
+		dst_inv:set_stack(dst_list, slot, stack)
+		return true
+	end
+	return false
+end
+
+function signs_bot.lib.release_inv_items(src_inv, src_list, slot, stack)
+	src_inv:set_stack(src_list, slot, stack)
 end
