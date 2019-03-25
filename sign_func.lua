@@ -311,7 +311,7 @@ function signs_bot.trash_sign(base_pos, robot_pos, param2, slot)
 		local node = lib.get_node_lvm(pos1)
 		local sign = ItemStack("signs_bot:sign_cmnd")
 		minetest.remove_node(pos1)
-		return lib.put_inv_item(base_pos, slot, sign)
+		return lib.put_inv_items(base_pos, slot, sign)
 	end
 	return false
 end

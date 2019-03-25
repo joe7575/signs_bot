@@ -36,6 +36,10 @@ function signs_bot.move_robot(pos, param2)
 	if lib.check_pos(pos1, pos2) then  -- one step forward
 		new_pos = pos1
 	elseif lib.check_pos(pos3, pos1) then  -- one step up
+		local node = lib.get_node_lvm(pos4)
+		if node.name == "signs_bot:robot_leg" then 
+			return nil
+		end
 		new_pos = {x=pos.x, y=pos.y+1, z=pos.z}
 		minetest.swap_node(pos, {name="signs_bot:robot_foot"})
 		minetest.set_node(new_pos, {name="signs_bot:robot", param2=param2})

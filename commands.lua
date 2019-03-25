@@ -91,7 +91,7 @@ signs_bot.register_botcommand("move", {
 	params = "<steps>",	
 	description = I("Move the robot 1..9 steps forward.\nDefault value: 1"),
 	check = function(steps)
-		steps = tonumber(steps)
+		steps = tonumber(steps or "1")
 		return steps > 0 and steps < 10
 	end,
 	func = function(base_pos, mem, steps)

@@ -93,7 +93,6 @@ function signs_bot.robot_add(base_pos, robot_pos, param2, num, slot)
 	end
 end
 	
-
 --
 -- Place/dig items
 --
@@ -102,9 +101,23 @@ function signs_bot.place_item(base_pos, robot_pos, param2, slot, dirs, level)
 		local pos1, p2 = lib.work_pos(robot_pos, param2, dir)
 		pos1.y = pos1.y + level
 		if lib.not_protected(base_pos, pos1) and lib.is_air_like(pos1) then
-			local taken = lib.get_inv_item(base_pos, slot)
+			local src_inv, src_list = get_own_inv(base_pos)
+			local taken, rest, src_slot = lib.get_inv_items(src_inv, src_list, slot, 1)
 			if taken then
-				lib.place_node(robot_pos, pos1, taken, M(base_pos):get_string("owner"), p2)
+				local name = taken:get_name()
+				if name == "default:torch" then  
+					name = "signs_bot:torch" 
+				end
+				local def = minetest.registered_nodes[name]
+				if not def then return end
+				if def.paramtype2 == "wallmounted" then
+					local dir = minetest.facedir_to_dir(p2)
+					local wdir = minetest.dir_to_wallmounted(dir)
+					minetest.set_node(pos1, {name=name, param2=wdir})
+				else
+					minetest.set_node(pos1, {name=name, param2=p2})
+				end
+				lib.release_inv_items(src_inv, src_list, src_slot, rest)
 			end
 		end
 	end
@@ -116,8 +129,10 @@ function signs_bot.dig_item(base_pos, robot_pos, param2, slot, dirs, level)
 		pos1.y = pos1.y + level
 		local node = lib.get_node_lvm(pos1)
 		if lib.not_protected(base_pos, pos1) and lib.is_simple_node(node) then
-			minetest.remove_node(pos1)
-			lib.put_inv_item(base_pos, slot, ItemStack(node.name))
+			local dst_inv, dst_list = get_own_inv(base_pos)
+			if lib.put_inv_items(dst_inv, dst_list, slot, ItemStack(node.name)) then
+				minetest.remove_node(pos1)
+			end
 		end
 	end
 end
@@ -133,3 +148,52 @@ function signs_bot.rotate_item(base_pos, robot_pos, param2, dir, level, steps)
 		end
 	end
 end
+
+minetest.register_node("signs_bot:torch", {
+	description = "Bot torch",
+	inventory_image = "default_torch_on_floor.png",
+	wield_image = "default_torch_on_floor.png",
+	drawtype = "nodebox",
+	node_box = {
+		type = "connected",
+		fixed = {
+			{-1/16, -3/16, -1/16, 1/16, 7/16, 1/16},
+			--{-2/16,  4/16, -2/16, 2/16, 8/16, 2/16},
+		},
+		connect_bottom = {{-1/16, -8/16, -1/16, 1/16, 1/16, 1/16}},
+		connect_front = {{-1/16, -1/16, -8/16, 1/16, 1/16, 1/16}},
+		connect_left = {{-8/16, -1/16, -1/16, 1/16, 1/16, 1/16}},
+		connect_back = {{-1/16, -1/16, -1/16, 1/16, 1/16, 8/16}},
+		connect_right = {{-1/16, -1/16, -1/16, 8/16, 1/16, 1/16}},
+	},
+	tiles = { 
+		-- up, down, right, left, back, front
+		"signs_bot_torch_top.png", 
+		"signs_bot_torch_bottom.png", 
+		{
+			image = "signs_bot_torch_animated.png", 
+			backface_culling = false,
+			animation = {
+				type = "vertical_frames",
+				aspect_w = 16,
+				aspect_h = 16,
+				length = 4.0,
+			},
+		},
+		
+	},
+	connects_to = {
+		"group:pane", "group:stone", "group:glass", "group:wood", "group:tree", 
+		"group:bakedclay", "group:soil"},
+	paramtype = "light",
+	paramtype2 = "wallmounted",
+	sunlight_propagates = true,
+	walkable = false,
+	liquids_pointable = false,
+	light_source = 12,
+	groups = {choppy=2, dig_immediate=3, flammable=1, attached_node=1, torch=1, not_in_creative_inventory=1},
+	drop = "default:torch",
+	sounds = default.node_sound_wood_defaults(),
+})
+
+
