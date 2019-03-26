@@ -206,6 +206,7 @@ minetest.register_node("signs_bot:box", {
 	
 	on_timer = node_timer,
 	
+	on_rotate = screwdriver.disallow,
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {cracky = 1},

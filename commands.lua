@@ -55,20 +55,40 @@ local function check_cmnd_block(pos, mem, meta)
 	return false
 end
 
+local function trigger_sensor(pos, node)
+	print("trigger_sensor")
+	local meta = M(pos)
+	local dest_pos = meta:get_string("dest_pos")
+	local dest_idx = meta:get_int("dest_idx")
+	if dest_pos ~= "" and dest_idx ~= 0 then
+		minetest.registered_nodes[node.name].switch_sign_changer(minetest.string_to_pos(dest_pos), dest_idx)
+	end
+end
+
 local function no_cmnd_block(mem)
-	local pos1 = lib.next_pos(mem.robot_pos, mem.robot_param2)
-	local meta = M(pos1)
-	if check_cmnd_block(pos1, mem, meta) then
-		return false
-	else
-		local pos2 = {x=pos1.x, y=pos1.y+1, z=pos1.z}
-		meta = M(pos2)
-		if check_cmnd_block(pos2, mem, meta) then
-			return false
+	local pos = minetest.find_node_near(mem.robot_pos, 1, {"signs_bot:bot_sensor", "group:sign_bot_sign"})
+	if pos then
+		local dis = vector.distance(mem.robot_pos, pos)
+		local node = lib.get_node_lvm(pos)
+		if dis == 1 and node.name == "signs_bot:bot_sensor" then
+			trigger_sensor(pos, node)
+		else
+			local pos1 = lib.next_pos(mem.robot_pos, mem.robot_param2)
+			local meta = M(pos1)
+			if check_cmnd_block(pos1, mem, meta) then
+				return false
+			else
+				local pos2 = {x=pos1.x, y=pos1.y+1, z=pos1.z}
+				meta = M(pos2)
+				if check_cmnd_block(pos2, mem, meta) then
+					return false
+				end
+			end
 		end
 	end
 	return true
 end
+
 
 --
 -- Command register API function
@@ -85,7 +105,6 @@ function signs_bot.register_botcommand(name, def)
 	tCommands[name].name = name
 	SortedKeys[#SortedKeys+1] = name
 end
-
 
 signs_bot.register_botcommand("move", {
 	params = "<steps>",	

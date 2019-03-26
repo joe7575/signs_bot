@@ -67,6 +67,7 @@ end
 function signs_bot.robot_take(base_pos, robot_pos, param2, num, slot)
 	local pos1 = lib.next_pos(robot_pos, param2)
 	if lib.not_protected(base_pos, pos1) then
+		--minetest.global_exists("node_io")
 		local src_inv, src_list = get_other_inv(pos1)
 		local dst_inv, dst_list = get_own_inv(base_pos)
 		local taken, rest, src_slot = lib.get_inv_items(src_inv, src_list, slot, num)

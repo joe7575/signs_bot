@@ -159,3 +159,36 @@ end
 function signs_bot.lib.release_inv_items(src_inv, src_list, slot, stack)
 	src_inv:set_stack(src_list, slot, stack)
 end
+
+
+--
+--  Place/dig signs
+--
+function signs_bot.lib.place_sign(pos, sign, param2)				
+	minetest.set_node(pos, {name=sign:get_name(), param2=param2})
+	minetest.registered_nodes[sign:get_name()].after_place_node(pos, nil, sign)
+end
+
+function signs_bot.lib.dig_sign(pos, node)
+	node = node or get_node_lvm(pos)
+	local nmeta = minetest.get_meta(pos)
+	local cmnd = nmeta:get_string("signs_bot_cmnd")
+	local sign
+	if cmnd ~= "" then
+		if node.name == "signs_bot:sign_cmnd" then
+			local err_code = nmeta:get_int("err_code")
+			local err_msg = nmeta:get_string("err_msg")
+			local name = nmeta:get_string("sign_name")
+			sign = ItemStack("signs_bot:sign_cmnd")
+			local smeta = sign:get_meta()
+			smeta:set_string("cmnd", cmnd)
+			smeta:set_int("err_code", err_code)
+			smeta:set_string("err_msg", err_msg)
+			smeta:set_string("description", name)
+		else
+			sign = ItemStack(node.name)
+		end
+		minetest.remove_node(pos)
+		return sign
+	end
+end

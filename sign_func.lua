@@ -164,20 +164,11 @@ minetest.register_node("signs_bot:sign_cmnd", {
 	
 	on_dig = function(pos, node, digger)
 		if not minetest.is_protected(pos, digger:get_player_name()) then
-			local nmeta = minetest.get_meta(pos)
-			local cmnd = nmeta:get_string("signs_bot_cmnd")
-			local err_code = nmeta:get_int("err_code")
-			local err_msg = nmeta:get_string("err_msg")
-			local name = nmeta:get_string("sign_name")
-			local sign = ItemStack("signs_bot:sign_cmnd")
-			local smeta = sign:get_meta()
-			smeta:set_string("cmnd", cmnd)
-			smeta:set_int("err_code", err_code)
-			smeta:set_string("err_msg", err_msg)
-			smeta:set_string("description", name)
-			minetest.remove_node(pos)
-			local inv = minetest.get_inventory({type="player", name=digger:get_player_name()})
-			inv:add_item("main", sign)
+			local sign = lib.dig_sign(pos, node)
+			if sign then
+				local inv = minetest.get_inventory({type="player", name=digger:get_player_name()})
+				inv:add_item("main", sign)
+			end
 		end
 	end,
 	
@@ -185,7 +176,7 @@ minetest.register_node("signs_bot:sign_cmnd", {
 	sunlight_propagates = true,
 	is_ground_content = false,
 	drop = "",
-	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, wood = 1},
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, wood = 1, sign_bot_sign = 1},
 	sounds = default.node_sound_wood_defaults(),
 })
 
@@ -221,21 +212,7 @@ function signs_bot.place_sign(base_pos, robot_pos, param2, slot)
 		if lib.is_air_like(pos1) then
 			local sign = get_inv_sign(base_pos, slot)
 			if sign then
-				local meta = sign:get_meta()
-				local cmnd = meta:get_string("cmnd")
-				local err_code = meta:get_int("err_code")
-				local err_msg =  meta:get_string("err_msg")
-				local name = meta:get_string("description")
-				minetest.set_node(pos1, {name=sign:get_name(), param2=param2})
-				local under = {x=pos1.x, y=pos1.y-1, z=pos1.z}
-				local pointed_thing = {type="node", under=under, above=pos1}
-				minetest.registered_nodes[sign:get_name()].after_place_node(pos1, nil, sign, pointed_thing)
-				--pcall(minetest.after_place_node, pos1, nil, sign, pointed_thing)
-				meta = M(pos1)
-				meta:set_string("signs_bot_cmnd", cmnd)
-				meta:set_int("err_code", err_code)
-				meta:set_string("err_msg", err_msg)
-				meta:set_string("sign_name", name)
+				lib.place_sign(pos1, sign, param2)
 				return true
 			else
 				signs_bot.output(base_pos, I("Error: Signs inventory empty"))
@@ -252,21 +229,7 @@ function signs_bot.place_sign_behind(base_pos, robot_pos, param2, slot)
 		if lib.is_air_like(pos1) then
 			local sign = get_inv_sign(base_pos, slot)
 			if sign then
-				local meta = sign:get_meta()
-				local cmnd = meta:get_string("cmnd")
-				local err_code = meta:get_int("err_code")
-				local err_msg =  meta:get_string("err_msg")
-				local name = meta:get_string("description")
-				minetest.set_node(pos1, {name=sign:get_name(), param2=param2})
-				local under = {x=pos1.x, y=pos1.y-1, z=pos1.z}
-				local pointed_thing = {type="node", under=under, above=pos1}
-				minetest.registered_nodes[sign:get_name()].after_place_node(pos1, nil, sign, pointed_thing)
-				--pcall(minetest.after_place_node, pos1, nil, sign, pointed_thing)
-				meta = M(pos1)
-				meta:set_string("signs_bot_cmnd", cmnd)
-				meta:set_int("err_code", err_code)
-				meta:set_string("err_msg", err_msg)
-				meta:set_string("sign_name", name)
+				lib.place_sign(pos1, sign, param2)
 				return true
 			else
 				signs_bot.output(base_pos, I("Error: Signs inventory empty"))

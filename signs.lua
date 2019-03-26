@@ -57,10 +57,11 @@ local function register_sign(def)
 			meta:set_string("signs_bot_cmnd", def.commands)
 			meta:set_string("formspec", formspec(def.commands))
 		end,
+		on_rotate = screwdriver.disallow,
 		paramtype = "light",
 		sunlight_propagates = true,
 		is_ground_content = false,
-		groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, wood = 1},
+		groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, wood = 1, sign_bot_sign = 1},
 		sounds = default.node_sound_wood_defaults(),
 	})
 end
