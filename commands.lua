@@ -65,13 +65,18 @@ local function trigger_sensor(pos, node)
 	end
 end
 
-local function no_cmnd_block(mem)
-	local pos = minetest.find_node_near(mem.robot_pos, 1, {"signs_bot:bot_sensor", "group:sign_bot_sign"})
+local function can_move(mem)
+	local pos = minetest.find_node_near(mem.robot_pos, 1, {
+			"signs_bot:bot_sensor", "signs_bot:bot_sensor_on", "group:sign_bot_sign"})
 	if pos then
 		local dis = vector.distance(mem.robot_pos, pos)
 		local node = lib.get_node_lvm(pos)
-		if dis == 1 and node.name == "signs_bot:bot_sensor" then
-			trigger_sensor(pos, node)
+		-- Will the bot pass the sensor?
+		if dis == 1 and node.name == "signs_bot:bot_sensor_on" then
+			node.name = "signs_bot:bot_sensor"
+			minetest.swap_node(pos, node)
+		elseif node.name == "signs_bot:bot_sensor" then
+			return {pos=pos, node=node}
 		else
 			local pos1 = lib.next_pos(mem.robot_pos, mem.robot_param2)
 			local meta = M(pos1)
@@ -89,6 +94,19 @@ local function no_cmnd_block(mem)
 	return true
 end
 
+local function after_move(mem, state)
+	if state ~= true then
+		local dis = vector.distance(mem.robot_pos, state.pos)
+		local node = lib.get_node_lvm(state.pos)
+		-- Will the bot reach the sensor?
+		print("after_move", dis, node.name)
+		if dis == 1 then
+			node.name = "signs_bot:bot_sensor_on"
+			minetest.swap_node(state.pos, node)
+			trigger_sensor(state.pos, node)
+		end
+	end
+end	
 
 --
 -- Command register API function
@@ -115,10 +133,12 @@ signs_bot.register_botcommand("move", {
 	end,
 	func = function(base_pos, mem, steps)
 		steps = tonumber(steps)
-		if no_cmnd_block(mem) then
+		local state = can_move(mem)
+		if state then
 			local new_pos = signs_bot.move_robot(mem.robot_pos, mem.robot_param2)
 			if new_pos then  -- not blocked?
 				mem.robot_pos = new_pos
+				after_move(mem, state)
 			end
 			-- more than one move step?
 			if steps and steps > 1 then

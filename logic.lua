@@ -158,6 +158,33 @@ minetest.register_node("signs_bot:bot_sensor", {
 	sounds = default.node_sound_metal_defaults(),
 })
 
+minetest.register_node("signs_bot:bot_sensor_on", {
+	description = "Bot Sensor",
+	drawtype = "nodebox",
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{ -11/32, -1/2, -11/32, 11/32, -5/16, 11/32},
+		},
+	},
+	tiles = {
+		-- up, down, right, left, back, front
+		"signs_bot_sensor.png^signs_bot_sensor_on.png",
+		"signs_bot_sensor.png",
+		"signs_bot_sensor.png^[transformFXR90",
+		"signs_bot_sensor.png",
+		"signs_bot_sensor.png",
+		"signs_bot_sensor.png",
+	},
+	
+	switch_sign_changer = switch_sign_changer,
+	on_rotate = screwdriver.disallow,
+	paramtype2 = "facedir",
+	is_ground_content = false,
+	diggable = false,
+	groups = {not_in_creative_inventory = 1},
+	sounds = default.node_sound_metal_defaults(),
+})
 
 local function pairing(itemstack, placer, pointed_thing)
 	if pointed_thing.type == "node" then
