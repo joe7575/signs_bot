@@ -165,8 +165,10 @@ end
 --  Place/dig signs
 --
 function signs_bot.lib.place_sign(pos, sign, param2)				
-	minetest.set_node(pos, {name=sign:get_name(), param2=param2})
-	minetest.registered_nodes[sign:get_name()].after_place_node(pos, nil, sign)
+	if sign:get_name() then
+		minetest.set_node(pos, {name=sign:get_name(), param2=param2})
+		minetest.registered_nodes[sign:get_name()].after_place_node(pos, nil, sign)
+	end
 end
 
 function signs_bot.lib.dig_sign(pos, node)

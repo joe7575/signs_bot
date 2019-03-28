@@ -100,24 +100,3 @@ register_sign({
 	commands = "stop", 
 	image = "signs_bot_sign_stop.png",
 })
-
-register_sign({
-	name = "sign_tree", 
-	description = I('Sign "cut tree"'), 
-	commands = "cut_tree\npause 10\ncollect_items\nturn_around", 
-	image = "signs_bot_sign_tree.png",
-})
-
-register_sign({
-	name = "sign_crops", 
-	description = I('Sign "harvest crops"'), 
-	commands = "harvest_crops\nturn_around", 
-	image = "signs_bot_sign_crops.png",
-})
-
-register_sign({
-	name = "sign_flowers", 
-	description = I('Sign "pick flowers"'), 
-	commands = "pick_flowers\nturn_around", 
-	image = "signs_bot_sign_flowers.png",
-})

@@ -65,7 +65,6 @@ local function switch_sign_changer(pos, new_idx)
 		M(pos):set_int("sign_param2", param2)
 		put_inv_sign(pos, old_idx, sign)
 	end
-	print(S(pos), new_idx)
 	sign = get_inv_sign(pos, new_idx)
 	if sign:get_count() == 1 then
 		lib.place_sign(pos1, sign, M(pos):get_int("sign_param2"))
@@ -121,6 +120,7 @@ for idx = 1,4 do
 		paramtype2 = "facedir",
 		is_ground_content = false,
 		groups = {cracky = 1, not_in_creative_inventory = not_in_inv},
+		drop = "signs_bot:changer1",
 		sounds = default.node_sound_metal_defaults(),
 	})
 end
@@ -177,6 +177,17 @@ minetest.register_node("signs_bot:bot_sensor_on", {
 		"signs_bot_sensor.png",
 	},
 	
+	after_place_node = function(pos)
+		minetest.get_node_timer(pos):start(1)
+	end,
+		
+	on_timer = function(pos)
+		local node = lib.get_node_lvm(pos)
+		node.name = "signs_bot:bot_sensor"
+		minetest.swap_node(pos, node)
+		return false
+	end,
+	
 	switch_sign_changer = switch_sign_changer,
 	on_rotate = screwdriver.disallow,
 	paramtype2 = "facedir",
@@ -186,27 +197,66 @@ minetest.register_node("signs_bot:bot_sensor_on", {
 	sounds = default.node_sound_metal_defaults(),
 })
 
-local function pairing(itemstack, placer, pointed_thing)
+local function get_current_data(pointed_thing)
+	local pos = pointed_thing.under
+	local node = lib.get_node_lvm(pos)
+	if string.sub(node.name, 1, 17) == "signs_bot:changer" then
+		return pos, "changer"
+	elseif node.name == "signs_bot:bot_sensor" then
+		return pos, "sensor"
+	end
+end
+
+local function get_stored_data(placer)
+	local spos = placer:get_attribute("signs_bot_spos")
+	local name = placer:get_attribute("signs_bot_name")
+	if spos ~= "" then
+		return minetest.string_to_pos(spos), name
+	end
+end
+	
+local function store_data(placer, pos, name)
+	if pos then
+		local spos = minetest.pos_to_string(pos)
+		placer:set_attribute("signs_bot_spos", spos)
+		placer:set_attribute("signs_bot_name", name)
+	else
+		placer:set_attribute("signs_bot_spos", nil)
+		placer:set_attribute("signs_bot_name", nil)
+	end
+end
+
+-- Write changer_pos data to sensor_pos
+local function pairing(changer_pos, sensor_pos)
+	local dest_idx = string.sub(lib.get_node_lvm(changer_pos).name, 18)
+	local dest_pos = minetest.pos_to_string(changer_pos)
+	local meta = M(sensor_pos)
+	meta:set_string("dest_pos", dest_pos)
+	meta:set_int("dest_idx", tonumber(dest_idx))
+	meta:set_string("infotext", "Bot Sensor: Connected with "..dest_pos.." / "..dest_idx)
+end
+
+local function use_tool(itemstack, placer, pointed_thing)
 	if pointed_thing.type == "node" then
-		local pos = pointed_thing.under
-		local node = minetest.get_node(pos)
-		if string.sub(node.name, 1, 17) == "signs_bot:changer" then
-			minetest.sound_play('signs_bot_ping', {to_player = placer:get_player_name()})
-			placer:set_attribute("signs_bot_changer_pos", minetest.pos_to_string(pos))
-			placer:set_attribute("signs_bot_changer_idx", string.sub(node.name, 18) )
-		elseif node.name == "signs_bot:bot_sensor"
-		and placer:get_attribute("signs_bot_changer_pos") ~= "" then
-			local dest_pos = placer:get_attribute("signs_bot_changer_pos")
-			local dest_idx = placer:get_attribute("signs_bot_changer_idx")
-			local meta = M(pos)
-			meta:set_string("dest_pos", dest_pos)
-			meta:set_int("dest_idx", tonumber(dest_idx))
-			meta:set_string("infotext", "Bot Sensor: Connected with "..dest_pos.." / "..dest_idx)
-			print(dest_pos, dest_idx)
+		local pos1,name1 = get_stored_data(placer)
+		local pos2,name2 = get_current_data(pointed_thing)
+		
+		if name1 == "changer" and name2 == "sensor" then
+			pairing(pos1, pos2)
+			store_data(placer, nil, nil)
 			minetest.sound_play('signs_bot_pong', {to_player = placer:get_player_name()})
+		elseif name2 == "changer" and name1 == "sensor" then
+			pairing(pos2, pos1)
+			store_data(placer, nil, nil)
+			minetest.sound_play('signs_bot_pong', {to_player = placer:get_player_name()})
+		elseif name2 == "changer" or name2 == "sensor" then
+			store_data(placer, pos2, name2)
+			minetest.sound_play('signs_bot_ping', {to_player = placer:get_player_name()})
 		else
+			store_data(placer, nil, nil)
 			minetest.sound_play('signs_bot_error', {to_player = placer:get_player_name()})
 		end
+		return
 	end
 end
 			
@@ -216,8 +266,8 @@ minetest.register_node("signs_bot:connector", {
 	inventory_image = "signs_bot_tool.png",
 	wield_image = "signs_bot_tool.png",
 	groups = {cracky=1, book=1},
-	on_use = pairing,
-	on_place = pairing,
+	on_use = use_tool,
+	on_place = use_tool,
 	node_placement_prediction = "",
 	stack_max = 1,
 })

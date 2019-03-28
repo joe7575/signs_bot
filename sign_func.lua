@@ -26,14 +26,7 @@ local lib = signs_bot.lib
 local HELP = I([[Robot Commands
  
 The robot can place and dig items on
-positions specified via <pos> and <lvl>.
-<pos> is one of:
-    f - in front of the robot
-    l - left from the front position
-    r - right from the front position
-    2 - both sides (left and right)
-    3 - all three positions in front of the robot
-<lvl> is one of:
+levels. <lvl> is one of:
     -1 - one level below the robot height
      0 - robot y-position
     +1 - one level above the robot height
