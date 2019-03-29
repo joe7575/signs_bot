@@ -57,3 +57,12 @@ minetest.register_node("signs_bot:bot_flap", {
 	groups = {choppy = 2, oddly_breakable_by_hand = 2, wood = 1, sign_bot_sign = 1},
 	sounds = default.node_sound_wood_defaults(),
 })
+
+minetest.register_craft({
+	output = "signs_bot:bot_flap",
+	recipe = {
+		{"signs_bot:sign_cmnd", "group:wood", "default:steel_ingot"},
+		{"", "", ""},
+		{"", "", ""}
+	}
+})

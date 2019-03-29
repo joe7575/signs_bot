@@ -34,7 +34,7 @@ end
 
 local function formspec1(pos, mem)
 	mem.running = mem.running or false
-	local cmnd = mem.running and "stop;"..I("Stop") or "start;"..I("Start") 
+	local cmnd = mem.running and "stop;"..I("Return") or "start;"..I("Launch") 
 	return "size[10,8]"..
 	default.gui_bg..
 	default.gui_bg_img..
@@ -55,7 +55,7 @@ end
 
 local function formspec2(pos, mem)
 	mem.running = mem.running or false
-	local cmnd = mem.running and "stop;"..I("Stop") or "start;"..I("Start") 
+	local cmnd = mem.running and "stop;"..I("Return") or "start;"..I("Launch") 
 	local output = M(pos):get_string("output")
 	output = minetest.formspec_escape(output)
 	return "size[10,8]"..
@@ -95,12 +95,6 @@ local function start_robot(pos)
 	local meta = minetest.get_meta(pos)
 	local number = meta:get_string("number")
 	
---	print("start_robot")
---	if not check_fuel(pos, meta) then 
---		local number = meta:get_string("number")
---		meta:set_string("infotext", "Robot Base "..number..": no fuel")
---		return false 
---	end
 	mem.running = true
 	meta:set_string("formspec", formspec1(pos, mem))
 	reset_robot(pos, mem)
@@ -142,19 +136,52 @@ local function on_receive_fields(pos, formname, fields, player)
 		meta:set_string("formspec", formspec1(pos, mem))
 	elseif fields.tab == "2" then
 		meta:set_string("formspec", formspec2(pos, mem))
-	elseif fields.start == I("Start") then
+	elseif fields.start == I("Launch") then
 		start_robot(pos)
-	elseif fields.stop == I("Stop") then
+	elseif fields.stop == I("Return") then
 		signs_bot.stop_robot(pos, mem)
 	end
 end
 
-local function allow_metadata_inventory(pos, listname, index, stack, player)
+local function allow_metadata_inventory_put(pos, listname, index, stack, player)
 	if minetest.is_protected(pos, player:get_player_name()) then
+		return 0
+	end
+	local mem = tubelib2.get_mem(pos)
+	if mem.running then
+		return 0
+	end
+	local name = stack:get_name()
+	if minetest.get_item_group(name, "sign_bot_sign") ~= 1 then
 		return 0
 	end
 	return stack:get_count()
 end
+
+local function allow_metadata_inventory_take(pos, listname, index, stack, player)
+	if minetest.is_protected(pos, player:get_player_name()) then
+		return 0
+	end
+	local mem = tubelib2.get_mem(pos)
+	if mem.running then
+		return 0
+	end
+	return stack:get_count()
+end
+
+local function allow_metadata_inventory_move(pos, from_list, from_index, to_list, to_index, count, player)
+	if minetest.is_protected(pos, player:get_player_name()) then
+		return 0
+	end
+	local mem = tubelib2.get_mem(pos)
+	if mem.running then
+		return 0
+	end
+	if from_list ~= to_list then
+		return 0
+	end
+	return count
+end	
 
 minetest.register_node("signs_bot:box", {
 	description = I("Signs Bot Box"),
@@ -189,8 +216,9 @@ minetest.register_node("signs_bot:box", {
 	end,
 
 	on_receive_fields = on_receive_fields,
-	allow_metadata_inventory_put = allow_metadata_inventory,
-	allow_metadata_inventory_take = allow_metadata_inventory,
+	allow_metadata_inventory_put = allow_metadata_inventory_put,
+	allow_metadata_inventory_take = allow_metadata_inventory_take,
+	allow_metadata_inventory_move = allow_metadata_inventory_move,
 	
 	on_dig = function(pos, node, puncher, pointed_thing)
 		if minetest.is_protected(pos, puncher:get_player_name()) then
@@ -214,9 +242,12 @@ minetest.register_node("signs_bot:box", {
 })
 
 
---minetest.register_craft({
---	type = "shapeless",
---	output = "signs_bot:robot",
---	recipe = {"smartline:controller"}
---})
+minetest.register_craft({
+	output = "signs_bot:box",
+	recipe = {
+		{"default:steel_ingot", "group:wood", "default:steel_ingot"},
+		{"basic_materials:gear_steel", "default:mese_crystal", "basic_materials:gear_steel"},
+		{"default:tin_ingot", "basic_materials:silicon", "default:tin_ingot"}
+	}
+})
 

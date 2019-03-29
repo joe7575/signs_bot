@@ -73,11 +73,29 @@ register_sign({
 	image = "signs_bot_sign_right.png",
 })
 
+minetest.register_craft({
+	output = "signs_bot:sign_right 6",
+	recipe = {
+		{"group:wood", "default:stick", "group:wood"},
+		{"dye:yellow", "default:stick", "dye:black"},
+		{"", "", ""}
+	}
+})
+
 register_sign({
 	name = "sign_left", 
 	description = I('Sign "turn left"'), 
 	commands = "turn_left", 
 	image = "signs_bot_sign_left.png",
+})
+
+minetest.register_craft({
+	output = "signs_bot:sign_left 6",
+	recipe = {
+		{"group:wood", "default:stick", "group:wood"},
+		{"dye:yellow", "default:stick", ""},
+		{"dye:black", "", ""}
+	}
 })
 
 register_sign({
@@ -87,6 +105,15 @@ register_sign({
 	image = "signs_bot_sign_take.png",
 })
 
+minetest.register_craft({
+	output = "signs_bot:sign_take 6",
+	recipe = {
+		{"group:wood", "default:stick", "group:wood"},
+		{"dye:yellow", "default:stick", ""},
+		{"", "dye:black", ""}
+	}
+})
+
 register_sign({
 	name = "sign_add", 
 	description = I('Sign "add item"'), 
@@ -94,9 +121,27 @@ register_sign({
 	image = "signs_bot_sign_add.png",
 })
 
+minetest.register_craft({
+	output = "signs_bot:sign_add 6",
+	recipe = {
+		{"group:wood", "default:stick", "group:wood"},
+		{"dye:yellow", "default:stick", ""},
+		{"", "", "dye:black"}
+	}
+})
+
 register_sign({
 	name = "sign_stop", 
 	description = I('Sign "stop"'), 
 	commands = "stop", 
 	image = "signs_bot_sign_stop.png",
+})
+
+minetest.register_craft({
+	output = "signs_bot:sign_stop 6",
+	recipe = {
+		{"group:wood", "default:stick", "group:wood"},
+		{"dye:black", "default:stick", "dye:yellow"},
+		{"", "", ""}
+	}
 })

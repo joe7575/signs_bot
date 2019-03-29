@@ -62,12 +62,12 @@ local function switch_sign_changer(pos, new_idx)
 	local param2 = minetest.get_node(pos).param2
 	local sign = lib.dig_sign(pos1)
 	if sign then
-		M(pos):set_int("sign_param2", param2)
+		M(pos):set_int("sign_param2_"..old_idx, param2)
 		put_inv_sign(pos, old_idx, sign)
 	end
 	sign = get_inv_sign(pos, new_idx)
 	if sign:get_count() == 1 then
-		lib.place_sign(pos1, sign, M(pos):get_int("sign_param2"))
+		lib.place_sign(pos1, sign, M(pos):get_int("sign_param2_"..new_idx))
 	end
 end
 
@@ -270,4 +270,31 @@ minetest.register_node("signs_bot:connector", {
 	on_place = use_tool,
 	node_placement_prediction = "",
 	stack_max = 1,
+})
+
+minetest.register_craft({
+	output = "signs_bot:changer1",
+	recipe = {
+		{"", "", ""},
+		{"dye:yellow", "group:wood", "dye:black"},
+		{"default:steel_ingot", "default:mese_crystal_fragment", "default:steel_ingot"}
+	}
+})
+
+minetest.register_craft({
+	output = "signs_bot:bot_sensor",
+	recipe = {
+		{"", "", ""},
+		{"dye:black", "group:wood", "dye:yellow"},
+		{"default:steel_ingot", "default:mese_crystal_fragment", "default:steel_ingot"}
+	}
+})
+
+minetest.register_craft({
+	output = "signs_bot:connector",
+	recipe = {
+		{"basic_materials:plastic_strip", "dye:black", ""},
+		{"", "basic_materials:silicon", ""},
+		{"", "", "basic_materials:plastic_strip"}
+	}
 })

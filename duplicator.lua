@@ -32,7 +32,9 @@ local formspec = "size[8,7.3]"..
 	"list[context;temp;3,1;1,1;]"..
 	"label[0.3,2;"..I("Output:").."]"..
 	"list[context;outp;3,2;1,1;]"..
-	"label[4.5,1;"..I("Template is the\nprogrammed sign\nto be copied").."]"..
+	"label[4,0;"..I("1. Place one sign to be\n    used as template.\n")..
+			I("2. Add 'command signs' to\n    the input inventory.\n")..
+			I("3. Take the copies\n    from the output inventory.").."]"..
 	"list[current_player;main;0,3.5;8,4;]"..
 	"listring[context;inp]"..
 	"listring[current_player;main]"..
@@ -40,7 +42,23 @@ local formspec = "size[8,7.3]"..
 	"listring[context;outp]"
 
 
-local function allow_metadata_inventory(pos, listname, index, stack, player)
+local function allow_metadata_inventory_put(pos, listname, index, stack, player)
+	if minetest.is_protected(pos, player:get_player_name()) then
+		return 0
+	end
+	if listname == "outp" then
+		return 0
+	end
+	if minetest.get_item_group(stack:get_name(), "sign_bot_sign") ~= 1 then
+		return 0
+	end
+	if listname == "temp" then
+		return 1
+	end
+	return stack:get_count()
+end
+
+local function allow_metadata_inventory_take(pos, listname, index, stack, player)
 	if minetest.is_protected(pos, player:get_player_name()) then
 		return 0
 	end
@@ -100,8 +118,8 @@ minetest.register_node("signs_bot:duplicator", {
 		meta:set_string("formspec", formspec)
 	end,
 	
-	allow_metadata_inventory_put = allow_metadata_inventory,
-	allow_metadata_inventory_take = allow_metadata_inventory,
+	allow_metadata_inventory_put = allow_metadata_inventory_put,
+	allow_metadata_inventory_take = allow_metadata_inventory_take,
 	on_metadata_inventory_put = on_metadata_inventory_put,
 	
 	can_dig = function(pos, player)
@@ -118,4 +136,14 @@ minetest.register_node("signs_bot:duplicator", {
 	groups = {cracky = 1},
 	sounds = default.node_sound_metal_defaults(),
 })
+
+minetest.register_craft({
+	output = "signs_bot:duplicator",
+	recipe = {
+		{"default:steel_ingot", "group:wood", "default:steel_ingot"},
+		{"", "basic_materials:gear_steel", ""},
+		{"default:tin_ingot", "", "default:tin_ingot"}
+	}
+})
+
 

@@ -133,6 +133,9 @@ minetest.register_node("signs_bot:sign_cmnd", {
 	end,
 	
 	on_receive_fields = function(pos, formname, fields, player)
+		if minetest.is_protected(pos, player:get_player_name()) then
+			return
+		end
 		local meta = minetest.get_meta(pos)
 		if fields.check then
 			check_and_store(pos, meta, fields)
@@ -271,3 +274,13 @@ function signs_bot.trash_sign(base_pos, robot_pos, param2, slot)
 	end
 	return false
 end
+
+
+minetest.register_craft({
+	output = "signs_bot:sign_cmnd 4",
+	recipe = {
+		{"group:wood", "default:stick", "group:wood"},
+		{"dye:yellow", "default:stick", "dye:yellow"},
+		{"", "", ""}
+	}
+})
