@@ -59,7 +59,7 @@ local function switch_sign_changer(pos, new_idx)
 	node.name = "signs_bot:changer"..new_idx
 	minetest.swap_node(pos, node)
 	-- swap sign
-	local param2 = minetest.get_node(pos).param2
+	local param2 = minetest.get_node(pos1).param2
 	local sign = lib.dig_sign(pos1)
 	if sign then
 		M(pos):set_int("sign_param2_"..old_idx, param2)

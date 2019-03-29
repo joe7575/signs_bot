@@ -1,1 +1,4 @@
-default, farming, tubelib2
+default
+farming
+basic_materials
+tubelib2
