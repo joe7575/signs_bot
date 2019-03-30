@@ -203,7 +203,7 @@ local function put_inv_sign(base_pos, slot, item)
 end
 
 function signs_bot.place_sign(base_pos, robot_pos, param2, slot)
-	local pos1 = lib.work_pos(robot_pos, param2, "f")
+	local pos1 = lib.dest_pos(robot_pos, param2, {0})
 	if lib.not_protected(base_pos, pos1) then
 		if lib.is_air_like(pos1) then
 			local sign = get_inv_sign(base_pos, slot)
@@ -220,7 +220,7 @@ function signs_bot.place_sign(base_pos, robot_pos, param2, slot)
 end
 
 function signs_bot.place_sign_behind(base_pos, robot_pos, param2, slot)
-	local pos1 = lib.work_pos(robot_pos, param2, "b")
+	local pos1 = lib.dest_pos(robot_pos, param2, {2})
 	if lib.not_protected(base_pos, pos1) then
 		if lib.is_air_like(pos1) then
 			local sign = get_inv_sign(base_pos, slot)
@@ -237,7 +237,7 @@ function signs_bot.place_sign_behind(base_pos, robot_pos, param2, slot)
 end
 
 function signs_bot.dig_sign(base_pos, robot_pos, param2, slot)
-	local pos1 = lib.work_pos(robot_pos, param2, "f")
+	local pos1 = lib.dest_pos(robot_pos, param2, {0})
 	local meta =  M(pos1)
 	local cmnd = meta:get_string("signs_bot_cmnd")
 	local err_code = meta:get_int("err_code")
@@ -260,7 +260,7 @@ function signs_bot.dig_sign(base_pos, robot_pos, param2, slot)
 end
 
 function signs_bot.trash_sign(base_pos, robot_pos, param2, slot)
-	local pos1 = lib.work_pos(robot_pos, param2, "f")
+	local pos1 = lib.dest_pos(robot_pos, param2, {0})
 	local cmnd = M(pos1):get_string("signs_bot_cmnd")
 	if cmnd == "" then
 		signs_bot.output(base_pos, I("Error: No sign available"))

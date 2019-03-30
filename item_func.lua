@@ -27,6 +27,8 @@ local tRotations = {
 	[3] = {12,20,16},
 }
 
+local Dir2Route = {r={0,1}, f={0}, l={0,3}, b={2}}
+
 --
 -- Inventory helper functions
 --
@@ -62,10 +64,10 @@ function signs_bot.robot_take(base_pos, robot_pos, param2, num, slot)
 			--minetest.global_exists("node_io")
 			local src_inv, src_list = get_other_inv(pos1, true)
 			local dst_inv, dst_list = get_own_inv(base_pos)
-			local taken, rest, src_slot = lib.get_inv_items(src_inv, src_list, slot, num)
+			local taken = lib.get_inv_items(src_inv, src_list, slot, num)
 			if taken then
-				if lib.put_inv_items(dst_inv, dst_list, slot, taken) then
-					lib.release_inv_items(src_inv, src_list, src_slot, rest)
+				if not lib.put_inv_items(dst_inv, dst_list, slot, taken) then
+					lib.drop_items(robot_pos, taken)
 				end
 			end
 		end
@@ -81,10 +83,10 @@ function signs_bot.robot_add(base_pos, robot_pos, param2, num, slot, is_fuel)
 		if you == "" or me == you then
 			local src_inv, src_list = get_own_inv(base_pos)
 			local dst_inv, dst_list = get_other_inv(pos1, false, is_fuel)
-			local taken, rest, src_slot = lib.get_inv_items(src_inv, src_list, slot, num)
+			local taken = lib.get_inv_items(src_inv, src_list, slot, num)
 			if taken then
-				if lib.put_inv_items(dst_inv, dst_list, slot, taken) then
-					lib.release_inv_items(src_inv, src_list, src_slot, rest)
+				if not lib.put_inv_items(dst_inv, dst_list, slot, taken) then
+					lib.drop_items(robot_pos, taken)
 				end
 			end
 		end
@@ -95,11 +97,11 @@ end
 -- Place/dig items
 --
 function signs_bot.place_item(base_pos, robot_pos, param2, slot, dir, level)
-	local pos1, p2 = lib.work_pos(robot_pos, param2, dir)
+	local pos1, p2 = lib.dest_pos(robot_pos, param2, Dir2Route[dir])
 	pos1.y = pos1.y + level
 	if lib.not_protected(base_pos, pos1) and lib.is_air_like(pos1) then
 		local src_inv, src_list = get_own_inv(base_pos)
-		local taken, rest, src_slot = lib.get_inv_items(src_inv, src_list, slot, 1)
+		local taken = lib.get_inv_items(src_inv, src_list, slot, 1)
 		if taken then
 			local name = taken:get_name()
 			if name == "default:torch" then  
@@ -116,13 +118,12 @@ function signs_bot.place_item(base_pos, robot_pos, param2, slot, dir, level)
 			else
 				minetest.set_node(pos1, {name=name, param2=p2})
 			end
-			lib.release_inv_items(src_inv, src_list, src_slot, rest)
 		end
 	end
 end
 
 function signs_bot.dig_item(base_pos, robot_pos, param2, slot, dir, level)
-	local pos1 = lib.work_pos(robot_pos, param2, dir)
+	local pos1 = lib.dest_pos(robot_pos, param2, Dir2Route[dir])
 	pos1.y = pos1.y + level
 	local node = lib.get_node_lvm(pos1)
 	if lib.not_protected(base_pos, pos1) and lib.is_simple_node(node) then
@@ -134,7 +135,7 @@ function signs_bot.dig_item(base_pos, robot_pos, param2, slot, dir, level)
 end
 
 function signs_bot.rotate_item(base_pos, robot_pos, param2, dir, level, steps)
-	local pos1 = lib.work_pos(robot_pos, param2, dir)
+	local pos1 = lib.dest_pos(robot_pos, param2, Dir2Route[dir])
 	pos1.y = pos1.y + level
 	local node = lib.get_node_lvm(pos1)
 	if lib.not_protected(base_pos, pos1) and lib.is_simple_node(node) then

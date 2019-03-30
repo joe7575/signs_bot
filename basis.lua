@@ -25,58 +25,30 @@ local lib = signs_bot.lib
 
 local CYCLE_TIME = 1
 
-function signs_bot.output(pos, text)
-	local meta = minetest.get_meta(pos)
-	text = meta:get_string("output") .. "\n" .. (text or "")
-	text = text:sub(-500,-1)
-	meta:set_string("output", text)
-end
-
-local function formspec1(pos, mem)
+local function formspec(pos, mem)
 	mem.running = mem.running or false
-	local cmnd = mem.running and "stop;"..I("Return") or "start;"..I("Launch") 
+	local cmnd = mem.running and "stop;"..I("Off") or "start;"..I("On") 
 	return "size[10,8]"..
 	default.gui_bg..
 	default.gui_bg_img..
 	default.gui_slots..
-	"tabheader[0,0;tab;"..I("Inventory,Output")..";1;;true]"..
-	"label[3.8,0;"..I("Signs").."]label[6.3,0;"..I("Other items").."]"..
-	"label[3.8,0.5;1]label[4.8,0.5;2]"..
-	"list[context;sign;3.5,1;2,2;]"..
-	"label[3.8,3;3]label[4.8,3;4]"..
+	"label[2.8,0;"..I("Signs").."]label[6.3,0;"..I("Other items").."]"..
+	"label[2.8,0.5;1]label[3.8,0.5;2]label[4.8,0.5;3]"..
+	"list[context;sign;2.5,1;3,2;]"..
+	"label[2.8,3;4]label[3.8,3;5]label[4.8,3;6]"..
 	"label[6.3,0.5;1]label[7.3,0.5;2]label[8.3,0.5;3]label[9.3,0.5;4]"..
 	"list[context;main;6,1;4,2;]"..
 	"label[6.3,3;5]label[7.3,3;6]label[8.3,3;7]label[9.3,3;8]"..
-	"button[0.5,1.7;1.8,1;"..cmnd.."]"..
+	"button[0.4,2;1.8,1;"..cmnd.."]"..
 	"list[current_player;main;1,4;8,4;]"..
 	"listring[context;main]"..
 	"listring[current_player;main]"
 end
 
-local function formspec2(pos, mem)
-	mem.running = mem.running or false
-	local cmnd = mem.running and "stop;"..I("Return") or "start;"..I("Launch") 
-	local output = M(pos):get_string("output")
-	output = minetest.formspec_escape(output)
-	return "size[10,8]"..
-	default.gui_bg..
-	default.gui_bg_img..
-	default.gui_slots..
-	"tabheader[0,0;tab;"..I("Inventory,Output")..";2;;true]"..
-	"textarea[0.3,0.2;10,8.3;help;"..I("Output")..":;"..output.."]"..
-	"button[4.4,7.5;1.8,1;clear;"..I("Clear").."]"..
-	"button[6.3,7.5;1.8,1;update;"..I("Update").."]"..
-	"button[8.2,7.5;1.8,1;"..cmnd.."]"
-end
-
-local function error(pos, err)
-	local mem = tubelib2.get_mem(pos)
-	output(pos, err)
-	local number = M(pos):get_string("number")
-	mem.running = false
-	minetest.get_node_timer(pos):stop()
-	minetest.sound_play('signs_bot_error', {pos = mem.robot_pos})
-	return false
+function signs_bot.infotext(pos, state)
+	local meta = minetest.get_meta(pos)
+	local number = meta:get_string("number")
+	meta:set_string("infotext", I("Robot Box ")..number..": "..state)
 end
 
 local function reset_robot(pos, mem)
@@ -90,27 +62,25 @@ local function reset_robot(pos, mem)
 	signs_bot.place_robot(mem.robot_pos, pos_below, mem.robot_param2)	
 end
 
-local function start_robot(pos)
-	local mem = tubelib2.get_mem(pos)
-	local meta = minetest.get_meta(pos)
-	local number = meta:get_string("number")
+local function start_robot(base_pos)
+	local mem = tubelib2.get_mem(base_pos)
+	local meta = minetest.get_meta(base_pos)
 	
 	mem.running = true
-	meta:set_string("formspec", formspec1(pos, mem))
-	reset_robot(pos, mem)
-	minetest.get_node_timer(pos):start(CYCLE_TIME)
-	meta:set_string("infotext", I("Robot Box ")..number..I(": running"))
+	meta:set_string("formspec", formspec(base_pos, mem))
+	signs_bot.infotext(base_pos, I("running"))
+	reset_robot(base_pos, mem)
+	minetest.get_node_timer(base_pos):start(CYCLE_TIME)
 	return true
 end
 
 function signs_bot.stop_robot(base_pos, mem)
 	local meta = minetest.get_meta(base_pos)
-	local number = meta:get_string("number")
 	mem.running = false
 	mem.lCmnd = nil
 	minetest.get_node_timer(base_pos):stop()
-	meta:set_string("infotext", I("Robot Box ")..number..I(": stopped"))
-	meta:set_string("formspec", formspec1(base_pos, mem))
+	signs_bot.infotext(base_pos, I("stopped"))
+	meta:set_string("formspec", formspec(base_pos, mem))
 	signs_bot.remove_robot(mem.robot_pos)
 end
 
@@ -131,14 +101,10 @@ local function on_receive_fields(pos, formname, fields, player)
 	local meta = minetest.get_meta(pos)
 	
 	if fields.update then
-		meta:set_string("formspec", formspec1(pos, mem))
-	elseif fields.tab == "1" then
-		meta:set_string("formspec", formspec1(pos, mem))
-	elseif fields.tab == "2" then
-		meta:set_string("formspec", formspec2(pos, mem))
-	elseif fields.start == I("Launch") then
+		meta:set_string("formspec", formspec(pos, mem))
+	elseif fields.start == I("On") then
 		start_robot(pos)
-	elseif fields.stop == I("Return") then
+	elseif fields.stop == I("Off") then
 		signs_bot.stop_robot(pos, mem)
 	end
 end
@@ -152,7 +118,7 @@ local function allow_metadata_inventory_put(pos, listname, index, stack, player)
 		return 0
 	end
 	local name = stack:get_name()
-	if minetest.get_item_group(name, "sign_bot_sign") ~= 1 then
+	if listname == "sign" and minetest.get_item_group(name, "sign_bot_sign") ~= 1 then
 		return 0
 	end
 	return stack:get_count()
@@ -200,7 +166,7 @@ minetest.register_node("signs_bot:box", {
 		local meta = minetest.get_meta(pos)
 		local inv = meta:get_inventory()
 		inv:set_size('main', 8)
-		inv:set_size('sign', 4)
+		inv:set_size('sign', 6)
 	end,
 	
 	after_place_node = function(pos, placer)
@@ -210,9 +176,10 @@ minetest.register_node("signs_bot:box", {
 		local number = "0000" --tubelib.add_node(pos, "signs_bot:base")
 		meta:set_string("owner", placer:get_player_name())
 		meta:set_string("number", number)
-		meta:set_string("formspec", formspec1(pos, mem))
-		meta:set_string("infotext", I("Robot Box ")..number..I(": stopped"))
+		meta:set_string("formspec", formspec(pos, mem))
 		meta:set_string("signs_bot_cmnd", "turn_off")
+		meta:set_int("err_code", 0)
+		signs_bot.infotext(pos, I("stopped"))
 	end,
 
 	on_receive_fields = on_receive_fields,

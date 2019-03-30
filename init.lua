@@ -27,3 +27,5 @@ dofile(MP.."/basis.lua")
 dofile(MP.."/duplicator.lua")
 dofile(MP.."/logic.lua")
 dofile(MP.."/bot_flap.lua")
+dofile(MP.."/more_cmnds.lua")
+

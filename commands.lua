@@ -97,8 +97,7 @@ end
 
 local function no_sign_around(mem)
 	if minetest.find_node_near(mem.robot_pos, 1, {
-			"signs_bot:bot_sensor", "group:sign_bot_sign"}) then  -- something around?
-
+			"signs_bot:box", "signs_bot:bot_sensor", "group:sign_bot_sign"}) then  -- something around?
 		local pos1 = lib.next_pos(mem.robot_pos, mem.robot_param2)
 		local meta = M(pos1)
 		if check_cmnd_block(pos1, mem, meta) then
@@ -117,13 +116,13 @@ end
 signs_bot.register_botcommand("move", {
 	mod = "core",
 	params = "<steps>",	
-	description = I("Move the robot 1..9 steps forward.\nDefault value: 1"),
+	description = I("Move the robot 1..99 steps forward."),
 	check = function(steps)
 		steps = tonumber(steps or "1")
-		return steps > 0 and steps < 10
+		return steps ~= nil and steps > 0 and steps < 100
 	end,
 	cmnd = function(base_pos, mem, steps)
-		steps = tonumber(steps)
+		steps = tonumber(steps or 1)
 		local no_sign, has_sensor = no_sign_around(mem)
 		if no_sign then
 			local new_pos = signs_bot.move_robot(mem.robot_pos, mem.robot_param2)
@@ -206,7 +205,7 @@ signs_bot.register_botcommand("pause", {
 	description = I("Stop the robot for <sec> seconds\n(1..9999)"),
 	check = function(sec)
 		sec = tonumber(sec or 1)
-		return sec > 0 and sec < 10000
+		return sec and sec > 0 and sec < 10000
 	end,
 	cmnd = function(base_pos, mem, sec)
 		-- more than one second?
@@ -250,21 +249,21 @@ signs_bot.register_botcommand("take_item", {
 	mod = "core",
 	params = "<num> <slot>",	
 	description = I("Take <num> items from a chest like node\nand put it into the item inventory.\n"..
-		"Param <slot> (1..8) is optional"),
+		"<slot> is the inventory slot (1..8)"),
 	check = function(num, slot)
-		num = tonumber(num)
-		if num == nil or num < 1 or num > 99 then 
+		num = tonumber(num or 1)
+		if not num or num < 1 or num > 99 then 
 			return false 
 		end
-		slot = tonumber(slot)
-		if slot and (slot < 1 or slot > 8) then 
+		slot = tonumber(slot or 1)
+		if not slot or slot < 1 or slot > 8 then 
 			return false 
 		end
 		return true
 	end,
 	cmnd = function(base_pos, mem, num, slot)
-		num = tonumber(num)
-		slot = tonumber(slot)
+		num = tonumber(num or 1)
+		slot = tonumber(slot or 1)
 		signs_bot.robot_take(base_pos, mem.robot_pos, mem.robot_param2, num, slot)
 		return true
 	end,
@@ -274,21 +273,21 @@ signs_bot.register_botcommand("add_item", {
 	mod = "core",
 	params = "<num> <slot>",	
 	description = I("Add <num> items to a chest like node\ntaken from the item inventory.\n"..
-		"Param <slot> (1..8) is optional"),
+		"<slot> is the inventory slot (1..8)"),
 	check = function(num, slot)
-		num = tonumber(num)
-		if num == nil or num < 1 or num > 99 then 
+		num = tonumber(num or 1)
+		if not num or num < 1 or num > 99 then 
 			return false 
 		end
-		slot = tonumber(slot)
-		if slot and (slot < 1 or slot > 8) then 
+		slot = tonumber(slot or 1)
+		if not slot or slot < 1 or slot > 8 then 
 			return false 
 		end
 		return true
 	end,
 	cmnd = function(base_pos, mem, num, slot)
-		num = tonumber(num)
-		slot = tonumber(slot)
+		num = tonumber(num or 1)
+		slot = tonumber(slot or 1)
 		signs_bot.robot_add(base_pos, mem.robot_pos, mem.robot_param2, num, slot)
 		return true
 	end,
@@ -298,21 +297,21 @@ signs_bot.register_botcommand("add_fuel", {
 	mod = "core",
 	params = "<num> <slot>",	
 	description = I("Add <num> fuel items to a furnace like node\ntaken from the item inventory.\n"..
-		"Param <slot> (1..8) is optional"),
+		"<slot> is the inventory slot (1..8)"),
 	check = function(num, slot)
-		num = tonumber(num)
-		if num == nil or num < 1 or num > 99 then 
+		num = tonumber(num or 1)
+		if not num or num < 1 or num > 99 then 
 			return false 
 		end
-		slot = tonumber(slot)
-		if slot and (slot < 1 or slot > 8) then 
+		slot = tonumber(slot or 1)
+		if not slot or slot < 1 or slot > 8 then 
 			return false 
 		end
 		return true
 	end,
 	cmnd = function(base_pos, mem, num, slot)
-		num = tonumber(num)
-		slot = tonumber(slot)
+		num = tonumber(num or 1)
+		slot = tonumber(slot or 1)
 		signs_bot.robot_add(base_pos, mem.robot_pos, mem.robot_param2, num, slot)
 		return true
 	end,
@@ -322,17 +321,17 @@ signs_bot.register_botcommand("place_front", {
 	mod = "core",
 	params = "<slot> <lvl>",	
 	description = I("Place an item in front of the robot\n"..
-		"<slot> is the inventory slot of the item (1..8)\n"..
+		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
-		slot = tonumber(slot)
-		if slot and (slot < 1 or slot > 8) then 
+		slot = tonumber(slot or 1)
+		if not slot or slot < 1 or slot > 8 then 
 			return false 
 		end
 		return tValidLevels[lvl] ~= nil
 	end,
 	cmnd = function(base_pos, mem, slot, lvl)
-		slot = tonumber(slot)
+		slot = tonumber(slot or 1)
 		local level = tValidLevels[lvl]
 		signs_bot.place_item(base_pos, mem.robot_pos, mem.robot_param2, slot, "f", level)
 		return true
@@ -343,17 +342,17 @@ signs_bot.register_botcommand("place_left", {
 	mod = "core",
 	params = "<slot> <lvl>",	
 	description = I("Place an item on the left side\n"..
-		"<slot> is the inventory slot of the item (1..8)\n"..
+		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
-		slot = tonumber(slot)
-		if slot and (slot < 1 or slot > 8) then 
+		slot = tonumber(slot or 1)
+		if not slot or slot < 1 or slot > 8 then 
 			return false 
 		end
 		return tValidLevels[lvl] ~= nil
 	end,
 	cmnd = function(base_pos, mem, slot, lvl)
-		slot = tonumber(slot)
+		slot = tonumber(slot or 1)
 		local level = tValidLevels[lvl]
 		signs_bot.place_item(base_pos, mem.robot_pos, mem.robot_param2, slot, "l", level)
 		return true
@@ -364,17 +363,17 @@ signs_bot.register_botcommand("place_right", {
 	mod = "core",
 	params = "<slot> <lvl>",	
 	description = I("Place an item on the right side\n"..
-		"<slot> is the inventory slot of the item (1..8)\n"..
+		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
-		slot = tonumber(slot)
-		if slot and (slot < 1 or slot > 8) then 
+		slot = tonumber(slot or 1)
+		if not slot or slot < 1 or slot > 8 then 
 			return false 
 		end
 		return tValidLevels[lvl] ~= nil
 	end,
 	cmnd = function(base_pos, mem, slot, lvl)
-		slot = tonumber(slot)
+		slot = tonumber(slot or 1)
 		local level = tValidLevels[lvl]
 		signs_bot.place_item(base_pos, mem.robot_pos, mem.robot_param2, slot, "r", level)
 		return true
@@ -385,17 +384,17 @@ signs_bot.register_botcommand("dig_front", {
 	mod = "core",
 	params = "<slot> <lvl>",	
 	description = I("Dig an item in front of the robot\n"..
-		"<slot> is the inventory slot for the item(1..8)\n"..
+		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
-		slot = tonumber(slot)
-		if slot and (slot < 1 or slot > 8) then 
+		slot = tonumber(slot or 1)
+		if not slot or slot < 1 or slot > 8 then 
 			return false 
 		end
 		return tValidLevels[lvl] ~= nil
 	end,
 	cmnd = function(base_pos, mem, slot, lvl)
-		slot = tonumber(slot)
+		slot = tonumber(slot or 1)
 		local level = tValidLevels[lvl]
 		signs_bot.dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, "f", level)
 		return true
@@ -406,17 +405,17 @@ signs_bot.register_botcommand("dig_left", {
 	mod = "core",
 	params = "<slot> <lvl>",	
 	description = I("Dig an item on the left side\n"..
-		"<slot> is the inventory slot for the item(1..8)\n"..
+		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
-		slot = tonumber(slot)
-		if slot and (slot < 1 or slot > 8) then 
+		slot = tonumber(slot or 1)
+		if not slot or slot < 1 or slot > 8 then 
 			return false 
 		end
 		return tValidLevels[lvl] ~= nil
 	end,
 	cmnd = function(base_pos, mem, slot, lvl)
-		slot = tonumber(slot)
+		slot = tonumber(slot or 1)
 		local level = tValidLevels[lvl]
 		signs_bot.dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, "l", level)
 		return true
@@ -427,17 +426,17 @@ signs_bot.register_botcommand("dig_right", {
 	mod = "core",
 	params = "<slot> <lvl>",	
 	description = I("Dig an item on the right side\n"..
-		"<slot> is the inventory slot for the item(1..8)\n"..
+		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
-		slot = tonumber(slot)
-		if slot and (slot < 1 or slot > 8) then 
+		slot = tonumber(slot or 1)
+		if not slot or slot < 1 or slot > 8 then 
 			return false 
 		end
 		return tValidLevels[lvl] ~= nil
 	end,
 	cmnd = function(base_pos, mem, slot, lvl)
-		slot = tonumber(slot)
+		slot = tonumber(slot or 1)
 		local level = tValidLevels[lvl]
 		signs_bot.dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, "r", level)
 		return true
@@ -451,7 +450,7 @@ signs_bot.register_botcommand("rotate_item", {
 		"<lvl> is one of:  -1   0   +1\n"..
 		"<steps> is one of:  1   2   3"),
 	check = function(lvl, steps)
-		steps = tonumber(steps)
+		steps = tonumber(steps or 1)
 		if not steps or steps < 1 or steps > 4 then
 			return false
 		end
@@ -459,7 +458,7 @@ signs_bot.register_botcommand("rotate_item", {
 	end,
 	cmnd = function(base_pos, mem, lvl, steps)
 		local level = tValidLevels[lvl]
-		steps = tonumber(steps)
+		steps = tonumber(steps or 1)
 		signs_bot.rotate_item(base_pos, mem.robot_pos, mem.robot_param2, "f", level, steps)
 		return true
 	end,
@@ -469,13 +468,13 @@ signs_bot.register_botcommand("place_sign", {
 	mod = "core",
 	params = "<slot>",	
 	description = I("Place a sign in front of the robot\ntaken from the signs inventory\n"..
-		"<slot> is the inventory slot (1..4)"),
+		"<slot> is the inventory slot (1..6)"),
 	check = function(slot)
-		slot = tonumber(slot)
-		return slot and slot > 0 and slot < 5
+		slot = tonumber(slot or 1)
+		return slot and slot > 0 and slot < 7
 	end,
 	cmnd = function(base_pos, mem, slot)
-		slot = tonumber(slot)
+		slot = tonumber(slot or 1)
 		signs_bot.place_sign(base_pos, mem.robot_pos, mem.robot_param2, slot)
 		return true
 	end,
@@ -485,13 +484,13 @@ signs_bot.register_botcommand("place_sign_behind", {
 	mod = "core",
 	params = "<slot>",	
 	description = I("Place a sign behind the robot\ntaken from the signs inventory\n"..
-		"<slot> is the inventory slot (1..4)"),
+		"<slot> is the inventory slot (1..6)"),
 	check = function(slot)
-		slot = tonumber(slot)
-		return slot and slot > 0 and slot < 5
+		slot = tonumber(slot or 1)
+		return slot and slot > 0 and slot < 7
 	end,
 	cmnd = function(base_pos, mem, slot)
-		slot = tonumber(slot)
+		slot = tonumber(slot or 1)
 		signs_bot.place_sign_behind(base_pos, mem.robot_pos, mem.robot_param2, slot)
 		return true
 	end,
@@ -502,13 +501,13 @@ signs_bot.register_botcommand("dig_sign", {
 	params = "<slot>",	
 	description = I("Dig the sign in front of the robot\n"..
 		"and add it to the signs inventory.\n"..
-		"<slot> is the inventory slot (1..4)"),
+		"<slot> is the inventory slot (1..6)"),
 	check = function(slot)
-		slot = tonumber(slot)
-		return slot and slot > 0 and slot < 5
+		slot = tonumber(slot or 1)
+		return slot and slot > 0 and slot < 7
 	end,
 	cmnd = function(base_pos, mem, slot)
-		slot = tonumber(slot)
+		slot = tonumber(slot or 1)
 		signs_bot.dig_sign(base_pos, mem.robot_pos, mem.robot_param2, slot)
 		return true
 	end,
@@ -521,11 +520,11 @@ signs_bot.register_botcommand("trash_sign", {
 		"and add the cleared sign to\nthe item iventory.\n"..
 		"<slot> is the inventory slot (1..8)"),
 	check = function(slot)
-		slot = tonumber(slot)
-		return slot and slot > 0 and slot < 5
+		slot = tonumber(slot or 1)
+		return slot and slot > 0 and slot < 9
 	end,
 	cmnd = function(base_pos, mem, slot)
-		slot = tonumber(slot)
+		slot = tonumber(slot or 1)
 		signs_bot.trash_sign(base_pos, mem.robot_pos, mem.robot_param2, slot)
 		return true
 	end,
@@ -563,12 +562,20 @@ end
 function signs_bot.run_next_command(base_pos, mem)
 	mem.lCmnd = mem.lCmnd or {}
 	local res = nil
+	local sts
 	while res == nil do
 		local line = table.remove(mem.lCmnd, 1)
 		if line then
 			local cmnd, param1, param2 = unpack(string.split(line, " "))
 			if cmnd ~= "--" then -- No comment?
-				res = tCommands[cmnd].cmnd(base_pos, mem, param1, param2)
+				sts,res = true, tCommands[cmnd].cmnd(base_pos, mem, param1, param2)
+				--sts, res = pcall(tCommands[cmnd].cmnd(base_pos, mem, param1, param2))
+				if not sts then
+					minetest.sound_play('signs_bot_error', {pos = base_pos})
+					minetest.sound_play('signs_bot_error', {pos = mem.robot_pos})
+					signs_bot.infotext(base_pos, I("error"))
+					return false
+				end
 			end
 		else
 			res = tCommands["move"].cmnd(base_pos, mem)
@@ -583,7 +590,7 @@ function signs_bot.get_help_text()
 	for _,mod in ipairs(SortedMods) do
 		for _,cmnd in ipairs(SortedKeys[mod]) do
 			local item = tCommands[cmnd]
-			tbl[#tbl+1] = mod..": "..item.name.." "..item.params
+			tbl[#tbl+1] = item.name.." "..item.params
 			local text = string.gsub(item.description, "\n", "\n  -- ")
 			tbl[#tbl+1] = "  -- "..text
 		end
