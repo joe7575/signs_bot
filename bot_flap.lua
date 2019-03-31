@@ -31,9 +31,9 @@ local function formspec(cmnd)
 	"button_exit[2.5,5.5;2,1;exit;"..I("Exit").."]"
 end
 
-local commands = [[dig_sign 4
+local commands = [[dig_sign 6
 move 2
-place_sign_behind 4
+place_sign_behind 6
 ]]
 
 minetest.register_node("signs_bot:bot_flap", {

@@ -61,7 +61,7 @@ local function register_sign(def)
 		paramtype = "light",
 		sunlight_propagates = true,
 		is_ground_content = false,
-		groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, wood = 1, sign_bot_sign = 1},
+		groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, sign_bot_sign = 1},
 		sounds = default.node_sound_wood_defaults(),
 	})
 end

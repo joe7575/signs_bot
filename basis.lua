@@ -213,8 +213,8 @@ minetest.register_craft({
 	output = "signs_bot:box",
 	recipe = {
 		{"default:steel_ingot", "group:wood", "default:steel_ingot"},
-		{"basic_materials:gear_steel", "default:mese_crystal", "basic_materials:gear_steel"},
-		{"default:tin_ingot", "basic_materials:silicon", "default:tin_ingot"}
+		{"basic_materials:motor", "default:mese_crystal", "basic_materials:gear_steel"},
+		{"default:tin_ingot", "", "default:tin_ingot"}
 	}
 })
 

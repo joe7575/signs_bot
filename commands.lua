@@ -567,9 +567,9 @@ function signs_bot.run_next_command(base_pos, mem)
 		local line = table.remove(mem.lCmnd, 1)
 		if line then
 			local cmnd, param1, param2 = unpack(string.split(line, " "))
-			if cmnd ~= "--" then -- No comment?
-				sts,res = true, tCommands[cmnd].cmnd(base_pos, mem, param1, param2)
-				--sts, res = pcall(tCommands[cmnd].cmnd(base_pos, mem, param1, param2))
+			if cmnd ~= "--" and tCommands[cmnd] then -- Valid command?
+				--sts,res = true, tCommands[cmnd].cmnd(base_pos, mem, param1, param2)
+				sts, res = pcall(tCommands[cmnd].cmnd, base_pos, mem, param1, param2)
 				if not sts then
 					minetest.sound_play('signs_bot_error', {pos = base_pos})
 					minetest.sound_play('signs_bot_error', {pos = mem.robot_pos})

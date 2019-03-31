@@ -78,6 +78,14 @@ local function trim(s)
   return (s:gsub("^%s*(.-)%s*$", "%1"))
 end
 
+local function trim_text(text)
+	local tbl = {}
+	for idx,line in ipairs(string.split(text, "\n", true)) do
+		tbl[#tbl+1]	= trim(line)
+	end
+	return table.concat(tbl, "\n")
+end
+
 local function append_line(pos, meta, line)
 	line = trim(line or "") 
 	local text = meta:get_string("signs_bot_cmnd").."\n"..line
@@ -88,7 +96,7 @@ local function append_line(pos, meta, line)
 end	
 	
 local function check_and_store(pos, meta, fields)	
-	meta:set_string("signs_bot_cmnd", fields.cmnd)
+	meta:set_string("signs_bot_cmnd", trim_text(fields.cmnd))
 	meta:set_string("sign_name", fields.name)
 	local res,err_msg = signs_bot.check_commands(pos, fields.cmnd)
 	meta:set_int("err_code", res and 0 or 1) -- zero means OK
@@ -172,7 +180,7 @@ minetest.register_node("signs_bot:sign_cmnd", {
 	sunlight_propagates = true,
 	is_ground_content = false,
 	drop = "",
-	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, wood = 1, sign_bot_sign = 1},
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, sign_bot_sign = 1},
 	sounds = default.node_sound_wood_defaults(),
 })
 
