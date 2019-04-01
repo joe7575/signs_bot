@@ -75,14 +75,6 @@ local function check_cmnd_block(pos, mem, meta)
 	return false
 end
 
-local function trigger_sensor(pos, node)
-	local meta = M(pos)
-	local dest_pos = meta:get_string("dest_pos")
-	local dest_idx = meta:get_int("dest_idx")
-	if dest_pos ~= "" and dest_idx ~= 0 then
-		minetest.registered_nodes[node.name].switch_sign_changer(minetest.string_to_pos(dest_pos), dest_idx)
-	end
-end
 
 local function activate_sensor(pos, param2)
 	local pos1 = lib.next_pos(pos, param2)
@@ -91,7 +83,7 @@ local function activate_sensor(pos, param2)
 		node.name = "signs_bot:bot_sensor_on"
 		minetest.swap_node(pos1, node)
 		minetest.registered_nodes[node.name].after_place_node(pos1)
-		trigger_sensor(pos1, node)
+		signs_bot.lib.swap_bot_control_unit(pos1)
 	end
 end
 

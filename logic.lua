@@ -8,7 +8,7 @@
 	LGPLv2.1+
 	See LICENSE.txt for more information
 	
-	Signs Bot: Logic Nodes
+	Signs Bot: Logic nodes for Bot Control
 
 ]]--
 
@@ -39,19 +39,23 @@ local formspec = "size[8,7]"..
 -- Get one sign from the robot signs inventory
 local function get_inv_sign(pos, slot)
 	local inv = minetest.get_inventory({type="node", pos=pos})
-	local stack = inv:get_stack("sign", slot)
-	local taken = stack:take_item(1)
-	inv:set_stack("sign", slot, stack)
-	return taken
+	if inv then
+		local stack = inv:get_stack("sign", slot)
+		local taken = stack:take_item(1)
+		inv:set_stack("sign", slot, stack)
+		return taken
+	end
 end
 
 local function put_inv_sign(pos, slot, sign)
 	local inv = minetest.get_inventory({type="node", pos=pos})
-	inv:set_stack("sign", slot, sign)
+	if inv then
+		inv:set_stack("sign", slot, sign)
+	end
 end
 
 
-local function switch_sign_changer(pos, new_idx)
+function signs_bot.switch_sign_changer(pos, new_idx)
 	-- swap changer
 	local node = lib.get_node_lvm(pos)
 	local pos1 = lib.next_pos(pos, (node.param2 + 1) % 4)
@@ -74,7 +78,7 @@ end
 local function swap_node(pos, node)
 	local slot = tonumber(string.sub(node.name, 18))
 	local new_idx = (slot % 4) + 1
-	switch_sign_changer(pos, new_idx)
+	signs_bot.switch_sign_changer(pos, new_idx)
 end
 
 local function allow_metadata_inventory()
@@ -84,7 +88,8 @@ end
 for idx = 1,4 do
 	local not_in_inv = idx == 1 and 0 or 1
 	minetest.register_node("signs_bot:changer"..idx, {
-		description = "Sign Changer",
+		description = I("Bot Control Unit"),
+		inventory_image = "signs_bot_ctrl_unit_inv.png",
 		drawtype = "nodebox",
 		node_box = {
 			type = "fixed",
@@ -94,12 +99,12 @@ for idx = 1,4 do
 		},
 		tiles = {
 			-- up, down, right, left, back, front
-			"signs_bot_changer.png^signs_bot_changer"..idx..".png",
-			"signs_bot_changer.png^signs_bot_changer"..idx..".png",
-			"signs_bot_changer.png^signs_bot_changer"..idx..".png^[transformFXR90",
-			"signs_bot_changer.png^signs_bot_changer"..idx..".png",
-			"signs_bot_changer.png^signs_bot_changer"..idx..".png",
-			"signs_bot_changer.png^signs_bot_changer"..idx..".png",
+			"signs_bot_sensor3.png^signs_bot_changer"..idx..".png",
+			"signs_bot_sensor3.png",
+			"signs_bot_sensor3.png^[transformFXR90",
+			"signs_bot_sensor3.png",
+			"signs_bot_sensor3.png",
+			"signs_bot_sensor3.png",
 		},
 		on_construct = function(pos)
 			local meta = minetest.get_meta(pos)
@@ -125,9 +130,13 @@ for idx = 1,4 do
 	})
 end
 
+local function update_infotext(pos, dest_pos, dest_idx)
+	M(pos):set_string("infotext", I("Bot Sensor: Connected with ")..dest_pos.." / "..dest_idx)
+end	
 
 minetest.register_node("signs_bot:bot_sensor", {
-	description = "Bot Sensor",
+	description = I("Bot Sensor"),
+	inventory_image = "signs_bot_sensor_bot_inv.png",
 	drawtype = "nodebox",
 	node_box = {
 		type = "fixed",
@@ -137,29 +146,29 @@ minetest.register_node("signs_bot:bot_sensor", {
 	},
 	tiles = {
 		-- up, down, right, left, back, front
-		"signs_bot_changer.png^signs_bot_sensor.png",
-		"signs_bot_changer.png^signs_bot_sensor.png",
-		"signs_bot_changer.png^signs_bot_sensor.png^[transformFXR90",
-		"signs_bot_changer.png^signs_bot_sensor.png",
-		"signs_bot_changer.png^signs_bot_sensor.png",
-		"signs_bot_changer.png^signs_bot_sensor.png",
+		"signs_bot_sensor2.png^signs_bot_sensor_bot.png",
+		"signs_bot_sensor2.png",
+		"signs_bot_sensor2.png^[transformFXR90",
+		"signs_bot_sensor2.png",
+		"signs_bot_sensor2.png",
+		"signs_bot_sensor2.png",
 	},
 	
 	after_place_node = function(pos, placer)
 		local meta = minetest.get_meta(pos)
-		meta:set_string("infotext", "Bot Sensor: Not connected")
+		meta:set_string("infotext", I("Bot Sensor: Not connected"))
 	end,
 	
-	switch_sign_changer = switch_sign_changer,
+	update_infotext = update_infotext,
 	on_rotate = screwdriver.disallow,
 	paramtype2 = "facedir",
 	is_ground_content = false,
-	groups = {cracky = 1},
+	groups = {sign_bot_sensor = 1, cracky = 1},
 	sounds = default.node_sound_metal_defaults(),
 })
 
 minetest.register_node("signs_bot:bot_sensor_on", {
-	description = "Bot Sensor",
+	description = I("Bot Sensor"),
 	drawtype = "nodebox",
 	node_box = {
 		type = "fixed",
@@ -169,12 +178,12 @@ minetest.register_node("signs_bot:bot_sensor_on", {
 	},
 	tiles = {
 		-- up, down, right, left, back, front
-		"signs_bot_sensor.png^signs_bot_sensor_on.png",
-		"signs_bot_sensor.png",
-		"signs_bot_sensor.png^[transformFXR90",
-		"signs_bot_sensor.png",
-		"signs_bot_sensor.png",
-		"signs_bot_sensor.png",
+		"signs_bot_sensor2.png^signs_bot_sensor_bot_on.png",
+		"signs_bot_sensor2.png",
+		"signs_bot_sensor2.png^[transformFXR90",
+		"signs_bot_sensor2.png",
+		"signs_bot_sensor2.png",
+		"signs_bot_sensor2.png",
 	},
 	
 	after_place_node = function(pos)
@@ -188,12 +197,13 @@ minetest.register_node("signs_bot:bot_sensor_on", {
 		return false
 	end,
 	
-	switch_sign_changer = switch_sign_changer,
+	update_infotext = update_infotext,
+	
 	on_rotate = screwdriver.disallow,
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	diggable = false,
-	groups = {not_in_creative_inventory = 1},
+	groups = {sign_bot_sensor = 1, not_in_creative_inventory = 1},
 	sounds = default.node_sound_metal_defaults(),
 })
 
@@ -202,7 +212,7 @@ local function get_current_data(pointed_thing)
 	local node = lib.get_node_lvm(pos)
 	if string.sub(node.name, 1, 17) == "signs_bot:changer" then
 		return pos, "changer"
-	elseif node.name == "signs_bot:bot_sensor" then
+	elseif minetest.get_item_group(node.name, "sign_bot_sensor") == 1 then
 		return pos, "sensor"
 	end
 end
@@ -233,7 +243,8 @@ local function pairing(changer_pos, sensor_pos)
 	local meta = M(sensor_pos)
 	meta:set_string("dest_pos", dest_pos)
 	meta:set_int("dest_idx", tonumber(dest_idx))
-	meta:set_string("infotext", "Bot Sensor: Connected with "..dest_pos.." / "..dest_idx)
+	local node = lib.get_node_lvm(sensor_pos)
+	minetest.registered_nodes[node.name].update_infotext(sensor_pos, dest_pos, dest_idx)
 end
 
 local function use_tool(itemstack, placer, pointed_thing)
@@ -262,7 +273,7 @@ end
 			
 
 minetest.register_node("signs_bot:connector", {
-	description = "Sensor Connector Tool",
+	description = I("Sensor Connection Tool"),
 	inventory_image = "signs_bot_tool.png",
 	wield_image = "signs_bot_tool.png",
 	groups = {cracky=1, book=1},

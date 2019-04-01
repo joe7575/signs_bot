@@ -50,6 +50,36 @@ local function get_own_inv(pos, take)
 	return minetest.get_inventory({type="node", pos=pos}), "main"
 end
 
+-- Get the given number of items from the inv. The position within the list
+-- is random so that different item stacks will be considered.
+-- Returns nil if ItemList is empty.
+local function get_items(inv, listname, num)
+	if inv:is_empty(listname) then
+		return nil
+	end
+	local size = inv:get_size(listname)
+	local startpos = math.random(1, size)
+	for idx = startpos, startpos+size do
+		idx = (idx % size) + 1
+		local items = inv:get_stack(listname, idx)
+		if items:get_count() > 0 then
+			local taken = items:take_item(num)
+			inv:set_stack(listname, idx, items)
+			return taken
+		end
+	end
+	return nil
+end
+
+-- Put the given stack into the given ItemList.
+-- Function returns false if ItemList is full.
+local function put_items(inv, listname, stack)
+	if inv:room_for_item(listname, stack) then
+		inv:add_item(listname, stack)
+		return true
+	end
+	return false
+end
 
 --
 -- Move from/to inventories
@@ -64,7 +94,7 @@ function signs_bot.robot_take(base_pos, robot_pos, param2, num, slot)
 			--minetest.global_exists("node_io")
 			local src_inv, src_list = get_other_inv(pos1, true)
 			local dst_inv, dst_list = get_own_inv(base_pos)
-			local taken = lib.get_inv_items(src_inv, src_list, slot, num)
+			local taken = get_items(src_inv, src_list, num)
 			if taken then
 				if not lib.put_inv_items(dst_inv, dst_list, slot, taken) then
 					lib.drop_items(robot_pos, taken)
@@ -85,7 +115,7 @@ function signs_bot.robot_add(base_pos, robot_pos, param2, num, slot, is_fuel)
 			local dst_inv, dst_list = get_other_inv(pos1, false, is_fuel)
 			local taken = lib.get_inv_items(src_inv, src_list, slot, num)
 			if taken then
-				if not lib.put_inv_items(dst_inv, dst_list, slot, taken) then
+				if not put_items(dst_inv, dst_list, taken) then
 					lib.drop_items(robot_pos, taken)
 				end
 			end
@@ -117,6 +147,7 @@ function signs_bot.place_item(base_pos, robot_pos, param2, slot, dir, level)
 				minetest.set_node(pos1, {name=name, param2=param2})
 			else
 				minetest.set_node(pos1, {name=name, param2=p2})
+				minetest.check_single_for_falling(pos1)
 			end
 		end
 	end

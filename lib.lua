@@ -117,9 +117,11 @@ end
 function signs_bot.lib.get_inv_items(src_inv, src_list, slot, num)
 	for idx = (slot or 1),src_inv:get_size(src_list) do
 		local stack = src_inv:get_stack(src_list, idx)
-		local taken = stack:take_item(num or 1)
-		src_inv:set_stack(src_list, slot, stack)
-		return taken
+		if stack:get_count() > 0 then
+			local taken = stack:take_item(num or 1)
+			src_inv:set_stack(src_list, idx, stack)
+			return taken
+		end
 	end
 end	
 
@@ -178,3 +180,11 @@ function signs_bot.lib.dig_sign(pos, node)
 	end
 end
 
+function signs_bot.lib.swap_bot_control_unit(sensor_pos)
+	local meta = M(sensor_pos)
+	local dest_pos = meta:get_string("dest_pos")
+	local dest_idx = meta:get_int("dest_idx")
+	if dest_pos ~= "" and dest_idx ~= 0 then
+		signs_bot.switch_sign_changer(minetest.string_to_pos(dest_pos), dest_idx)
+	end
+end
