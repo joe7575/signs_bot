@@ -84,6 +84,25 @@ function signs_bot.stop_robot(base_pos, mem)
 	signs_bot.remove_robot(mem.robot_pos)
 end
 
+local function signs_bot_get_signal(pos, node)
+	local mem = tubelib2.get_mem(pos)
+	if mem.running then
+		return "on"
+	else
+		return "off"
+	end
+end
+
+-- To be called from sensors
+local function signs_bot_on_signal(pos, node, signal)
+	if signal == "on" then
+		start_robot(pos)
+	elseif signal == "off" then
+		signs_bot.stop_robot(pos, tubelib2.get_mem(pos))
+	end
+end
+
+
 local function node_timer(pos, elapsed)
 	local mem = tubelib2.get_mem(pos)
 	--local t = minetest.get_us_time()
@@ -182,6 +201,8 @@ minetest.register_node("signs_bot:box", {
 		signs_bot.infotext(pos, I("stopped"))
 	end,
 
+	signs_bot_get_signal = signs_bot_get_signal,
+	signs_bot_on_signal = signs_bot_on_signal,
 	on_receive_fields = on_receive_fields,
 	allow_metadata_inventory_put = allow_metadata_inventory_put,
 	allow_metadata_inventory_take = allow_metadata_inventory_take,

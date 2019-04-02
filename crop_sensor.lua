@@ -8,7 +8,7 @@
 	LGPLv2.1+
 	See LICENSE.txt for more information
 	
-	Node Sensor
+	Crop Sensor
 
 ]]--
 
@@ -25,8 +25,8 @@ local lib = signs_bot.lib
 
 local CYCLE_TIME = 2
 
-local function update_infotext(pos, dest_pos, cmnd)
-	M(pos):set_string("infotext", I("Node Sensor: Connected with ")..S(dest_pos).." / "..cmnd)
+local function update_infotext(pos, dest_pos, dest_idx)
+	M(pos):set_string("infotext", I("Crop Sensor: Connected with ")..S(dest_pos).." / "..dest_idx)
 end	
 
 local function swap_node(pos, name)
@@ -41,18 +41,18 @@ end
 local function node_timer(pos)
 	local pos1 = lib.next_pos(pos, M(pos):get_int("param2"))
 	local node = minetest.get_node_or_nil(pos1)
-	if node and node.name ~= "air" then
+	if node and signs_bot.FarmingNodes[node.name] then
 		signs_bot.send_signal(pos)
-		swap_node(pos, "signs_bot:node_sensor_on")
+		swap_node(pos, "signs_bot:crop_sensor_on")
 	else
-		swap_node(pos, "signs_bot:node_sensor")
+		swap_node(pos, "signs_bot:crop_sensor")
 	end
 	return true
 end
 
-minetest.register_node("signs_bot:node_sensor", {
-	description = I("Node Sensor"),
-	inventory_image = "signs_bot_sensor_node_inv.png",
+minetest.register_node("signs_bot:crop_sensor", {
+	description = I("Crop Sensor"),
+	inventory_image = "signs_bot_sensor_crop_inv.png",
 	drawtype = "nodebox",
 	node_box = {
 		type = "fixed",
@@ -62,7 +62,7 @@ minetest.register_node("signs_bot:node_sensor", {
 	},
 	tiles = {
 		-- up, down, right, left, back, front
-		"signs_bot_sensor1.png^signs_bot_sensor_node.png",
+		"signs_bot_sensor1.png^signs_bot_sensor_crop.png",
 		"signs_bot_sensor1.png",
 		"signs_bot_sensor1.png^[transformFXR90",
 		"signs_bot_sensor1.png^[transformFXR90",
@@ -72,7 +72,7 @@ minetest.register_node("signs_bot:node_sensor", {
 	
 	after_place_node = function(pos, placer)
 		local meta = M(pos)
-		meta:set_string("infotext", "Node Sensor: Not connected")
+		meta:set_string("infotext", "Crop Sensor: Not connected")
 		minetest.get_node_timer(pos):start(CYCLE_TIME)
 		local node = minetest.get_node(pos)
 		meta:set_int("param2", (node.param2 + 2) % 4)
@@ -89,8 +89,8 @@ minetest.register_node("signs_bot:node_sensor", {
 	sounds = default.node_sound_metal_defaults(),
 })
 
-minetest.register_node("signs_bot:node_sensor_on", {
-	description = I("Node Sensor"),
+minetest.register_node("signs_bot:crop_sensor_on", {
+	description = I("Crop Sensor"),
 	drawtype = "nodebox",
 	node_box = {
 		type = "fixed",
@@ -100,7 +100,7 @@ minetest.register_node("signs_bot:node_sensor_on", {
 	},
 	tiles = {
 		-- up, down, right, left, back, front
-		"signs_bot_sensor1.png^signs_bot_sensor_node_on.png",
+		"signs_bot_sensor1.png^signs_bot_sensor_crop_on.png",
 		"signs_bot_sensor1.png",
 		"signs_bot_sensor1.png^[transformFXR90",
 		"signs_bot_sensor1.png^[transformFXR90",
@@ -121,7 +121,7 @@ minetest.register_node("signs_bot:node_sensor_on", {
 })
 
 minetest.register_craft({
-	output = "signs_bot:node_sensor",
+	output = "signs_bot:crop_sensor",
 	recipe = {
 		{"", "", ""},
 		{"dye:black", "group:stone", "dye:yellow"},
@@ -131,8 +131,8 @@ minetest.register_craft({
 
 minetest.register_lbm({
 	label = "[signs_bot] Restart timer",
-	name = "signs_bot:node_sensor_restart",
-	nodenames = {"signs_bot:node_sensor", "signs_bot:node_sensor_on"},
+	name = "signs_bot:crop_sensor_restart",
+	nodenames = {"signs_bot:crop_sensor", "signs_bot:crop_sensor_on"},
 	run_at_every_load = true,
 	action = function(pos, node)
 		minetest.get_node_timer(pos):start(CYCLE_TIME)

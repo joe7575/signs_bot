@@ -83,7 +83,6 @@ local function activate_sensor(pos, param2)
 		node.name = "signs_bot:bot_sensor_on"
 		minetest.swap_node(pos1, node)
 		minetest.registered_nodes[node.name].after_place_node(pos1)
-		signs_bot.lib.swap_bot_control_unit(pos1)
 	end
 end
 

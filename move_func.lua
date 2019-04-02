@@ -8,7 +8,7 @@
 	LGPLv2.1+
 	See LICENSE.txt for more information
 	
-	Signs Bot: Move functions
+	Signs Bot move functions
 
 ]]--
 

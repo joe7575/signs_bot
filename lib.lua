@@ -179,12 +179,3 @@ function signs_bot.lib.dig_sign(pos, node)
 		return sign
 	end
 end
-
-function signs_bot.lib.swap_bot_control_unit(sensor_pos)
-	local meta = M(sensor_pos)
-	local dest_pos = meta:get_string("dest_pos")
-	local dest_idx = meta:get_int("dest_idx")
-	if dest_pos ~= "" and dest_idx ~= 0 then
-		signs_bot.switch_sign_changer(minetest.string_to_pos(dest_pos), dest_idx)
-	end
-end
