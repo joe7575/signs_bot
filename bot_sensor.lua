@@ -85,6 +85,7 @@ minetest.register_node("signs_bot:bot_sensor_on", {
 	after_place_node = function(pos)
 		minetest.get_node_timer(pos):start(1)
 		signs_bot.send_signal(pos)
+		signs_bot.lib.activate_extender_nodes(pos, true)
 	end,
 		
 	on_timer = function(pos)

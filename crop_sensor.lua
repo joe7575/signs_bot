@@ -32,18 +32,21 @@ end
 local function swap_node(pos, name)
 	local node = minetest.get_node(pos)
 	if node.name == name then
-		return
+		return false
 	end
 	node.name = name
 	minetest.swap_node(pos, node)
+	return true
 end
 	
 local function node_timer(pos)
 	local pos1 = lib.next_pos(pos, M(pos):get_int("param2"))
 	local node = minetest.get_node_or_nil(pos1)
-	if node and signs_bot.FarmingNodes[node.name] then
-		signs_bot.send_signal(pos)
-		swap_node(pos, "signs_bot:crop_sensor_on")
+	if node and signs_bot.FarmingCrop[node.name] then
+		if swap_node(pos, "signs_bot:crop_sensor_on") then
+			signs_bot.send_signal(pos)
+			signs_bot.lib.activate_extender_nodes(pos, true)
+		end
 	else
 		swap_node(pos, "signs_bot:crop_sensor")
 	end

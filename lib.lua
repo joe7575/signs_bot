@@ -179,3 +179,28 @@ function signs_bot.lib.dig_sign(pos, node)
 		return sign
 	end
 end
+
+local function activate_extender_node(pos)
+	local node = get_node_lvm(pos)
+	if node.name == "signs_bot:sensor_extender" then
+		node.name = "signs_bot:sensor_extender_on"
+		minetest.swap_node(pos, node)
+		minetest.registered_nodes["signs_bot:sensor_extender_on"].after_place_node(pos)
+	end
+end
+
+local NestedCounter = 0
+function signs_bot.lib.activate_extender_nodes(pos, is_sensor)
+	if is_sensor then 
+		NestedCounter = 0 
+	else
+		NestedCounter = NestedCounter + 1
+		if NestedCounter >= 5 then
+			return
+		end
+	end
+	activate_extender_node({x=pos.x-1, y=pos.y, z=pos.z})
+	activate_extender_node({x=pos.x+1, y=pos.y, z=pos.z})
+	activate_extender_node({x=pos.x, y=pos.y, z=pos.z-1})
+	activate_extender_node({x=pos.x, y=pos.y, z=pos.z+1})
+end

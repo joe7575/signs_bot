@@ -68,7 +68,8 @@ signs_bot.register_botcommand("drop_items", {
 		num = tonumber(num or 1)
 		slot = tonumber(slot)
 		local pos = lib.dest_pos(mem.robot_pos, mem.robot_param2, {0})
-		local items = lib.get_inv_items("", "main", slot, num)
+		local inv = minetest.get_inventory({type="node", pos=base_pos})
+		local items = lib.get_inv_items(inv, "main", slot, num)
 		minetest.add_item(pos, items)
 		return true
 	end,
