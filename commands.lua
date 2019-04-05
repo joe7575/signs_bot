@@ -104,6 +104,24 @@ local function no_sign_around(mem)
 	return true, false
 end
 
+
+local function move(base_pos, mem)
+	local no_sign, has_sensor = no_sign_around(mem)
+	if no_sign then
+		local new_pos = signs_bot.move_robot(mem.robot_pos, mem.robot_param2)
+		if new_pos then  -- not blocked?
+			mem.robot_pos = new_pos
+			if has_sensor then
+				activate_sensor(mem.robot_pos, (mem.robot_param2 + 1) % 4)
+				activate_sensor(mem.robot_pos, (mem.robot_param2 + 3) % 4)
+			end
+		end
+		mem.steps = mem.steps - 1
+	else
+		mem.steps = nil
+	end
+end	
+
 signs_bot.register_botcommand("move", {
 	mod = "core",
 	params = "<steps>",	
@@ -113,25 +131,14 @@ signs_bot.register_botcommand("move", {
 		return steps ~= nil and steps > 0 and steps < 100
 	end,
 	cmnd = function(base_pos, mem, steps)
-		steps = tonumber(steps or 1)
-		local no_sign, has_sensor = no_sign_around(mem)
-		if no_sign then
-			local new_pos = signs_bot.move_robot(mem.robot_pos, mem.robot_param2)
-			if new_pos then  -- not blocked?
-				mem.robot_pos = new_pos
-				if has_sensor then
-					activate_sensor(mem.robot_pos, (mem.robot_param2 + 1) % 4)
-					activate_sensor(mem.robot_pos, (mem.robot_param2 + 3) % 4)
-				end
-			end
-			-- more than one move step?
-			if steps and steps > 1 then
-				steps = steps - 1
-				-- add to the command table again
-				table.insert(mem.lCmnd, 1, "move "..steps)
-			end
+		if not mem.steps then
+			mem.steps = tonumber(steps or 1)
 		end
-		return true
+		move(base_pos, mem)
+		if mem.steps == 0 then
+			mem.steps = nil
+			return true
+		end
 	end,
 })
 
@@ -199,14 +206,14 @@ signs_bot.register_botcommand("pause", {
 		return sec and sec > 0 and sec < 10000
 	end,
 	cmnd = function(base_pos, mem, sec)
-		-- more than one second?
-		sec = tonumber(sec or 1)
-		if sec and sec > 1 then
-			sec = sec - 1
-			-- add to the command table again
-			table.insert(mem.lCmnd, 1, "pause "..sec)
+		if not mem.steps then
+			mem.steps = tonumber(sec or 1)
 		end
-		return true
+		mem.steps = mem.steps - 1
+		if mem.steps == 0 then
+			mem.steps = nil
+			return true
+		end
 	end,
 })
 	
@@ -521,13 +528,12 @@ signs_bot.register_botcommand("trash_sign", {
 	end,
 })
 	
-signs_bot.register_botcommand("stop_robot", {
+signs_bot.register_botcommand("stop", {
 	mod = "core",
 	params = "",	
 	description = I("Stop the robot."),
 	cmnd = function(base_pos, mem, slot)
-		mem.lCmnd = {"stop_robot"}
-		return true
+		return nil
 	end,
 })
 
@@ -555,25 +561,29 @@ function signs_bot.run_next_command(base_pos, mem)
 	local res = nil
 	local sts
 	while res == nil do
-		local line = table.remove(mem.lCmnd, 1)
+		local line = mem.lCmnd[1]
 		if line then
 			local cmnd, param1, param2 = unpack(string.split(line, " "))
 			if cmnd ~= "--" and tCommands[cmnd] then -- Valid command?
-				--sts,res = true, tCommands[cmnd].cmnd(base_pos, mem, param1, param2)
-				sts, res = pcall(tCommands[cmnd].cmnd, base_pos, mem, param1, param2)
+				sts,res = true, tCommands[cmnd].cmnd(base_pos, mem, param1, param2)
+				--sts, res = pcall(tCommands[cmnd].cmnd, base_pos, mem, param1, param2)
 				if not sts then
 					minetest.sound_play('signs_bot_error', {pos = base_pos})
 					minetest.sound_play('signs_bot_error', {pos = mem.robot_pos})
 					signs_bot.infotext(base_pos, I("error"))
-					return false
+					return false  -- finished
+				elseif res == nil then -- need more time slices?
+					return true  -- busy
 				end
+			else
+				res = true
 			end
+			table.remove(mem.lCmnd, 1)
 		else
 			res = tCommands["move"].cmnd(base_pos, mem)
 		end
-
 	end
-	return res
+	return res -- true if ok, false if error or finished
 end	
 
 function signs_bot.get_help_text()

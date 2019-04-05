@@ -74,20 +74,17 @@ local function formspec2()
 	"button[3.5,7.5;2,1;copy;"..I("Copy").."]"
 end
 
-local function trim(s)
-  return (s:gsub("^%s*(.-)%s*$", "%1"))
-end
-
 local function trim_text(text)
 	local tbl = {}
+	text = string.gsub(text, "\r", "\n")
 	for idx,line in ipairs(string.split(text, "\n", true)) do
-		tbl[#tbl+1]	= trim(line)
+		tbl[#tbl+1] = line:trim()
 	end
 	return table.concat(tbl, "\n")
 end
 
 local function append_line(pos, meta, line)
-	line = trim(line or "") 
+	line = line and line:trim() or ""
 	local text = meta:get_string("signs_bot_cmnd").."\n"..line
 	meta:set_string("signs_bot_cmnd", text)
 	local res,err_msg = signs_bot.check_commands(pos, text)

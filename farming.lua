@@ -25,7 +25,6 @@ local lib = signs_bot.lib
 local function planting(base_pos, pos, stack)
 	if lib.not_protected(base_pos, pos) and lib.is_air_like(pos) then
 		local item = signs_bot.FarmingSeed[stack:get_name()]
-		print("planting", stack:get_name(), dump(signs_bot.FarmingSeed[stack:get_name()]))
 		if item and item.seed then
 			minetest.set_node(pos, {name = item.seed, paramtype2 = "wallmounted", param2 = 1})
 			if item.t1 ~= nil then 

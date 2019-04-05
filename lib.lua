@@ -35,14 +35,15 @@ function signs_bot.lib.next_pos(pos, param2)
 end
 
 -- Determine the destination position based on the robot position, 
--- the robot param2, and a route table like : [0,0,3]
+-- the robot param2, and a route table like : {0,0,3}
 -- 0 = forward, 1 = right, 2 = backward, 3 = left
 function signs_bot.lib.dest_pos(pos, param2, route)
+	local p2
 	for _,dir in ipairs(route) do
-		param2 = (param2 + dir) % 4
-		pos = vector.add(pos, Face2Dir[param2])
+		p2 = (param2 + dir) % 4
+		pos = vector.add(pos, Face2Dir[p2])
 	end
-	return pos, param2
+	return pos, p2
 end
 
 function signs_bot.lib.get_node_lvm(pos)
@@ -84,7 +85,7 @@ end
 
 -- Has to be checked before a node is placed
 function signs_bot.lib.is_air_like(pos)
-	local node = minetest.get_node(pos)
+	local node = get_node_lvm(pos)
 	if minetest.registered_nodes[node.name] and minetest.registered_nodes[node.name].buildable_to then
 		return true
 	end

@@ -73,7 +73,7 @@ local fc = signs_bot.register_farming_crop
 
 if farming.mod ~= "redo" then
 	fs("farming:seed_wheat", "farming:wheat_1")
-	fc("farming:wheat_8",  "farming:wheat", "farming:seed_wheat")
+	fc("farming:wheat_8", "farming:wheat", "farming:seed_wheat")
 	fs("farming:seed_cotton", "farming:cotton_1")
 	fc("farming:cotton_8", "farming:cotton", "farming:seed_cotton")
 end
@@ -81,11 +81,15 @@ end
 -------------------------------------------------------------------------------
 -- Farming Redo
 -------------------------------------------------------------------------------
---if farming.mod == "redo" then
---	fn("farming:wheat_8",     "farming:wheat",          "farming:wheat_1")
---	fn("farming:cotton_8",    "farming:cotton",         "farming:cotton_1")
---	fn("farming:carrot_8",    "farming:carrot 2",       "farming:carrot_1")
---	fn("farming:potato_4",    "farming:potato 3",       "farming:potato_1")
+if farming.mod == "redo" then
+	fs("farming:seed_wheat", "farming:wheat_1")
+	fc("farming:wheat_8", "farming:wheat", "farming:seed_wheat")
+	fs("farming:seed_cotton", "farming:cotton_1")
+	fc("farming:cotton_8", "farming:cotton", "seed_cotton")
+	fs("farming:carrot", "farming:carrot")
+	fc("farming:carrot_8", "farming:carrot 2")
+	fs("farming:potato", "farming:potato_1")
+	fc("farming:potato_4", "farming:potato 3")
 --	fn("farming:tomato_8",    "farming:tomato 3",       "farming:tomato_1")
 --	fn("farming:cucumber_4",  "farming:cucumber 2",     "farming:cucumber_1")
 --	fn("farming:corn_8",      "farming:corn 2",         "farming:corn_1")
@@ -103,7 +107,7 @@ end
 --	fn("farming:oat_8",       "farming:oat",            "farming:oat_1")
 --	fn("farming:rye_8",       "farming:rye",            "farming:rye_1")
 --	fn("farming:rice_8",      "farming:rice",           "farming:rice_1")
---end
+end
 
 -------------------------------------------------------------------------------
 -- Ethereal Farming

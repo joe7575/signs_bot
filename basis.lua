@@ -52,12 +52,9 @@ function signs_bot.infotext(pos, state)
 end
 
 local function reset_robot(pos, mem)
---	if mem.robot_pos then
---		minetest.after(5, minetest.remove_node, table.copy(mem.robot_pos))
---	end
-	
 	mem.robot_param2 = (minetest.get_node(pos).param2 + 1) % 4
 	mem.robot_pos = lib.next_pos(pos, mem.robot_param2, 1)
+	mem.steps = nil
 	local pos_below = {x=mem.robot_pos.x, y=mem.robot_pos.y-1, z=mem.robot_pos.z}
 	signs_bot.place_robot(mem.robot_pos, pos_below, mem.robot_param2)	
 end
@@ -65,7 +62,7 @@ end
 local function start_robot(base_pos)
 	local mem = tubelib2.get_mem(base_pos)
 	local meta = minetest.get_meta(base_pos)
-	
+	mem.lCmnd = nil
 	mem.running = true
 	meta:set_string("formspec", formspec(base_pos, mem))
 	signs_bot.infotext(base_pos, I("running"))
@@ -77,7 +74,6 @@ end
 function signs_bot.stop_robot(base_pos, mem)
 	local meta = minetest.get_meta(base_pos)
 	mem.running = false
-	mem.lCmnd = nil
 	minetest.get_node_timer(base_pos):stop()
 	signs_bot.infotext(base_pos, I("stopped"))
 	meta:set_string("formspec", formspec(base_pos, mem))

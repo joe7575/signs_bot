@@ -66,6 +66,10 @@ local function register_sign(def)
 	})
 end
 
+signs_bot.register_sign = register_sign
+
+
+
 register_sign({
 	name = "sign_right", 
 	description = I('Sign "turn right"'), 
