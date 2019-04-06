@@ -23,7 +23,7 @@ local I,_ = dofile(MP.."/intllib.lua")
 
 local lib = signs_bot.lib
 
-local CYCLE_TIME = 2
+local CYCLE_TIME = 4
 
 local function update_infotext(pos, dest_pos, cmnd)
 	M(pos):set_string("infotext", I("Node Sensor: Connected with ")..S(dest_pos).." / "..cmnd)
