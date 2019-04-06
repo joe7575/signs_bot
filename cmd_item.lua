@@ -119,7 +119,7 @@ function signs_bot.robot_add(base_pos, robot_pos, param2, num, slot, is_fuel)
 end
 
 signs_bot.register_botcommand("take_item", {
-	mod = "core",
+	mod = "item",
 	params = "<num> <slot>",	
 	description = I("Take <num> items from a chest like node\nand put it into the item inventory.\n"..
 		"<slot> is the inventory slot (1..8)"),
@@ -143,7 +143,7 @@ signs_bot.register_botcommand("take_item", {
 })
 	
 signs_bot.register_botcommand("add_item", {
-	mod = "core",
+	mod = "item",
 	params = "<num> <slot>",	
 	description = I("Add <num> items to a chest like node\ntaken from the item inventory.\n"..
 		"<slot> is the inventory slot (1..8)"),
@@ -167,7 +167,7 @@ signs_bot.register_botcommand("add_item", {
 })
 	
 signs_bot.register_botcommand("add_fuel", {
-	mod = "core",
+	mod = "item",
 	params = "<num> <slot>",	
 	description = I("Add <num> fuel items to a furnace like node\ntaken from the item inventory.\n"..
 		"<slot> is the inventory slot (1..8)"),
@@ -191,7 +191,7 @@ signs_bot.register_botcommand("add_fuel", {
 })
 
 signs_bot.register_botcommand("pickup_items", {
-	mod = "core",
+	mod = "item",
 	params = "<slot>",	
 	description = I("Pick up all objects\n"..
 		"in a 3x3 field.\n"..
@@ -218,7 +218,7 @@ signs_bot.register_botcommand("pickup_items", {
 })
 	
 signs_bot.register_botcommand("drop_items", {
-	mod = "core",
+	mod = "item",
 	params = "<num> <slot>",	
 	description = I("Drop items in front of the bot.\n"..
 		"<slot> is the inventory slot (1..8)"),

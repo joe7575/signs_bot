@@ -29,7 +29,7 @@ local tPos2Dir = {l = "l", r = "r", L = "l", R = "l", f = "f", F = "f"}
 local tCommands = {}
 local SortedKeys = {}
 local SortedMods = {}
-
+local tMods = {}
 --
 -- Command register API function
 --
@@ -40,6 +40,7 @@ function signs_bot.register_botcommand(name, def)
 	if not SortedKeys[def.mod] then
 		SortedKeys[def.mod] = {}
 		SortedMods[#SortedMods+1] = def.mod
+		tMods[#tMods+1] = def.mod
 	end
 	local idx = #SortedKeys[def.mod] + 1
 	SortedKeys[def.mod][idx] = name
@@ -115,7 +116,7 @@ local function move(base_pos, mem)
 end	
 
 signs_bot.register_botcommand("move", {
-	mod = "core",
+	mod = "move",
 	params = "<steps>",	
 	description = I("Move the robot 1..99 steps forward."),
 	check = function(steps)
@@ -184,17 +185,27 @@ function signs_bot.run_next_command(base_pos, mem)
 	return res -- true if ok, false if error or finished
 end	
 
-function signs_bot.get_help_text()
+function signs_bot.get_commands()
 	local tbl = {}
 	for _,mod in ipairs(SortedMods) do
+		tbl[#tbl+1] = mod..I(" commands:")
 		for _,cmnd in ipairs(SortedKeys[mod]) do
 			local item = tCommands[cmnd]
-			tbl[#tbl+1] = item.name.." "..item.params
-			local text = string.gsub(item.description, "\n", "\n  -- ")
-			tbl[#tbl+1] = "  -- "..text
+			tbl[#tbl+1] = "    "..item.name.." "..item.params
 		end
 	end
-	return table.concat(tbl, "\n")
+	return tbl
+end	
+
+function signs_bot.get_help_text(cmnd)
+	if cmnd then
+		cmnd = unpack(string.split(cmnd, " "))
+		local item = tCommands[cmnd]
+		if item then
+			return item.description
+		end
+	end
+	return I("unknown command")
 end	
 	
 	

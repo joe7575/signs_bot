@@ -35,15 +35,18 @@ Supported commands:
 
 ]])
 
-local lHelp = {}
-local sHelp = ""
-local function gen_help_text()
-	local text = HELP..signs_bot.get_help_text()
-	text = minetest.formspec_escape(text)
-	sHelp = text:gsub("\n", ", ")
-	lHelp = string.split(sHelp, ",")
-end
-minetest.after(2, gen_help_text)
+local sCmnds = ""
+local lCmnds = {}
+local tCmndIdx = {}
+
+minetest.after(2, function() 
+	for idx,cmnd in ipairs(signs_bot.get_commands()) do
+		cmnd = minetest.formspec_escape(cmnd)
+		lCmnds[#lCmnds+1] = cmnd
+		tCmndIdx[cmnd] = idx
+	end
+	sCmnds = table.concat(lCmnds, ",")
+end)
 
 
 local function formspec1(meta)
@@ -64,14 +67,15 @@ local function formspec1(meta)
 	"button[7,7.5;2,1;check;"..I("Check").."]"
 end
 
-local function formspec2()
+local function formspec2(pos, text)
 	return "size[9,8]"..
 	default.gui_bg..
 	default.gui_bg_img..
 	default.gui_slots..
 	"tabheader[0,0;tab;"..I("Commands,Help")..";2;;true]"..
-	"table[0.1,0.1;8.6,7.2;help;"..sHelp..";1]"..
-	"button[3.5,7.5;2,1;copy;"..I("Copy").."]"
+	"table[0.1,0;8.6,4;command;"..sCmnds..";"..pos.."]"..
+	"textarea[0.3,4.5;9,3.5;help;Help:;"..text.."]"..
+	"button[3,7.5;3,1;copy;"..I("Copy Cmnd").."]"
 end
 
 local function trim_text(text)
@@ -148,18 +152,23 @@ minetest.register_node("signs_bot:sign_cmnd", {
 		elseif fields.key_enter_field then
 			check_and_store(pos, meta, fields)
 		elseif fields.copy then
-			append_line(pos, meta, lHelp[meta:get_int("help_pos")])
+			append_line(pos, meta, lCmnds[meta:get_int("help_pos")])
 		elseif fields.tab == "1" then
 			meta:set_string("formspec", formspec1(meta))
 		elseif fields.tab == "2" then
 			check_and_store(pos, meta, fields)
-			meta:set_string("formspec", formspec2(meta))
-		elseif fields.help then
-			local evt = minetest.explode_table_event(fields.help)
+			local pos = meta:get_int("help_pos")
+			local cmnd = lCmnds[pos] or ""
+			meta:set_string("formspec", formspec2(pos, signs_bot.get_help_text(cmnd)))
+		elseif fields.command then
+			local evt = minetest.explode_table_event(fields.command)
 			if evt.type == "DCL" then
-				append_line(pos, meta, lHelp[tonumber(evt.row)])
+				append_line(pos, meta, lCmnds[tonumber(evt.row)])
 			elseif evt.type == "CHG" then
-				meta:set_int("help_pos", tonumber(evt.row))
+				local pos = tonumber(evt.row)
+				meta:set_int("help_pos", pos)
+				local cmnd = lCmnds[pos] or ""
+				meta:set_string("formspec", formspec2(pos, signs_bot.get_help_text(cmnd)))
 			end
 		end
 	end,
@@ -226,7 +235,7 @@ local function place_sign(base_pos, robot_pos, param2, slot)
 end
 
 signs_bot.register_botcommand("place_sign", {
-	mod = "core",
+	mod = "sign",
 	params = "<slot>",	
 	description = I("Place a sign in front of the robot\ntaken from the signs inventory\n"..
 		"<slot> is the inventory slot (1..6)"),
@@ -259,7 +268,7 @@ local function place_sign_behind(base_pos, robot_pos, param2, slot)
 end
 
 signs_bot.register_botcommand("place_sign_behind", {
-	mod = "core",
+	mod = "sign",
 	params = "<slot>",	
 	description = I("Place a sign behind the robot\ntaken from the signs inventory\n"..
 		"<slot> is the inventory slot (1..6)"),
@@ -298,7 +307,7 @@ local function dig_sign(base_pos, robot_pos, param2, slot)
 end
 
 signs_bot.register_botcommand("dig_sign", {
-	mod = "core",
+	mod = "sign",
 	params = "<slot>",	
 	description = I("Dig the sign in front of the robot\n"..
 		"and add it to the signs inventory.\n"..
@@ -331,7 +340,7 @@ local function trash_sign(base_pos, robot_pos, param2, slot)
 end
 
 signs_bot.register_botcommand("trash_sign", {
-	mod = "core",
+	mod = "sign",
 	params = "<slot>",	
 	description = I("Dig the sign in front of the robot\n"..
 		"and add the cleared sign to\nthe item iventory.\n"..

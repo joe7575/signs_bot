@@ -70,7 +70,7 @@ local function place_item(base_pos, robot_pos, param2, slot, dir, level)
 end
 
 signs_bot.register_botcommand("place_front", {
-	mod = "core",
+	mod = "place",
 	params = "<slot> <lvl>",	
 	description = I("Place an item in front of the robot\n"..
 		"<slot> is the inventory slot (1..8)\n"..
@@ -91,7 +91,7 @@ signs_bot.register_botcommand("place_front", {
 })
 	
 signs_bot.register_botcommand("place_left", {
-	mod = "core",
+	mod = "place",
 	params = "<slot> <lvl>",	
 	description = I("Place an item on the left side\n"..
 		"<slot> is the inventory slot (1..8)\n"..
@@ -112,7 +112,7 @@ signs_bot.register_botcommand("place_left", {
 })
 	
 signs_bot.register_botcommand("place_right", {
-	mod = "core",
+	mod = "place",
 	params = "<slot> <lvl>",	
 	description = I("Place an item on the right side\n"..
 		"<slot> is the inventory slot (1..8)\n"..
@@ -145,7 +145,7 @@ local function dig_item(base_pos, robot_pos, param2, slot, dir, level)
 end
 
 signs_bot.register_botcommand("dig_front", {
-	mod = "core",
+	mod = "place",
 	params = "<slot> <lvl>",	
 	description = I("Dig an item in front of the robot\n"..
 		"<slot> is the inventory slot (1..8)\n"..
@@ -166,7 +166,7 @@ signs_bot.register_botcommand("dig_front", {
 })
 
 signs_bot.register_botcommand("dig_left", {
-	mod = "core",
+	mod = "place",
 	params = "<slot> <lvl>",	
 	description = I("Dig an item on the left side\n"..
 		"<slot> is the inventory slot (1..8)\n"..
@@ -187,7 +187,7 @@ signs_bot.register_botcommand("dig_left", {
 })
 
 signs_bot.register_botcommand("dig_right", {
-	mod = "core",
+	mod = "place",
 	params = "<slot> <lvl>",	
 	description = I("Dig an item on the right side\n"..
 		"<slot> is the inventory slot (1..8)\n"..
@@ -220,7 +220,7 @@ local function rotate_item(base_pos, robot_pos, param2, dir, level, steps)
 end
 
 signs_bot.register_botcommand("rotate_item", {
-	mod = "core",
+	mod = "place",
 	params = "<lvl> <steps>",	
 	description = I("Rotate an item in front of the robot\n"..
 		"<lvl> is one of:  -1   0   +1\n"..

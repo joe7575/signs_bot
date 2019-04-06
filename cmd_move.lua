@@ -97,7 +97,7 @@ local function backward_robot(pos, param2)
 end	
 
 signs_bot.register_botcommand("backward", {
-	mod = "core",
+	mod = "move",
 	params = "",	
 	description = I("Move the robot one step back"),
 	cmnd = function(base_pos, mem)
@@ -121,7 +121,7 @@ local function turn_robot(pos, param2, dir)
 end	
 
 signs_bot.register_botcommand("turn_left", {
-	mod = "core",
+	mod = "move",
 	params = "",	
 	description = I("Turn the robot to the left"),
 	cmnd = function(base_pos, mem)
@@ -131,7 +131,7 @@ signs_bot.register_botcommand("turn_left", {
 })
 
 signs_bot.register_botcommand("turn_right", {
-	mod = "core",
+	mod = "move",
 	params = "",	
 	description = I("Turn the robot to the right"),
 	cmnd = function(base_pos, mem)
@@ -141,7 +141,7 @@ signs_bot.register_botcommand("turn_right", {
 })
 
 signs_bot.register_botcommand("turn_around", {
-	mod = "core",
+	mod = "move",
 	params = "",	
 	description = I("Turn the robot around"),
 	cmnd = function(base_pos, mem)
@@ -176,7 +176,7 @@ local function robot_up(pos, param2)
 end	
 
 signs_bot.register_botcommand("move_up", {
-	mod = "core",
+	mod = "move",
 	params = "",	
 	description = I("Move the robot upwards"),
 	cmnd = function(base_pos, mem)
@@ -210,7 +210,7 @@ local function robot_down(pos, param2)
 end	
 
 signs_bot.register_botcommand("move_down", {
-	mod = "core",
+	mod = "move",
 	params = "",	
 	description = I("Move the robot down"),
 	cmnd = function(base_pos, mem)
@@ -223,7 +223,7 @@ signs_bot.register_botcommand("move_down", {
 })
 
 signs_bot.register_botcommand("pause", {
-	mod = "core",
+	mod = "move",
 	params = "<sec>",	
 	description = I("Stop the robot for <sec> seconds\n(1..9999)"),
 	check = function(sec)
@@ -243,7 +243,7 @@ signs_bot.register_botcommand("pause", {
 })
 
 signs_bot.register_botcommand("stop", {
-	mod = "core",
+	mod = "move",
 	params = "",	
 	description = I("Stop the robot."),
 	cmnd = function(base_pos, mem, slot)
@@ -252,7 +252,7 @@ signs_bot.register_botcommand("stop", {
 })
 
 signs_bot.register_botcommand("turn_off", {
-	mod = "core",
+	mod = "move",
 	params = "",	
 	description = I("Turn the robot off\n"..
 		"and put it back in the box."),

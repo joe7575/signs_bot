@@ -56,6 +56,7 @@ local function register_sign(def)
 			local meta = minetest.get_meta(pos)
 			meta:set_string("signs_bot_cmnd", def.commands)
 			meta:set_string("formspec", formspec(def.commands))
+			meta:set_string("infotext", def.description)
 		end,
 		on_rotate = screwdriver.disallow,
 		paramtype = "light",

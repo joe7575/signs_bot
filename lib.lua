@@ -64,6 +64,8 @@ function signs_bot.lib.get_node_lvm(pos)
 	return node
 end
 
+local next_pos = signs_bot.lib.next_pos
+local dest_pos = signs_bot.lib.dest_pos
 local get_node_lvm = signs_bot.lib.get_node_lvm
 
 -- check if posA == air-like and posB == solid and no player around
@@ -205,3 +207,41 @@ function signs_bot.lib.activate_extender_nodes(pos, is_sensor)
 	activate_extender_node({x=pos.x, y=pos.y, z=pos.z-1})
 	activate_extender_node({x=pos.x, y=pos.y, z=pos.z+1})
 end
+
+--
+-- Determine the field positions
+--
+local function start_pos(robot_pos, robot_param2, x_size, lvl_offs)
+	local pos = next_pos(robot_pos, robot_param2)
+	pos = {x=pos.x, y=pos.y+lvl_offs, z=pos.z}
+	if x_size == 5 then
+		return dest_pos(pos, robot_param2, {3,3})
+	else
+		return dest_pos(pos, robot_param2, {3})
+	end
+end	
+
+--
+-- Return a table with all positions to copy
+-- 
+function signs_bot.lib.gen_position_table(robot_pos, robot_param2, x_size, z_size, lvl_offs)
+	local tbl = {}
+	if robot_pos and robot_param2 and x_size and z_size and lvl_offs then
+		local pos = start_pos(robot_pos, robot_param2, x_size, lvl_offs)
+		tbl[#tbl+1] = pos
+		z_size = math.min(z_size, 5)
+		for z = 1,z_size do
+			for x = 1,x_size-1 do
+				local dir = (z % 2) == 0 and 3 or 1
+				pos = dest_pos(pos, robot_param2, {dir})
+				tbl[#tbl+1] = pos
+			end
+			if z < z_size then
+				pos = dest_pos(pos, robot_param2, {0})
+				tbl[#tbl+1] = pos
+			end
+		end
+	end
+	return tbl
+end
+

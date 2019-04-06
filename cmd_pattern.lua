@@ -96,42 +96,6 @@ local function inv_put_item(pos, mem, name)
 	end
 end
 
---
--- Determine the field positions
---
-local function start_pos(robot_pos, robot_param2, x_size, lvl_offs)
-	local pos = lib.next_pos(robot_pos, robot_param2)
-	pos = {x=pos.x, y=pos.y+lvl_offs, z=pos.z}
-	if x_size == 5 then
-		return lib.dest_pos(pos, robot_param2, {3,3})
-	else
-		return lib.dest_pos(pos, robot_param2, {3})
-	end
-end	
-
---
--- Return a table with all positions to copy
--- 
-local function gen_position_table(robot_pos, robot_param2, x_size, z_size, lvl_offs)
-	local tbl = {}
-	local pos = start_pos(robot_pos, robot_param2, x_size, lvl_offs)
-	tbl[#tbl+1] = pos
-	z_size = math.min(z_size, 5)
-	for z = 1,z_size do
-		for x = 1,x_size-1 do
-			local dir = (z % 2) == 0 and 3 or 1
-			pos = lib.dest_pos(pos, robot_param2, {dir})
-			tbl[#tbl+1] = pos
-		end
-		if z < z_size then
-			pos = lib.dest_pos(pos, robot_param2, {0})
-			tbl[#tbl+1] = pos
-		end
-	end
-	return tbl
-end
-
-
 local function pattern_copy(base_pos, mem)
 	local src_pos = mem.src_pos_tbl[mem.steps]
 	local dst_pos = mem.dst_pos_tbl[mem.steps]
@@ -150,7 +114,7 @@ end
 
 			
 signs_bot.register_botcommand("pattern", {
-	mod = "clone",
+	mod = "copy",
 	params = "",	
 	description = I("Store pattern to be cloned."),
 	cmnd = function(base_pos, mem)
@@ -161,7 +125,7 @@ signs_bot.register_botcommand("pattern", {
 })
 
 signs_bot.register_botcommand("copy", {
-	mod = "core",
+	mod = "copy",
 	params = "<size> <lvl>",	
 	description = I("Copy the nodes from\n"..
 		"the stored pattern position\n"..
@@ -176,13 +140,14 @@ signs_bot.register_botcommand("copy", {
 		return ValidSizes[size]
 	end,
 	cmnd = function(base_pos, mem, size, lvl)
+		if not mem.pttrn_pos then return true end
 		if not mem.steps then
 			local x,z = size:match('(%d)x(%d)')
 			lvl = tonumber(lvl or 0)
 			mem.x_size = tonumber(x)
 			mem.z_size = tonumber(z)
-			mem.src_pos_tbl = gen_position_table(mem.pttrn_pos, mem.pttrn_param2, x, z, lvl)
-			mem.dst_pos_tbl = gen_position_table(mem.robot_pos, mem.robot_param2, x, z, 0)
+			mem.src_pos_tbl = signs_bot.lib.gen_position_table(mem.pttrn_pos, mem.pttrn_param2, x, z, lvl)
+			mem.dst_pos_tbl = signs_bot.lib.gen_position_table(mem.robot_pos, mem.robot_param2, x, z, 0)
 			mem.dir_offs = mem.robot_param2 - mem.pttrn_param2
 			mem.steps = 1
 		end
