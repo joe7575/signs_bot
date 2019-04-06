@@ -8,7 +8,7 @@
 	LGPLv2.1+
 	See LICENSE.txt for more information
 	
-	Signs Bot: Signs related functions
+	Bot sign commands and nodes
 
 ]]--
 
@@ -99,6 +99,7 @@ local function check_and_store(pos, meta, fields)
 	meta:set_int("err_code", res and 0 or 1) -- zero means OK
 	meta:set_string("err_msg", err_msg)
 	meta:set_string("formspec", formspec1(meta))
+	meta:set_string("infotext", meta:get_string("sign_name"))
 end
 
 minetest.register_node("signs_bot:sign_cmnd", {
@@ -207,7 +208,7 @@ local function put_inv_sign(base_pos, slot, item)
 	return false
 end
 
-function signs_bot.place_sign(base_pos, robot_pos, param2, slot)
+local function place_sign(base_pos, robot_pos, param2, slot)
 	local pos1 = lib.dest_pos(robot_pos, param2, {0})
 	if lib.not_protected(base_pos, pos1) then
 		if lib.is_air_like(pos1) then
@@ -224,7 +225,23 @@ function signs_bot.place_sign(base_pos, robot_pos, param2, slot)
 	return false
 end
 
-function signs_bot.place_sign_behind(base_pos, robot_pos, param2, slot)
+signs_bot.register_botcommand("place_sign", {
+	mod = "core",
+	params = "<slot>",	
+	description = I("Place a sign in front of the robot\ntaken from the signs inventory\n"..
+		"<slot> is the inventory slot (1..6)"),
+	check = function(slot)
+		slot = tonumber(slot or 1)
+		return slot and slot > 0 and slot < 7
+	end,
+	cmnd = function(base_pos, mem, slot)
+		slot = tonumber(slot or 1)
+		place_sign(base_pos, mem.robot_pos, mem.robot_param2, slot)
+		return true
+	end,
+})
+
+local function place_sign_behind(base_pos, robot_pos, param2, slot)
 	local pos1 = lib.dest_pos(robot_pos, param2, {2})
 	if lib.not_protected(base_pos, pos1) then
 		if lib.is_air_like(pos1) then
@@ -241,7 +258,23 @@ function signs_bot.place_sign_behind(base_pos, robot_pos, param2, slot)
 	return false
 end
 
-function signs_bot.dig_sign(base_pos, robot_pos, param2, slot)
+signs_bot.register_botcommand("place_sign_behind", {
+	mod = "core",
+	params = "<slot>",	
+	description = I("Place a sign behind the robot\ntaken from the signs inventory\n"..
+		"<slot> is the inventory slot (1..6)"),
+	check = function(slot)
+		slot = tonumber(slot or 1)
+		return slot and slot > 0 and slot < 7
+	end,
+	cmnd = function(base_pos, mem, slot)
+		slot = tonumber(slot or 1)
+		place_sign_behind(base_pos, mem.robot_pos, mem.robot_param2, slot)
+		return true
+	end,
+})
+
+local function dig_sign(base_pos, robot_pos, param2, slot)
 	local pos1 = lib.dest_pos(robot_pos, param2, {0})
 	local meta =  M(pos1)
 	local cmnd = meta:get_string("signs_bot_cmnd")
@@ -264,7 +297,24 @@ function signs_bot.dig_sign(base_pos, robot_pos, param2, slot)
 	return false
 end
 
-function signs_bot.trash_sign(base_pos, robot_pos, param2, slot)
+signs_bot.register_botcommand("dig_sign", {
+	mod = "core",
+	params = "<slot>",	
+	description = I("Dig the sign in front of the robot\n"..
+		"and add it to the signs inventory.\n"..
+		"<slot> is the inventory slot (1..6)"),
+	check = function(slot)
+		slot = tonumber(slot or 1)
+		return slot and slot > 0 and slot < 7
+	end,
+	cmnd = function(base_pos, mem, slot)
+		slot = tonumber(slot or 1)
+		dig_sign(base_pos, mem.robot_pos, mem.robot_param2, slot)
+		return true
+	end,
+})
+
+local function trash_sign(base_pos, robot_pos, param2, slot)
 	local pos1 = lib.dest_pos(robot_pos, param2, {0})
 	local cmnd = M(pos1):get_string("signs_bot_cmnd")
 	if cmnd == "" then
@@ -280,6 +330,23 @@ function signs_bot.trash_sign(base_pos, robot_pos, param2, slot)
 	return false
 end
 
+signs_bot.register_botcommand("trash_sign", {
+	mod = "core",
+	params = "<slot>",	
+	description = I("Dig the sign in front of the robot\n"..
+		"and add the cleared sign to\nthe item iventory.\n"..
+		"<slot> is the inventory slot (1..8)"),
+	check = function(slot)
+		slot = tonumber(slot or 1)
+		return slot and slot > 0 and slot < 9
+	end,
+	cmnd = function(base_pos, mem, slot)
+		slot = tonumber(slot or 1)
+		trash_sign(base_pos, mem.robot_pos, mem.robot_param2, slot)
+		return true
+	end,
+})
+	
 
 minetest.register_craft({
 	output = "signs_bot:sign_cmnd 4",

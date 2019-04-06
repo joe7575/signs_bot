@@ -80,14 +80,54 @@ local function use_tool(itemstack, placer, pointed_thing)
 	end
 end
 			
+local Param2Matrix = {
+	{0,1,2,3},  -- y+
+	{6,15,8,17},  -- z+
+	{4,13,10,19},  -- z-
+	{5,14,11,16},  -- x+
+	{7,12,9,18},  -- x-
+	{22,21,20,23},  -- y-
+}
 
+local tRotation = {}
+local Wallmounted = {[0]=3,5,4,2}
+
+for _,row in ipairs(Param2Matrix) do
+	for idx,elem in ipairs(row) do
+		local tbl = {}
+		for i = 0,3 do
+			tbl[i] = row[((i+idx-1) % 4) + 1]
+		end
+		tRotation[elem] = tbl
+	end
+end
+
+local function param2_conversion(node, offs) 
+	local ndef = minetest.registered_nodes[node.name]
+	if not ndef or not ndef.paramtype2 then	return end
+	if ndef.paramtype2 == "facedir" then
+		node.param2 = tRotation[node.param2][offs]
+	elseif ndef.paramtype2 == "wallmounted" and node.param2 > 1 then
+		node.param2 = Wallmounted[(node.param2 + offs - 2) % 4]
+	end
+end
+
+local function test(itemstack, placer, pointed_thing)
+	if pointed_thing.type == "node" then
+		local pos = pointed_thing.under
+		local node = minetest.get_node(pos)
+		param2_conversion(node, 1) 
+		minetest.swap_node(pos, node)
+	end
+end
+		
 minetest.register_node("signs_bot:connector", {
 	description = I("Sensor Connection Tool"),
 	inventory_image = "signs_bot_tool.png",
 	wield_image = "signs_bot_tool.png",
 	groups = {cracky=1, book=1},
-	on_use = use_tool,
-	on_place = use_tool,
+	on_use = test,
+	on_place = test,
 	node_placement_prediction = "",
 	stack_max = 1,
 })
@@ -99,4 +139,22 @@ minetest.register_craft({
 		{"", "basic_materials:silicon", ""},
 		{"", "", "basic_materials:plastic_strip"}
 	}
+})
+
+minetest.register_node("signs_bot:cube", {
+	description = "Cube",
+	-- up, down, right, left, back, front
+	tiles = {
+		"signs_bot_yp.png",
+		"signs_bot_ym.png",
+		"signs_bot_xp.png",
+		"signs_bot_xm.png",
+		"signs_bot_zp.png",
+		"signs_bot_zm.png",
+	},
+	is_ground_content = false,
+	paramtype2 = "facedir",
+	groups = {snappy=3,cracky=3,oddly_breakable_by_hand=3},
+	drop = "",
+	sounds = default.node_sound_glass_defaults(),
 })

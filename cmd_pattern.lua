@@ -8,7 +8,7 @@
 	LGPLv2.1+
 	See LICENSE.txt for more information
 	
-	Cloning related functions
+	Bot cloning/pattern commands, signs, and nodes
 
 ]]--
 
@@ -34,6 +34,43 @@ local ValidSizes = {
 	["5x5"] = true,
 }
 
+--
+-- Helper function to rotate nodes by the Y-axis
+--
+local Param2Matrix = {
+	{0,1,2,3},  -- y+
+	{6,15,8,17},  -- z+
+	{4,13,10,19},  -- z-
+	{5,14,11,16},  -- x+
+	{7,12,9,18},  -- x-
+	{22,21,20,23},  -- y-
+}
+local tWallmountedRot = {[0]=3,5,4,2}
+local tFacedirRot = {}
+
+for _,row in ipairs(Param2Matrix) do
+	for idx,elem in ipairs(row) do
+		local tbl = {}
+		for i = 0,3 do
+			tbl[i] = row[((i+idx-1) % 4) + 1]
+		end
+		tFacedirRot[elem] = tbl
+	end
+end
+
+local function param2_conversion(node, offs) 
+	local ndef = minetest.registered_nodes[node.name]
+	if not ndef or not ndef.paramtype2 then	return end
+	if ndef.paramtype2 == "facedir" then
+		node.param2 = tFacedirRot[node.param2][offs]
+	elseif ndef.paramtype2 == "wallmounted" and node.param2 > 1 then
+		node.param2 = tWallmountedRot[(node.param2 + offs - 2) % 4]
+	end
+end
+	
+--
+-- Inventory functions
+--
 local function inv_get_item(pos, name)
 	-- air can be copied for free
 	if name == "air" then
@@ -59,7 +96,9 @@ local function inv_put_item(pos, mem, name)
 	end
 end
 
-
+--
+-- Determine the field positions
+--
 local function start_pos(robot_pos, robot_param2, x_size, lvl_offs)
 	local pos = lib.next_pos(robot_pos, robot_param2)
 	pos = {x=pos.x, y=pos.y+lvl_offs, z=pos.z}
@@ -104,7 +143,7 @@ local function pattern_copy(base_pos, mem)
 	
 		local dst_node = lib.get_node_lvm(dst_pos)
 		inv_put_item(base_pos, mem, dst_node.name)
-		src_node.param2 = (src_node.param2 + mem.dir_offs) % 4
+		param2_conversion(src_node, mem.dir_offs)
 		minetest.set_node(dst_pos, src_node)
 	end
 end
@@ -128,10 +167,10 @@ signs_bot.register_botcommand("copy", {
 		"the stored pattern position\n"..
 		"<size> is: 3x1, 3x2, 3x3,\n"..
 		"5x1, 5x2, 5x3, 5x4, or 5x5\n"..
-		"<lvl> pattern level offset (0..5)"),
+		"<lvl> pattern level offset (0..4)"),
 	check = function(size, lvl)
 		lvl = tonumber(lvl or 0)
-		if not lvl or lvl < 0 or lvl > 5 then
+		if not lvl or lvl < 0 or lvl > 4 then
 			return false
 		end
 		return ValidSizes[size]

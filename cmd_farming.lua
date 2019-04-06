@@ -8,7 +8,7 @@
 	LGPLv2.1+
 	See LICENSE.txt for more information
 	
-	Farming
+	Bot farming commands
 ]]--
 
 -- for lazy programmers
@@ -39,20 +39,6 @@ local function planting(base_pos, pos, stack)
 	return false
 end	
 
-local function harvesting(base_pos, pos, inv, slot)
-	if lib.not_protected(base_pos, pos) then
-		local node = minetest.get_node_or_nil(pos)
-		local item = signs_bot.FarmingCrop[node.name]
-		if item and item.inv_crop then
-			minetest.remove_node(pos)
-			lib.put_inv_items(inv, "main", slot, ItemStack(item.inv_crop))
-			if item.inv_seed then
-				lib.put_inv_items(inv, "main", slot, ItemStack(item.inv_seed))
-			end
-		end
-	end
-end
-			
 signs_bot.register_botcommand("plant_seed", {
 	mod = "core",
 	params = "<slot>",	
@@ -75,6 +61,20 @@ signs_bot.register_botcommand("plant_seed", {
 	end,
 })
 
+local function harvesting(base_pos, pos, inv, slot)
+	if lib.not_protected(base_pos, pos) then
+		local node = minetest.get_node_or_nil(pos)
+		local item = signs_bot.FarmingCrop[node.name]
+		if item and item.inv_crop then
+			minetest.remove_node(pos)
+			lib.put_inv_items(inv, "main", slot, ItemStack(item.inv_crop))
+			if item.inv_seed then
+				lib.put_inv_items(inv, "main", slot, ItemStack(item.inv_seed))
+			end
+		end
+	end
+end
+			
 signs_bot.register_botcommand("harvest", {
 	mod = "core",
 	params = "<slot>",	

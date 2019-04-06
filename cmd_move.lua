@@ -8,7 +8,7 @@
 	LGPLv2.1+
 	See LICENSE.txt for more information
 	
-	Signs Bot move functions
+	Bot move commands
 
 ]]--
 
@@ -16,6 +16,10 @@
 local S = function(pos) if pos then return minetest.pos_to_string(pos) end end
 local P = minetest.string_to_pos
 local M = minetest.get_meta
+
+-- Load support for intllib.
+local MP = minetest.get_modpath("signs_bot")
+local I,_ = dofile(MP.."/intllib.lua")
 
 local lib = signs_bot.lib
 
@@ -66,7 +70,7 @@ function signs_bot.move_robot(pos, param2)
 	return new_pos
 end	
 	
-function signs_bot.backward_robot(pos, param2)
+local function backward_robot(pos, param2)
 	local pos1 = lib.next_pos(pos, (param2 + 2) % 4)
 	local pos2 = {x=pos1.x, y=pos1.y-1, z=pos1.z}
 	local pos4 = {x=pos.x, y=pos.y-1, z=pos.z}
@@ -92,7 +96,20 @@ function signs_bot.backward_robot(pos, param2)
 	return new_pos
 end	
 
-function signs_bot.turn_robot(pos, param2, dir)
+signs_bot.register_botcommand("backward", {
+	mod = "core",
+	params = "",	
+	description = I("Move the robot one step back"),
+	cmnd = function(base_pos, mem)
+		local new_pos = backward_robot(mem.robot_pos, mem.robot_param2)
+		if new_pos then  -- not blocked?
+			mem.robot_pos = new_pos
+		end
+		return true
+	end,
+})
+
+local function turn_robot(pos, param2, dir)
 	if dir == "R" then
 		param2 = (param2 + 1) % 4
 	else
@@ -103,11 +120,43 @@ function signs_bot.turn_robot(pos, param2, dir)
 	return param2
 end	
 
+signs_bot.register_botcommand("turn_left", {
+	mod = "core",
+	params = "",	
+	description = I("Turn the robot to the left"),
+	cmnd = function(base_pos, mem)
+		mem.robot_param2 = turn_robot(mem.robot_pos, mem.robot_param2, "L")
+		return true
+	end,
+})
+
+signs_bot.register_botcommand("turn_right", {
+	mod = "core",
+	params = "",	
+	description = I("Turn the robot to the right"),
+	cmnd = function(base_pos, mem)
+		mem.robot_param2 = turn_robot(mem.robot_pos, mem.robot_param2, "R")
+		return true
+	end,
+})
+
+signs_bot.register_botcommand("turn_around", {
+	mod = "core",
+	params = "",	
+	description = I("Turn the robot around"),
+	cmnd = function(base_pos, mem)
+		mem.robot_param2 = turn_robot(mem.robot_pos, mem.robot_param2, "R")
+		mem.robot_param2 = turn_robot(mem.robot_pos, mem.robot_param2, "R")
+		return true
+	end,
+})
+
+
 -- Positions to check:
 --   1
 --  [R]  
 --   2
-function signs_bot.robot_up(pos, param2)
+local function robot_up(pos, param2)
 	local pos1 = {x=pos.x, y=pos.y+1, z=pos.z}
 	local pos2 = {x=pos.x, y=pos.y-1, z=pos.z}
 	if lib.check_pos(pos1, pos2) then
@@ -126,12 +175,25 @@ function signs_bot.robot_up(pos, param2)
 	return nil
 end	
 
+signs_bot.register_botcommand("move_up", {
+	mod = "core",
+	params = "",	
+	description = I("Move the robot upwards"),
+	cmnd = function(base_pos, mem)
+		local new_pos = robot_up(mem.robot_pos, mem.robot_param2)
+		if new_pos then  -- not blocked?
+			mem.robot_pos = new_pos
+		end
+		return true
+	end,
+})
+
 -- Positions to check:
 --  [R]  
 --   1
 --   2
 --   3
-function signs_bot.robot_down(pos, param2)
+local function robot_down(pos, param2)
 	local pos1 = {x=pos.x, y=pos.y-1, z=pos.z}
 	local pos2 = {x=pos.x, y=pos.y-2, z=pos.z}
 	local pos3 = {x=pos.x, y=pos.y-3, z=pos.z}
@@ -147,3 +209,58 @@ function signs_bot.robot_down(pos, param2)
 	return nil
 end	
 
+signs_bot.register_botcommand("move_down", {
+	mod = "core",
+	params = "",	
+	description = I("Move the robot down"),
+	cmnd = function(base_pos, mem)
+		local new_pos = robot_down(mem.robot_pos, mem.robot_param2)
+		if new_pos then  -- not blocked?
+			mem.robot_pos = new_pos
+		end
+		return true
+	end,
+})
+
+signs_bot.register_botcommand("pause", {
+	mod = "core",
+	params = "<sec>",	
+	description = I("Stop the robot for <sec> seconds\n(1..9999)"),
+	check = function(sec)
+		sec = tonumber(sec or 1)
+		return sec and sec > 0 and sec < 10000
+	end,
+	cmnd = function(base_pos, mem, sec)
+		if not mem.steps then
+			mem.steps = tonumber(sec or 1)
+		end
+		mem.steps = mem.steps - 1
+		if mem.steps == 0 then
+			mem.steps = nil
+			return true
+		end
+	end,
+})
+
+signs_bot.register_botcommand("stop", {
+	mod = "core",
+	params = "",	
+	description = I("Stop the robot."),
+	cmnd = function(base_pos, mem, slot)
+		return nil
+	end,
+})
+
+signs_bot.register_botcommand("turn_off", {
+	mod = "core",
+	params = "",	
+	description = I("Turn the robot off\n"..
+		"and put it back in the box."),
+	cmnd = function(base_pos, mem)
+		signs_bot.stop_robot(base_pos, mem)
+		return false
+	end,
+})
+
+	
+	
