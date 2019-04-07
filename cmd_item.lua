@@ -138,7 +138,7 @@ signs_bot.register_botcommand("take_item", {
 		num = tonumber(num or 1)
 		slot = tonumber(slot or 1)
 		signs_bot.robot_take(base_pos, mem.robot_pos, mem.robot_param2, num, slot)
-		return true
+		return lib.DONE
 	end,
 })
 	
@@ -162,7 +162,7 @@ signs_bot.register_botcommand("add_item", {
 		num = tonumber(num or 1)
 		slot = tonumber(slot or 1)
 		signs_bot.robot_add(base_pos, mem.robot_pos, mem.robot_param2, num, slot)
-		return true
+		return lib.DONE
 	end,
 })
 	
@@ -186,7 +186,7 @@ signs_bot.register_botcommand("add_fuel", {
 		num = tonumber(num or 1)
 		slot = tonumber(slot or 1)
 		signs_bot.robot_add(base_pos, mem.robot_pos, mem.robot_param2, num, slot)
-		return true
+		return lib.DONE
 	end,
 })
 
@@ -213,7 +213,7 @@ signs_bot.register_botcommand("pickup_items", {
 				end
 			end
 		end
-		return true
+		return lib.DONE
 	end,
 })
 	
@@ -237,7 +237,7 @@ signs_bot.register_botcommand("drop_items", {
 		local inv = minetest.get_inventory({type="node", pos=base_pos})
 		local items = lib.get_inv_items(inv, "main", slot, num)
 		minetest.add_item(pos, items)
-		return true
+		return lib.DONE
 	end,
 })
 

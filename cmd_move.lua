@@ -105,7 +105,7 @@ signs_bot.register_botcommand("backward", {
 		if new_pos then  -- not blocked?
 			mem.robot_pos = new_pos
 		end
-		return true
+		return lib.DONE
 	end,
 })
 
@@ -126,7 +126,7 @@ signs_bot.register_botcommand("turn_left", {
 	description = I("Turn the robot to the left"),
 	cmnd = function(base_pos, mem)
 		mem.robot_param2 = turn_robot(mem.robot_pos, mem.robot_param2, "L")
-		return true
+		return lib.DONE
 	end,
 })
 
@@ -136,7 +136,7 @@ signs_bot.register_botcommand("turn_right", {
 	description = I("Turn the robot to the right"),
 	cmnd = function(base_pos, mem)
 		mem.robot_param2 = turn_robot(mem.robot_pos, mem.robot_param2, "R")
-		return true
+		return lib.DONE
 	end,
 })
 
@@ -147,7 +147,7 @@ signs_bot.register_botcommand("turn_around", {
 	cmnd = function(base_pos, mem)
 		mem.robot_param2 = turn_robot(mem.robot_pos, mem.robot_param2, "R")
 		mem.robot_param2 = turn_robot(mem.robot_pos, mem.robot_param2, "R")
-		return true
+		return lib.DONE
 	end,
 })
 
@@ -184,7 +184,7 @@ signs_bot.register_botcommand("move_up", {
 		if new_pos then  -- not blocked?
 			mem.robot_pos = new_pos
 		end
-		return true
+		return lib.DONE
 	end,
 })
 
@@ -218,7 +218,7 @@ signs_bot.register_botcommand("move_down", {
 		if new_pos then  -- not blocked?
 			mem.robot_pos = new_pos
 		end
-		return true
+		return lib.DONE
 	end,
 })
 
@@ -237,8 +237,9 @@ signs_bot.register_botcommand("pause", {
 		mem.steps = mem.steps - 1
 		if mem.steps == 0 then
 			mem.steps = nil
-			return true
+			return lib.DONE
 		end
+		return lib.BUSY
 	end,
 })
 
@@ -247,7 +248,7 @@ signs_bot.register_botcommand("stop", {
 	params = "",	
 	description = I("Stop the robot."),
 	cmnd = function(base_pos, mem, slot)
-		return nil
+		return lib.BUSY
 	end,
 })
 
@@ -258,7 +259,7 @@ signs_bot.register_botcommand("turn_off", {
 		"and put it back in the box."),
 	cmnd = function(base_pos, mem)
 		signs_bot.stop_robot(base_pos, mem)
-		return false
+		return lib.TURN_OFF
 	end,
 })
 

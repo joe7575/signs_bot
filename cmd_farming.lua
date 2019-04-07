@@ -35,10 +35,21 @@ local function inv_put_item(pos, mem, name)
 	end
 end
 
+local function soil_availabe(pos)
+	local node = minetest.get_node_or_nil(pos)
+	if node.name == "air" then
+		node = minetest.get_node_or_nil({x=pos.x, y=pos.y-1, z=pos.z})
+		if minetest.get_item_group(node.name, "soil") >= 1 then
+			return true
+		end
+	end
+	return false
+end
+
 local function planting(base_pos, mem, slot)
 	local pos = mem.pos_tbl and mem.pos_tbl[mem.steps]
 	mem.steps = (mem.steps or 1) + 1
-	if pos and lib.not_protected(base_pos, pos) and lib.is_air_like(pos) then
+	if pos and lib.not_protected(base_pos, pos) and soil_availabe(pos) then
 		local stack = inv_get_item(base_pos, slot)
 		local item = stack and signs_bot.FarmingSeed[stack:get_name()]
 		if item and item.seed then
@@ -71,8 +82,9 @@ signs_bot.register_botcommand("plant_seed", {
 		planting(base_pos, mem, slot)
 		if mem.steps > #mem.pos_tbl then
 			mem.steps = nil
-			return true
+			return lib.DONE
 		end
+		return lib.BUSY
 	end,
 })
 
@@ -104,8 +116,9 @@ signs_bot.register_botcommand("harvest", {
 		harvesting(base_pos, mem)
 		if mem.steps > #mem.pos_tbl then
 			mem.steps = nil
-			return true
+			return lib.DONE
 		end
+		return lib.BUSY
 	end,
 })
 

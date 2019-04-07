@@ -86,7 +86,7 @@ signs_bot.register_botcommand("place_front", {
 		slot = tonumber(slot or 1)
 		local level = tValidLevels[lvl]
 		place_item(base_pos, mem.robot_pos, mem.robot_param2, slot, "f", level)
-		return true
+		return lib.DONE
 	end,
 })
 	
@@ -107,7 +107,7 @@ signs_bot.register_botcommand("place_left", {
 		slot = tonumber(slot or 1)
 		local level = tValidLevels[lvl]
 		place_item(base_pos, mem.robot_pos, mem.robot_param2, slot, "l", level)
-		return true
+		return lib.DONE
 	end,
 })
 	
@@ -128,7 +128,7 @@ signs_bot.register_botcommand("place_right", {
 		slot = tonumber(slot or 1)
 		local level = tValidLevels[lvl]
 		place_item(base_pos, mem.robot_pos, mem.robot_param2, slot, "r", level)
-		return true
+		return lib.DONE
 	end,
 })
 
@@ -161,7 +161,7 @@ signs_bot.register_botcommand("dig_front", {
 		slot = tonumber(slot or 1)
 		local level = tValidLevels[lvl]
 		dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, "f", level)
-		return true
+		return lib.DONE
 	end,
 })
 
@@ -182,7 +182,7 @@ signs_bot.register_botcommand("dig_left", {
 		slot = tonumber(slot or 1)
 		local level = tValidLevels[lvl]
 		dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, "l", level)
-		return true
+		return lib.DONE
 	end,
 })
 
@@ -203,7 +203,7 @@ signs_bot.register_botcommand("dig_right", {
 		slot = tonumber(slot or 1)
 		local level = tValidLevels[lvl]
 		dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, "r", level)
-		return true
+		return lib.DONE
 	end,
 })
 
@@ -236,7 +236,7 @@ signs_bot.register_botcommand("rotate_item", {
 		local level = tValidLevels[lvl]
 		steps = tonumber(steps or 1)
 		rotate_item(base_pos, mem.robot_pos, mem.robot_param2, "f", level, steps)
-		return true
+		return lib.DONE
 	end,
 })
 	

@@ -23,18 +23,6 @@ local I,_ = dofile(MP.."/intllib.lua")
 
 local lib = signs_bot.lib
 
-local HELP = I([[Robot Commands
- 
-The robot can place and dig items on
-levels. <lvl> is one of:
-    -1 - one level below the robot height
-     0 - robot y-position
-    +1 - one level above the robot height
-
-Supported commands:
-
-]])
-
 local sCmnds = ""
 local lCmnds = {}
 local tCmndIdx = {}
@@ -78,30 +66,39 @@ local function formspec2(pos, text)
 	"button[3,7.5;3,1;copy;"..I("Copy Cmnd").."]"
 end
 
-local function trim_text(text)
+local function add_arrow(text, line_num)
 	local tbl = {}
-	text = string.gsub(text, "\r", "\n")
 	for idx,line in ipairs(string.split(text, "\n", true)) do
-		tbl[#tbl+1] = line:trim()
+		if idx == line_num and not string.find(line, '<<== error') then
+			tbl[#tbl+1] = line.."  <<== error"
+		else
+			tbl[#tbl+1] = line
+		end
 	end
 	return table.concat(tbl, "\n")
+end	
+
+local function check_syntax(pos, meta, text)
+	local res,err_msg, line_num = signs_bot.check_commands(pos, text)
+	meta:set_int("err_code", res and 0 or 1) -- zero means OK
+	meta:set_string("err_msg", err_msg)
+	if line_num > 0 then
+		meta:set_string("signs_bot_cmnd", add_arrow(text, line_num))
+	end
 end
 
 local function append_line(pos, meta, line)
 	line = line and line:trim() or ""
 	local text = meta:get_string("signs_bot_cmnd").."\n"..line
 	meta:set_string("signs_bot_cmnd", text)
-	local res,err_msg = signs_bot.check_commands(pos, text)
-	meta:set_int("err_code", res and 0 or 1) -- zero means OK
-	meta:set_string("err_msg", err_msg)
+	check_syntax(pos, meta, text)
 end	
 	
 local function check_and_store(pos, meta, fields)	
-	meta:set_string("signs_bot_cmnd", trim_text(fields.cmnd))
+	local text = lib.trim_text(fields.cmnd)
 	meta:set_string("sign_name", fields.name)
-	local res,err_msg = signs_bot.check_commands(pos, fields.cmnd)
-	meta:set_int("err_code", res and 0 or 1) -- zero means OK
-	meta:set_string("err_msg", err_msg)
+	meta:set_string("signs_bot_cmnd", text)
+	check_syntax(pos, meta, text)
 	meta:set_string("formspec", formspec1(meta))
 	meta:set_string("infotext", meta:get_string("sign_name"))
 end
@@ -201,7 +198,6 @@ local function get_inv_sign(base_pos, slot)
 		inv:set_stack("sign", slot, stack)
 		return taken
 	end
-	signs_bot.output(base_pos, I("Error: Signs inventory slot is empty"))
 end
 			
 -- Put one sign into the robot signs inventory
@@ -213,7 +209,6 @@ local function put_inv_sign(base_pos, slot, item)
 		inv:set_stack("sign", slot, stack)
 		return true
 	end
-	signs_bot.output(base_pos, I("Error: Signs inventory slot is full"))
 	return false
 end
 
@@ -224,14 +219,14 @@ local function place_sign(base_pos, robot_pos, param2, slot)
 			local sign = get_inv_sign(base_pos, slot)
 			if sign then
 				lib.place_sign(pos1, sign, param2)
-				return true
+				return lib.DONE
 			else
-				signs_bot.output(base_pos, I("Error: Signs inventory empty"))
-				return false
+				return lib.ERROR, I("Error: Signs inventory empty")
 			end
 		end
+		return lib.DONE
 	end
-	return false
+	return lib.ERROR, I("Error: Position is protected")
 end
 
 signs_bot.register_botcommand("place_sign", {
@@ -245,8 +240,7 @@ signs_bot.register_botcommand("place_sign", {
 	end,
 	cmnd = function(base_pos, mem, slot)
 		slot = tonumber(slot or 1)
-		place_sign(base_pos, mem.robot_pos, mem.robot_param2, slot)
-		return true
+		return place_sign(base_pos, mem.robot_pos, mem.robot_param2, slot)
 	end,
 })
 
@@ -257,14 +251,14 @@ local function place_sign_behind(base_pos, robot_pos, param2, slot)
 			local sign = get_inv_sign(base_pos, slot)
 			if sign then
 				lib.place_sign(pos1, sign, param2)
-				return true
+				return lib.DONE
 			else
-				signs_bot.output(base_pos, I("Error: Signs inventory empty"))
-				return false
+				return lib.ERROR, I("Error: Signs inventory empty")
 			end
 		end
+		return lib.DONE
 	end
-	return false
+	return lib.ERROR, I("Error: Position is protected")
 end
 
 signs_bot.register_botcommand("place_sign_behind", {
@@ -278,8 +272,7 @@ signs_bot.register_botcommand("place_sign_behind", {
 	end,
 	cmnd = function(base_pos, mem, slot)
 		slot = tonumber(slot or 1)
-		place_sign_behind(base_pos, mem.robot_pos, mem.robot_param2, slot)
-		return true
+		return place_sign_behind(base_pos, mem.robot_pos, mem.robot_param2, slot)
 	end,
 })
 
@@ -290,8 +283,7 @@ local function dig_sign(base_pos, robot_pos, param2, slot)
 	local err_code = meta:get_int("err_code")
 	local name = meta:get_string("sign_name")
 	if cmnd == "" then
-		signs_bot.output(base_pos, I("Error: No sign available"))
-		return false
+		return lib.ERROR, I("Error: No sign available")
 	end
 	if lib.not_protected(base_pos, pos1) then
 		local node = lib.get_node_lvm(pos1)
@@ -301,9 +293,12 @@ local function dig_sign(base_pos, robot_pos, param2, slot)
 		meta:set_string("cmnd", cmnd)
 		meta:set_int("err_code", err_code)
 		minetest.remove_node(pos1)
-		return put_inv_sign(base_pos, slot, sign)
+		if not put_inv_sign(base_pos, slot, sign) then	
+			return lib.ERROR, I("Error: Signs inventory slot is full")
+		end
+		return lib.DONE
 	end
-	return false
+	return lib.ERROR, I("Error: Position is protected")
 end
 
 signs_bot.register_botcommand("dig_sign", {
@@ -318,8 +313,7 @@ signs_bot.register_botcommand("dig_sign", {
 	end,
 	cmnd = function(base_pos, mem, slot)
 		slot = tonumber(slot or 1)
-		dig_sign(base_pos, mem.robot_pos, mem.robot_param2, slot)
-		return true
+		return dig_sign(base_pos, mem.robot_pos, mem.robot_param2, slot)
 	end,
 })
 
@@ -327,16 +321,16 @@ local function trash_sign(base_pos, robot_pos, param2, slot)
 	local pos1 = lib.dest_pos(robot_pos, param2, {0})
 	local cmnd = M(pos1):get_string("signs_bot_cmnd")
 	if cmnd == "" then
-		signs_bot.output(base_pos, I("Error: No sign available"))
-		return false
+		return lib.ERROR, I("Error: No sign available")
 	end
 	if lib.not_protected(base_pos, pos1) then
 		local node = lib.get_node_lvm(pos1)
 		local sign = ItemStack("signs_bot:sign_cmnd")
 		minetest.remove_node(pos1)
-		return lib.put_inv_items(base_pos, slot, sign)
+		lib.put_inv_items(base_pos, slot, sign)
+		return lib.DONE
 	end
-	return false
+	return lib.ERROR, I("Error: Position is protected")
 end
 
 signs_bot.register_botcommand("trash_sign", {
@@ -351,8 +345,7 @@ signs_bot.register_botcommand("trash_sign", {
 	end,
 	cmnd = function(base_pos, mem, slot)
 		slot = tonumber(slot or 1)
-		trash_sign(base_pos, mem.robot_pos, mem.robot_param2, slot)
-		return true
+		return trash_sign(base_pos, mem.robot_pos, mem.robot_param2, slot)
 	end,
 })
 	

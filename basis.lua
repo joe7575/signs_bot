@@ -62,7 +62,8 @@ end
 local function start_robot(base_pos)
 	local mem = tubelib2.get_mem(base_pos)
 	local meta = minetest.get_meta(base_pos)
-	mem.lCmnd = nil
+	mem.lCmnd1 = {}
+	mem.lCmnd2 = {}
 	mem.running = true
 	meta:set_string("formspec", formspec(base_pos, mem))
 	signs_bot.infotext(base_pos, I("running"))

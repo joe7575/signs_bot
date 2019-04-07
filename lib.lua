@@ -28,6 +28,14 @@ local Face2Dir = {[0]=
 	{x=0,  y=1,  z=0}
 }
 
+-- Possible command results
+signs_bot.lib.BUSY = 1
+signs_bot.lib.DONE = 2
+signs_bot.lib.ERROR = 3
+signs_bot.lib.TURN_OFF = 4
+
+
+
 -- Determine the next robot position based on the robot position, 
 -- the robot param2.
 function signs_bot.lib.next_pos(pos, param2)
@@ -244,4 +252,13 @@ function signs_bot.lib.gen_position_table(robot_pos, robot_param2, x_size, z_siz
 	end
 	return tbl
 end
+
+function signs_bot.lib.trim_text(text)
+	local tbl = {}
+	for idx,line in ipairs(string.split(text, "[\r\n]+", true, -1, true)) do
+		tbl[#tbl+1] = line:trim()
+	end
+	return table.concat(tbl, "\n")
+end
+
 

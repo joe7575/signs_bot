@@ -1,0 +1,434 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-04-07 15:28+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: basis.lua
+msgid "Off"
+msgstr ""
+
+#: basis.lua
+msgid "On"
+msgstr ""
+
+#: basis.lua
+msgid "Signs"
+msgstr ""
+
+#: basis.lua
+msgid "Other items"
+msgstr ""
+
+#: basis.lua
+msgid "Robot Box "
+msgstr ""
+
+#: basis.lua
+msgid "running"
+msgstr ""
+
+#: basis.lua
+msgid "stopped"
+msgstr ""
+
+#: basis.lua
+msgid "Signs Bot Box"
+msgstr ""
+
+#: bot_flap.lua signs.lua
+msgid "Exit"
+msgstr ""
+
+#: bot_sensor.lua
+msgid "Bot Sensor: Connected with "
+msgstr ""
+
+#: bot_sensor.lua
+msgid "Bot Sensor"
+msgstr ""
+
+#: bot_sensor.lua
+msgid "Bot Sensor: Not connected"
+msgstr ""
+
+#: changer.lua
+msgid "Signs:"
+msgstr ""
+
+#: changer.lua
+msgid "Bot Control Unit"
+msgstr ""
+
+#: cmd_farming.lua
+msgid ""
+"Plant farming seeds\n"
+"in front of the robot"
+msgstr ""
+
+#: cmd_farming.lua
+msgid ""
+"Harvest farming products\n"
+"in front of the robot\n"
+"on a 3x3 field."
+msgstr ""
+
+#: cmd_farming.lua
+msgid "Sign \"farming\""
+msgstr ""
+
+#: cmd_item.lua
+msgid ""
+"Take <num> items from a chest like node\n"
+"and put it into the item inventory.\n"
+"<slot> is the inventory slot (1..8)"
+msgstr ""
+
+#: cmd_item.lua
+msgid ""
+"Add <num> items to a chest like node\n"
+"taken from the item inventory.\n"
+"<slot> is the inventory slot (1..8)"
+msgstr ""
+
+#: cmd_item.lua
+msgid ""
+"Add <num> fuel items to a furnace like node\n"
+"taken from the item inventory.\n"
+"<slot> is the inventory slot (1..8)"
+msgstr ""
+
+#: cmd_item.lua
+msgid ""
+"Pick up all objects\n"
+"in a 3x3 field.\n"
+"<slot> is the inventory slot (1..8)"
+msgstr ""
+
+#: cmd_item.lua
+msgid ""
+"Drop items in front of the bot.\n"
+"<slot> is the inventory slot (1..8)"
+msgstr ""
+
+#: cmd_move.lua
+msgid "Move the robot one step back"
+msgstr ""
+
+#: cmd_move.lua
+msgid "Turn the robot to the left"
+msgstr ""
+
+#: cmd_move.lua
+msgid "Turn the robot to the right"
+msgstr ""
+
+#: cmd_move.lua
+msgid "Turn the robot around"
+msgstr ""
+
+#: cmd_move.lua
+msgid "Move the robot upwards"
+msgstr ""
+
+#: cmd_move.lua
+msgid "Move the robot down"
+msgstr ""
+
+#: cmd_move.lua
+msgid ""
+"Stop the robot for <sec> seconds\n"
+"(1..9999)"
+msgstr ""
+
+#: cmd_move.lua
+msgid "Stop the robot."
+msgstr ""
+
+#: cmd_move.lua
+msgid ""
+"Turn the robot off\n"
+"and put it back in the box."
+msgstr ""
+
+#: cmd_pattern.lua
+msgid "Store pattern to be cloned."
+msgstr ""
+
+#: cmd_pattern.lua
+msgid ""
+"Copy the nodes from\n"
+"the stored pattern position\n"
+"<size> is: 3x1, 3x2, 3x3,\n"
+"5x1, 5x2, 5x3 (wide x deep)\n"
+"<lvl> pattern level offset (0..4)"
+msgstr ""
+
+#: cmd_pattern.lua
+msgid "Sign \"pattern\""
+msgstr ""
+
+#: cmd_pattern.lua
+msgid "Sign \"copy 3x3x3\""
+msgstr ""
+
+#: cmd_place.lua
+msgid ""
+"Place an item in front of the robot\n"
+"<slot> is the inventory slot (1..8)\n"
+"<lvl> is one of: -1   0   +1"
+msgstr ""
+
+#: cmd_place.lua
+msgid ""
+"Place an item on the left side\n"
+"<slot> is the inventory slot (1..8)\n"
+"<lvl> is one of: -1   0   +1"
+msgstr ""
+
+#: cmd_place.lua
+msgid ""
+"Place an item on the right side\n"
+"<slot> is the inventory slot (1..8)\n"
+"<lvl> is one of: -1   0   +1"
+msgstr ""
+
+#: cmd_place.lua
+msgid ""
+"Dig an item in front of the robot\n"
+"<slot> is the inventory slot (1..8)\n"
+"<lvl> is one of: -1   0   +1"
+msgstr ""
+
+#: cmd_place.lua
+msgid ""
+"Dig an item on the left side\n"
+"<slot> is the inventory slot (1..8)\n"
+"<lvl> is one of: -1   0   +1"
+msgstr ""
+
+#: cmd_place.lua
+msgid ""
+"Dig an item on the right side\n"
+"<slot> is the inventory slot (1..8)\n"
+"<lvl> is one of: -1   0   +1"
+msgstr ""
+
+#: cmd_place.lua
+msgid ""
+"Rotate an item in front of the robot\n"
+"<lvl> is one of:  -1   0   +1\n"
+"<steps> is one of:  1   2   3"
+msgstr ""
+
+#: cmd_sign.lua
+msgid "Commands,Help"
+msgstr ""
+
+#: cmd_sign.lua
+msgid "Sign name:"
+msgstr ""
+
+#: cmd_sign.lua
+msgid "Cancel"
+msgstr ""
+
+#: cmd_sign.lua
+msgid "Check"
+msgstr ""
+
+#: cmd_sign.lua
+msgid "Copy Cmnd"
+msgstr ""
+
+#: cmd_sign.lua
+msgid "Sign \"command\""
+msgstr ""
+
+#: cmd_sign.lua
+msgid "-- enter or copy commands from help page"
+msgstr ""
+
+#: cmd_sign.lua
+msgid "Error: Signs inventory empty"
+msgstr ""
+
+#: cmd_sign.lua
+msgid "Error: Position is protected"
+msgstr ""
+
+#: cmd_sign.lua
+msgid ""
+"Place a sign in front of the robot\n"
+"taken from the signs inventory\n"
+"<slot> is the inventory slot (1..6)"
+msgstr ""
+
+#: cmd_sign.lua
+msgid ""
+"Place a sign behind the robot\n"
+"taken from the signs inventory\n"
+"<slot> is the inventory slot (1..6)"
+msgstr ""
+
+#: cmd_sign.lua
+msgid "Error: No sign available"
+msgstr ""
+
+#: cmd_sign.lua
+msgid "Error: Signs inventory slot is full"
+msgstr ""
+
+#: cmd_sign.lua
+msgid ""
+"Dig the sign in front of the robot\n"
+"and add it to the signs inventory.\n"
+"<slot> is the inventory slot (1..6)"
+msgstr ""
+
+#: cmd_sign.lua
+msgid ""
+"Dig the sign in front of the robot\n"
+"and add the cleared sign to\n"
+"the item iventory.\n"
+"<slot> is the inventory slot (1..8)"
+msgstr ""
+
+#: commands.lua
+msgid " commands:"
+msgstr ""
+
+#: commands.lua
+msgid "unknown command"
+msgstr ""
+
+#: commands.lua
+msgid "Parameter error in line "
+msgstr ""
+
+#: commands.lua
+msgid "Command error in line "
+msgstr ""
+
+#: commands.lua
+msgid "Checked and approved"
+msgstr ""
+
+#: commands.lua
+msgid "error"
+msgstr ""
+
+#: commands.lua
+msgid ""
+"Move the robot 1..99 steps forward\n"
+"without paying attention to any signs.\n"
+"Up and down movements also become\n"
+"counted as steps."
+msgstr ""
+
+#: commands.lua
+msgid ""
+"Go to the next sign\n"
+"to be executed as a sub-process.\n"
+"After that it will go on with the next command\n"
+"on this sign."
+msgstr ""
+
+#: crop_sensor.lua
+msgid "Crop Sensor: Connected with "
+msgstr ""
+
+#: crop_sensor.lua
+msgid "Crop Sensor"
+msgstr ""
+
+#: duplicator.lua
+msgid "Input:"
+msgstr ""
+
+#: duplicator.lua
+msgid "Template:"
+msgstr ""
+
+#: duplicator.lua
+msgid "Output:"
+msgstr ""
+
+#: duplicator.lua
+msgid ""
+"1. Place one sign to be\n"
+"    used as template.\n"
+msgstr ""
+
+#: duplicator.lua
+msgid ""
+"2. Add 'command signs' to\n"
+"    the input inventory.\n"
+msgstr ""
+
+#: duplicator.lua
+msgid ""
+"3. Take the copies\n"
+"    from the output inventory."
+msgstr ""
+
+#: duplicator.lua
+msgid "Signs Duplicator"
+msgstr ""
+
+#: extender.lua
+msgid "Sensor Extender: Connected with "
+msgstr ""
+
+#: extender.lua
+msgid "Sensor Extender"
+msgstr ""
+
+#: extender.lua
+msgid "Sensor Extender: Not connected"
+msgstr ""
+
+#: node_sensor.lua
+msgid "Node Sensor: Connected with "
+msgstr ""
+
+#: node_sensor.lua
+msgid "Node Sensor"
+msgstr ""
+
+#: signs.lua
+msgid "Sign \"turn right\""
+msgstr ""
+
+#: signs.lua
+msgid "Sign \"turn left\""
+msgstr ""
+
+#: signs.lua
+msgid "Sign \"take item\""
+msgstr ""
+
+#: signs.lua
+msgid "Sign \"add item\""
+msgstr ""
+
+#: signs.lua
+msgid "Sign \"stop\""
+msgstr ""
+
+#: tool.lua
+msgid "Sensor Connection Tool"
+msgstr ""

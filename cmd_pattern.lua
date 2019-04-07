@@ -30,8 +30,6 @@ local ValidSizes = {
 	["5x1"] = true,
 	["5x2"] = true,
 	["5x3"] = true,
-	["5x4"] = true,
-	["5x5"] = true,
 }
 
 --
@@ -120,7 +118,7 @@ signs_bot.register_botcommand("pattern", {
 	cmnd = function(base_pos, mem)
 		mem.pttrn_pos = lib.next_pos(mem.robot_pos, mem.robot_param2)
 		mem.pttrn_param2 = mem.robot_param2
-		return true
+		return lib.DONE
 	end,
 })
 
@@ -130,7 +128,7 @@ signs_bot.register_botcommand("copy", {
 	description = I("Copy the nodes from\n"..
 		"the stored pattern position\n"..
 		"<size> is: 3x1, 3x2, 3x3,\n"..
-		"5x1, 5x2, 5x3, 5x4, or 5x5\n"..
+		"5x1, 5x2, 5x3 (wide x deep)\n"..
 		"<lvl> pattern level offset (0..4)"),
 	check = function(size, lvl)
 		lvl = tonumber(lvl or 0)
@@ -154,8 +152,9 @@ signs_bot.register_botcommand("copy", {
 		pattern_copy(base_pos, mem)
 		if mem.steps > #mem.src_pos_tbl then
 			mem.steps = nil
-			return true
+			return lib.DONE
 		end
+		return lib.BUSY
 	end,
 })
 

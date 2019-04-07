@@ -14,62 +14,23 @@
 
 signs_bot.FarmingSeed = {}
 signs_bot.FarmingCrop = {}
---signs_bot.FarmingTrees = {}
-	
----- default trees which require the node timer
---function signs_bot.register_tree_node(name, drop, plant)
---	signs_bot.FarmingTrees[name] = {drop = drop or name, plant = plant, t1= 166, t2 = 288}
---end
-
---function signs_bot.register_ground_node(name, drop)
---	signs_bot.GroundNodes[name] = {drop = drop or name}
---end
-
---local tn = signs_bot.register_tree_node
---local dn = signs_bot.register_default_farming_node
---local gn = signs_bot.register_ground_node
-
 
 -- inv_seed is the seed inventory name
 -- seed is what has to be placed on the ground
 -- t1/t2 is needed for farming nodes which require the node timer
 function signs_bot.register_farming_seed(inv_seed, seed, t1, t2)
-	signs_bot.FarmingSeed[inv_seed] = {seed = seed or inv_seed, t1 = 2400, t2 = 4800}
+	signs_bot.FarmingSeed[inv_seed] = {seed = seed, t1 = 2400, t2 = 4800}
 end
 
 -- crop is the farming crop in the final stage
 -- inv_crop is the the inventory item name of the crop result
 -- inv_seed is the the inventory item name of the seed result
 function signs_bot.register_farming_crop(crop, inv_crop, inv_seed)
-	signs_bot.FarmingCrop[crop] = {inv_crop = inv_crop or crop, inv_seed = inv_seed or crop}
+	signs_bot.FarmingCrop[crop] = {inv_crop = inv_crop, inv_seed = inv_seed}
 end
 
 local fs = signs_bot.register_farming_seed
 local fc = signs_bot.register_farming_crop
-
--------------------------------------------------------------------------------
--- Default Farming
--------------------------------------------------------------------------------
---tn("default:tree",        "default:tree",        "default:sapling")
---tn("default:aspen_tree",  "default:aspen_tree",  "default:aspen_sapling")
---tn("default:pine_tree",   "default:pine_tree",   "default:pine_sapling")
---tn("default:acacia_tree", "default:acacia_tree", "default:acacia_sapling")
---tn("default:jungletree",  "default:jungletree",  "default:junglesapling")
-
---fn("default:leaves")
---fn("default:aspen_leaves")
---fn("default:pine_needles")
---signs_bot.["default:pine_needles"].leaves = true  -- accepted as leaves
---fn("default:acacia_leaves")
---fn("default:jungleleaves")
-
---fn("default:bush_leaves")
---fn("default:acacia_bush_leaves")
-
---fn("default:cactus", "default:cactus", "default:cactus")
---fn("default:papyrus", "default:papyrus", "default:papyrus")
-
---fn("default:apple")
 
 if farming.mod ~= "redo" then
 	fs("farming:seed_wheat", "farming:wheat_1")
@@ -85,28 +46,45 @@ if farming.mod == "redo" then
 	fs("farming:seed_wheat", "farming:wheat_1")
 	fc("farming:wheat_8", "farming:wheat", "farming:seed_wheat")
 	fs("farming:seed_cotton", "farming:cotton_1")
-	fc("farming:cotton_8", "farming:cotton", "seed_cotton")
-	fs("farming:carrot", "farming:carrot")
-	fc("farming:carrot_8", "farming:carrot 2")
+	fc("farming:cotton_8", "farming:cotton", "farming:seed_cotton")
+	fs("farming:carrot", "farming:carrot_1")
+	fc("farming:carrot_8", "farming:carrot", "farming:carrot")
 	fs("farming:potato", "farming:potato_1")
-	fc("farming:potato_4", "farming:potato 3")
---	fn("farming:tomato_8",    "farming:tomato 3",       "farming:tomato_1")
---	fn("farming:cucumber_4",  "farming:cucumber 2",     "farming:cucumber_1")
---	fn("farming:corn_8",      "farming:corn 2",         "farming:corn_1")
---	fn("farming:coffee_5",    "farming:coffee_beans 2", "farming:coffee_1")
---	fn("farming:melon_8",     "farming:melon_slice 9",  "farming:melon_1")
---	fn("farming:pumpkin_8",   "farming:pumpkin_slice 9","farming:pumpkin_1")
---	fn("farming:raspberry_4", "farming:raspberries",    "farming:raspberry_1")
---	fn("farming:blueberry_4", "farming:blueberries",    "farming:blueberry_1")
---	fn("farming:rhubarb_3",   "farming:rhubarb 2",      "farming:rhubarb_1")
---	fn("farming:beanpole_5",  "farming:beans 3",        "farming:beanpole_1")
---	fn("farming:grapes_8",    "farming:grapes 3",       "farming:grapes_1")
---	fn("farming:barley_7",    "farming:barley",         "farming:barley_1")
---	fn("farming:chili_8",     "farming:chili_pepper 2", "farming:chili_1")
---	fn("farming:hemp_8",      "farming:hemp_leaf",      "farming:hemp_1")
---	fn("farming:oat_8",       "farming:oat",            "farming:oat_1")
---	fn("farming:rye_8",       "farming:rye",            "farming:rye_1")
---	fn("farming:rice_8",      "farming:rice",           "farming:rice_1")
+	fc("farming:potato_4", "farming:potato 2", "farming:potato")
+	fs("farming:tomato", "farming:tomato_1")
+	fc("farming:tomato_8", "farming:tomato 2", "farming:tomato")
+	fs("farming:cucumber", "farming:cucumber_1")
+	fc("farming:cucumber_4", "farming:cucumber", "farming:cucumber")
+	fs("farming:corn", "farming:corn_1")
+	fc("farming:corn_8", "farming:corn", "farming:corn")
+	fs("farming:coffee_beans", "farming:coffee_1")
+	fc("farming:coffee_5", "farming:coffee_beans", "farming:coffee_beans")
+	fs("farming:melon_slice", "farming:melon_1")
+	fc("farming:melon_8", "farming:melon_slice 8", "farming:melon_slice")
+	fs("farming:pumpkin_slice", "farming:pumpkin_1")
+	fc("farming:pumpkin_8", "farming:pumpkin_slice 8","farming:pumpkin_slice")
+	fs("farming:raspberries", "farming:raspberry_1")
+	fc("farming:raspberry_4", "farming:raspberries 2", "farming:raspberries")
+	fs("farming:blueberries", "farming:blueberry_1")
+	fc("farming:blueberry_4", "farming:blueberries", "farming:blueberries")
+	fs("farming:rhubarb", "farming:rhubarb_1")
+	fc("farming:rhubarb_3", "farming:rhubarb", "farming:rhubarb")
+	fs("farming:beans", "farming:beanpole_1")
+	fc("farming:beanpole_5", "farming:beans 2", "farming:beans")
+	fs("farming:grapes", "farming:grapes_1")
+	fc("farming:grapes_8", "farming:grapes 2", "farming:grapes")
+	fs("farming:barley", "farming:barley_1")
+	fc("farming:barley_7", "farming:barley", "farming:barley")
+	fs("farming:chili_pepper", "farming:chili_1")
+	fc("farming:chili_8", "farming:chili_pepper", "farming:chili_pepper")
+	fs("farming:hemp_leaf", "farming:hemp_1")
+	fc("farming:hemp_8", "farming:hemp_leaf", "farming:hemp_leaf")
+	fs("farming:oat", "farming:oat_1")
+	fc("farming:oat_8", "farming:oat", "farming:oat")
+	fs("farming:rye", "farming:rye_1")
+	fc("farming:rye_8", "farming:rye", "farming:rye")
+	fs("farming:rice", "farming:rice_1")
+	fc("farming:rice_8", "farming:rice", "farming:rice")
 end
 
 -------------------------------------------------------------------------------
