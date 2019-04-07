@@ -5,6 +5,13 @@ Signs Bot [signs_bot]
 
 **A robot controlled by signs.**
 
+Browse on: ![GitHub](https://github.com/joe7575/signs_bot)
+
+Download: ![GitHub](https://github.com/joe7575/signs_bot/archive/master.zip)
+
+![Signs Bot](https://github.com/joe7575/signs_bot/blob/master/screenshot.png)
+
+
 The bot can only be controlled by signs that are placed in its path.
 The bot starts running after starting until it encounters a shield. There, the commands are then processed on the shield.
 The bot can also put himself signs in the way, which he then works off.
