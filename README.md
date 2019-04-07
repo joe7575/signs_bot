@@ -13,7 +13,7 @@ Download: ![GitHub](https://github.com/joe7575/signs_bot/archive/master.zip)
 
 
 The bot can only be controlled by signs that are placed in its path.
-The bot starts running after starting until it encounters a shield. There, the commands are then processed on the shield.
+The bot starts running after starting until it encounters a sign. There, the commands are then processed on the sign.
 The bot can also put himself signs in the way, which he then works off.
 There is also a sign that can be programmed by the player, which then are processed by the bot.
 
