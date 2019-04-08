@@ -69,8 +69,8 @@ end
 local function add_arrow(text, line_num)
 	local tbl = {}
 	for idx,line in ipairs(string.split(text, "\n", true)) do
-		if idx == line_num and not string.find(line, '<<== error') then
-			tbl[#tbl+1] = line.."  <<== error"
+		if idx == line_num and not string.find(line, '--<<== error') then
+			tbl[#tbl+1] = line.."  --<<== error"
 		else
 			tbl[#tbl+1] = line
 		end
@@ -91,7 +91,8 @@ local function append_line(pos, meta, line)
 	line = line and line:trim() or ""
 	local text = meta:get_string("signs_bot_cmnd").."\n"..line
 	meta:set_string("signs_bot_cmnd", text)
-	check_syntax(pos, meta, text)
+	meta:set_int("err_code", 1) -- zero means OK
+	meta:set_string("err_msg", "please check the added line(s)")
 end	
 	
 local function check_and_store(pos, meta, fields)	

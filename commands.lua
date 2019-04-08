@@ -68,14 +68,17 @@ end
 	
 function signs_bot.check_commands(pos, text)
 	for idx,line in ipairs(string.split(text, "\n", true)) do
-		local cmnd, param1, param2, param3 = unpack(string.split(line, " "))
-		if tCommands[cmnd] then
-			if tCommands[cmnd].check and not tCommands[cmnd].check(param1, param2, param3) then
-				return false, I("Parameter error in line ")..idx..":\n"..
-				cmnd.." "..tCommands[cmnd].params, idx
+		local b = line:byte(1)
+		if b and b ~= 45 and b ~= 32 then -- no blank or comment line?
+			local cmnd, param1, param2, param3 = unpack(string.split(line, " "))
+			if tCommands[cmnd] then
+				if tCommands[cmnd].check and not tCommands[cmnd].check(param1, param2) then
+					return false, I("Parameter error in line ")..idx..":\n"..
+					cmnd.." "..tCommands[cmnd].params, idx
+				end
+			else
+				return false, I("Command error in line ")..idx..":\n"..line, idx
 			end
-		else
-			return false, I("Command error in line ")..idx..":\n"..line, idx
 		end
 	end
 	return true, I("Checked and approved"), 0
@@ -196,28 +199,32 @@ local function uncond_move(base_pos, mem)
 	mem.steps = mem.steps - 1
 end	
 
+local function bot_error(base_pos, mem, err)
+	minetest.sound_play('signs_bot_error', {pos = base_pos})
+	minetest.sound_play('signs_bot_error', {pos = mem.robot_pos})
+	signs_bot.infotext(base_pos, err)
+	return lib.TURN_OFF
+end
+
 function signs_bot.run_next_command(base_pos, mem)
 	mem.lCmnd1 = mem.lCmnd1 or {} -- forground job
 	mem.lCmnd2 = mem.lCmnd2 or {} -- background job
 	local sts,res,err
 	local line = mem.lCmnd2[1] or mem.lCmnd1[1] or "cond_move"
 	local cmnd, param1, param2 = unpack(string.split(line, " "))
+	if not tCommands[cmnd] then
+		return bot_error(base_pos, mem, "Error: Invalid command")
+	end
 	--debug(mem, cmnd)
 	--sts,res,err = true, tCommands[cmnd].cmnd(base_pos, mem, param1, param2)
 	sts,res,err = pcall(tCommands[cmnd].cmnd, base_pos, mem, param1, param2)
 	if not sts then
-		minetest.sound_play('signs_bot_error', {pos = base_pos})
-		minetest.sound_play('signs_bot_error', {pos = mem.robot_pos})
-		signs_bot.infotext(base_pos, I("error"))
-		res = lib.TURN_OFF
+		return bot_error(base_pos, mem, err)
 	end
 	if res ~= lib.BUSY then
 		local _ = table.remove(mem.lCmnd2, 1) or table.remove(mem.lCmnd1, 1)
 	elseif res == lib.ERROR and err then
-		minetest.sound_play('signs_bot_error', {pos = base_pos})
-		minetest.sound_play('signs_bot_error', {pos = mem.robot_pos})
-		signs_bot.infotext(base_pos, err)
-		res = lib.TURN_OFF
+		return bot_error(base_pos, mem, err)
 	end
 	return res ~= lib.TURN_OFF
 end

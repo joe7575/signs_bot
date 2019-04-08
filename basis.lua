@@ -92,10 +92,11 @@ end
 
 -- To be called from sensors
 local function signs_bot_on_signal(pos, node, signal)
-	if signal == "on" then
+	local mem = tubelib2.get_mem(pos)
+	if signal == "on" and not mem.running then
 		start_robot(pos)
-	elseif signal == "off" then
-		signs_bot.stop_robot(pos, tubelib2.get_mem(pos))
+	elseif signal == "off" and mem.running then
+		signs_bot.stop_robot(pos, mem)
 	end
 end
 

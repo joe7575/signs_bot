@@ -46,7 +46,7 @@ end
 -- the robot param2, and a route table like : {0,0,3}
 -- 0 = forward, 1 = right, 2 = backward, 3 = left
 function signs_bot.lib.dest_pos(pos, param2, route)
-	local p2
+	local p2 = param2
 	for _,dir in ipairs(route) do
 		p2 = (param2 + dir) % 4
 		pos = vector.add(pos, Face2Dir[p2])

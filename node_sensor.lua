@@ -39,10 +39,26 @@ local function swap_node(pos, name)
 	return true
 end
 	
+local function any_node_changed(pos)
+	local mem = tubelib2.get_mem(pos)
+	if not mem.pos1 or not mem.pos2 or not mem.num then
+		local node = minetest.get_node(pos)
+		local param2 = (node.param2 + 2) % 4
+		mem.pos1 = lib.dest_pos(pos, param2, {0})
+		mem.pos2 = lib.dest_pos(pos, param2, {0,0,0})
+		mem.num = #minetest.find_nodes_in_area(mem.pos1, mem.pos2, {"air"})
+		return false
+	end
+	local num = #minetest.find_nodes_in_area(mem.pos1, mem.pos2, {"air"})
+	if mem.num ~= num then
+		mem.num = num
+		return true
+	end
+	return false
+end
+
 local function node_timer(pos)
-	local pos1 = lib.next_pos(pos, M(pos):get_int("param2"))
-	local node = minetest.get_node_or_nil(pos1)
-	if node and node.name ~= "air" then
+	if any_node_changed(pos)then
 		if swap_node(pos, "signs_bot:node_sensor_on") then
 			signs_bot.send_signal(pos)
 			signs_bot.lib.activate_extender_nodes(pos, true)
@@ -75,10 +91,10 @@ minetest.register_node("signs_bot:node_sensor", {
 	
 	after_place_node = function(pos, placer)
 		local meta = M(pos)
+		local mem = tubelib2.init_mem(pos)
 		meta:set_string("infotext", "Node Sensor: Not connected")
 		minetest.get_node_timer(pos):start(CYCLE_TIME)
-		local node = minetest.get_node(pos)
-		meta:set_int("param2", (node.param2 + 2) % 4)
+		any_node_changed(pos)
 	end,
 	
 	on_timer = node_timer,

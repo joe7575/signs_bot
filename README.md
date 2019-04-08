@@ -30,7 +30,7 @@ An actuator can receive signals from many sensors. A sensor can only be connecte
 
 Sensors are:
 - Bot Sensor: sends a signal when the robot passes by
-- Node Sensor: sends a signal when it detects a block (tree, cactus, flower, etc.)
+- Node Sensor: sends a signal when it detects a change (tree, cactus, flower, etc.) in front of the sensor (over 3 positions)
 - Crop Sendor: Sends a signal when, for example, the wheat is fully grown
 
 Actuators are:
@@ -61,30 +61,33 @@ For all Inventory commands applies: If the inventory stack specified by <slot> i
     turn_right                - turn right
     turn_around               - turn around
     backward                  - one step backward
-    turn_off                  - Turn off the robot / back to the box
+    turn_off                  - turn off the robot / back to the box
     pause <sec>               - wait one or more seconds
     move_up                   - move up (maximum 2 times)
-    move_down                 - Move down
+    move_down                 - move down
     take_item <num> <slot>    - take one or more items from a box
     add_item <num> <slot>     - put one or more items in a box
     add_fuel <num> <slot>     - for furnaces or similar
     place_front <slot> <lvl>  - Set block in front of the robot
     place_left <slot> <lvl>   - Set block to the left
     place_right <slot> <lvl>  - set block to the right
+    place_below <slot>        - set block under the robot
     dig_front <slot> <lvl>    - remove block in front of the robot
     dig_left <slot> <lvl>     - remove block on the left
     dig_right <slot> <lvl>    - remove block on the right
+    dig_below <slot>          - dig block under the robot
     place_sign <slot>         - set sign
-    place_sign_behind <slot>  - Put a sign behind the bot
+    place_sign_behind <slot>  - put a sign behind the bot
     dig_sign <slot>           - remove the sign
     trash_sign <slot>         - Remove the sign, clear data and add to the item Inventory
     stop                      - Bot stops until the shield is removed
     pickup_items <slot>       - pickup items (in a 3x3 field)
     drop_items <slot>         - drop items
     harvest                   - harvest a 3x3 field (farming)
-    plant_seed                - a 3x3 field sowing / planting
-    pattern                   - Save the blocks behind the shield (up to 5x3x3) as template
-    copy <size>               - Make a copy of "pattern". Size is e.g. 3x3 (see ingame help)
+    sow_seed <slot>           - a 3x3 field sowing / planting
+    plant_sapling <slot>      - plant a sapling in front of the robot
+    pattern                   - save the blocks behind the shield (up to 5x3x3) as template
+    copy <size>               - make a copy of "pattern". Size is e.g. 3x3 (see ingame help)
 
 
 ### License
@@ -100,4 +103,5 @@ optional: farming redo
 ### History
 - 2019-03-23  v0.01  * first draft
 - 2019-04-06  v0.02  * completely reworked
+- 2019-04-08  v0.03  * 'plant_sapling', 'place_below', 'dig_below' added, many bugs fixed
 

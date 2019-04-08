@@ -64,10 +64,10 @@ local function planting(base_pos, mem, slot)
 	end
 end	
 
-signs_bot.register_botcommand("plant_seed", {
+signs_bot.register_botcommand("sow_seed", {
 	mod = "farming",
 	params = "<slot>",	
-	description = I("Plant farming seeds\nin front of the robot"),
+	description = I("Sow farming seeds\nin front of the robot"),
 	check = function(slot)
 		slot = tonumber(slot)
 		return slot and slot > 0 and slot < 9
@@ -123,10 +123,43 @@ signs_bot.register_botcommand("harvest", {
 })
 
 
+local function plant_sapling(base_pos, mem, slot)
+	local pos = lib.dest_pos(mem.robot_pos, mem.robot_param2, {0})
+	if lib.not_protected(base_pos, pos) and soil_availabe(pos) then
+		local stack = inv_get_item(base_pos, slot)
+		local item = stack and signs_bot.TreeSaplings[stack:get_name()]
+		if item and item.sapling then
+			minetest.set_node(pos, {name = item.sapling, paramtype2 = "wallmounted", param2 = 1})
+			if item.t1 ~= nil then 
+				-- We have to simulate "on_place" and start the timer by hand
+				-- because the after_place_node function checks player rights and can't therefore
+				-- be used.
+				minetest.get_node_timer(pos):start(math.random(item.t1, item.t2))
+			end			
+		end
+	end
+end	
+
+signs_bot.register_botcommand("plant_sapling", {
+	mod = "farming",
+	params = "<slot>",	
+	description = I("Plant a sapling\nin front of the robot"),
+	check = function(slot)
+		slot = tonumber(slot)
+		return slot and slot > 0 and slot < 9
+	end,
+	cmnd = function(base_pos, mem, slot)
+		slot = tonumber(slot)
+		plant_sapling(base_pos, mem, slot)
+		return lib.DONE
+	end,
+})
+
+
 local CMD = [[dig_sign 1
 move
 harvest
-plant_seed 1
+sow_seed 1
 backward
 place_sign 1
 turn_off]]

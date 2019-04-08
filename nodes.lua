@@ -14,12 +14,13 @@
 
 signs_bot.FarmingSeed = {}
 signs_bot.FarmingCrop = {}
+signs_bot.TreeSaplings = {}
 
 -- inv_seed is the seed inventory name
 -- seed is what has to be placed on the ground
 -- t1/t2 is needed for farming nodes which require the node timer
 function signs_bot.register_farming_seed(inv_seed, seed, t1, t2)
-	signs_bot.FarmingSeed[inv_seed] = {seed = seed, t1 = 2400, t2 = 4800}
+	signs_bot.FarmingSeed[inv_seed] = {seed = seed, t1 = t1 or 2400, t2 = t2 or 4800}
 end
 
 -- crop is the farming crop in the final stage
@@ -29,8 +30,17 @@ function signs_bot.register_farming_crop(crop, inv_crop, inv_seed)
 	signs_bot.FarmingCrop[crop] = {inv_crop = inv_crop, inv_seed = inv_seed}
 end
 
+-- inv_sapling is the sapling inventory name
+-- sapling is what has to be placed on the ground 
+-- t1/t2 is needed for trees which require the node timer
+function signs_bot.register_tree_saplings(inv_sapling, sapling, t1, t2)
+	signs_bot.TreeSaplings[inv_sapling] = {sapling = sapling, t1 = t1 or 300, t2 = t2 or 1500}
+end
+
 local fs = signs_bot.register_farming_seed
 local fc = signs_bot.register_farming_crop
+local ts = signs_bot.register_tree_saplings
+
 
 if farming.mod ~= "redo" then
 	fs("farming:seed_wheat", "farming:wheat_1")
@@ -121,3 +131,16 @@ end
 --fn("ethereal:orange")
 --fn("ethereal:coconut")
 
+-------------------------------------------------------------------------------
+-- Default Trees
+-------------------------------------------------------------------------------
+ts("default:acacia_bush_sapling", "default:acacia_bush_sapling")
+ts("default:acacia_sapling", "default:acacia_sapling")
+ts("default:aspen_sapling", "default:aspen_sapling")
+ts("default:blueberry_bush_sapling", "default:blueberry_bush_sapling")
+ts("default:bush_sapling", "default:bush_sapling")
+ts("default:emergent_jungle_sapling", "default:emergent_jungle_sapling")
+ts("default:junglesapling", "default:junglesapling")
+ts("default:pine_bush_sapling", "default:pine_bush_sapling")
+ts("default:pine_sapling", "default:pine_sapling")
+ts("default:sapling", "default:sapling")
