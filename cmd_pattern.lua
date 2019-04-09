@@ -188,10 +188,23 @@ minetest.register_craft({
 	}
 })
 
+local CMND = [[dig_sign 1
+move
+copy 3x3
+move_up
+copy 3x3 1
+move_up
+copy 3x3 2
+move_down
+move_down
+backward
+place_sign 1
+turn_around]]
+
 signs_bot.register_sign({
 	name = "copy3x3x3", 
 	description = I('Sign "copy 3x3x3"'), 
-	commands = "dig_sign 1\nmove\ncopy 3x3\nmove_up\ncopy 3x3 1\nmove_up\ncopy 3x3 2\nmove_down\nmove_down\nbackward\nplace_sign 1\nturn_around", 
+	commands = CMND, 
 	image = "signs_bot_sign_copy3x3x3.png",
 })
 

@@ -28,11 +28,13 @@ local CYCLE_TIME = 1
 local function formspec(pos, mem)
 	mem.running = mem.running or false
 	local cmnd = mem.running and "stop;"..I("Off") or "start;"..I("On") 
+	local bot = not mem.running and "image[0.3,0.3;1,1;signs_bot_bot_inv.png]" or ""
 	return "size[10,8]"..
 	default.gui_bg..
 	default.gui_bg_img..
 	default.gui_slots..
 	"label[2.8,0;"..I("Signs").."]label[6.3,0;"..I("Other items").."]"..
+	bot..
 	"label[2.8,0.5;1]label[3.8,0.5;2]label[4.8,0.5;3]"..
 	"list[context;sign;2.5,1;3,2;]"..
 	"label[2.8,3;4]label[3.8,3;5]label[4.8,3;6]"..
