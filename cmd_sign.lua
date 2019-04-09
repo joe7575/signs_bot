@@ -137,6 +137,7 @@ minetest.register_node("signs_bot:sign_cmnd", {
 			nmeta:set_string("signs_bot_cmnd", I("-- enter or copy commands from help page"))
 			nmeta:set_int("err_code", 0)
 		end
+		nmeta:set_string("infotext", nmeta:get_string("sign_name"))
 		nmeta:set_string("formspec", formspec1(nmeta))
 	end,
 	
@@ -225,9 +226,8 @@ local function place_sign(base_pos, robot_pos, param2, slot)
 				return lib.ERROR, I("Error: Signs inventory empty")
 			end
 		end
-		return lib.DONE
 	end
-	return lib.ERROR, I("Error: Position is protected")
+	return lib.ERROR, I("Error: Position protected or occupied")
 end
 
 signs_bot.register_botcommand("place_sign", {
@@ -257,9 +257,8 @@ local function place_sign_behind(base_pos, robot_pos, param2, slot)
 				return lib.ERROR, I("Error: Signs inventory empty")
 			end
 		end
-		return lib.DONE
 	end
-	return lib.ERROR, I("Error: Position is protected")
+	return lib.ERROR, I("Error: Position protected or occupied")
 end
 
 signs_bot.register_botcommand("place_sign_behind", {
@@ -295,7 +294,8 @@ local function dig_sign(base_pos, robot_pos, param2, slot)
 		meta:set_int("err_code", err_code)
 		minetest.remove_node(pos1)
 		if not put_inv_sign(base_pos, slot, sign) then	
-			return lib.ERROR, I("Error: Signs inventory slot is full")
+			signs_bot.lib.drop_items(robot_pos, sign)
+			return lib.ERROR, I("Error: Signs inventory slot is occupied")
 		end
 		return lib.DONE
 	end

@@ -203,7 +203,7 @@ local function bot_error(base_pos, mem, err)
 	minetest.sound_play('signs_bot_error', {pos = base_pos})
 	minetest.sound_play('signs_bot_error', {pos = mem.robot_pos})
 	signs_bot.infotext(base_pos, err)
-	return lib.TURN_OFF
+	return false
 end
 
 function signs_bot.run_next_command(base_pos, mem)
@@ -215,16 +215,16 @@ function signs_bot.run_next_command(base_pos, mem)
 	if not tCommands[cmnd] then
 		return bot_error(base_pos, mem, "Error: Invalid command")
 	end
-	--debug(mem, cmnd)
+	debug(mem, cmnd)
 	--sts,res,err = true, tCommands[cmnd].cmnd(base_pos, mem, param1, param2)
 	sts,res,err = pcall(tCommands[cmnd].cmnd, base_pos, mem, param1, param2)
 	if not sts then
 		return bot_error(base_pos, mem, err)
 	end
-	if res ~= lib.BUSY then
-		local _ = table.remove(mem.lCmnd2, 1) or table.remove(mem.lCmnd1, 1)
-	elseif res == lib.ERROR and err then
+	if res == lib.ERROR and err then
 		return bot_error(base_pos, mem, err)
+	elseif res ~= lib.BUSY then
+		local _ = table.remove(mem.lCmnd2, 1) or table.remove(mem.lCmnd1, 1)
 	end
 	return res ~= lib.TURN_OFF
 end
