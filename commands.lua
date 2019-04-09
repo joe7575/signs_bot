@@ -215,7 +215,7 @@ function signs_bot.run_next_command(base_pos, mem)
 	if not tCommands[cmnd] then
 		return bot_error(base_pos, mem, "Error: Invalid command")
 	end
-	debug(mem, cmnd)
+	--debug(mem, cmnd)
 	--sts,res,err = true, tCommands[cmnd].cmnd(base_pos, mem, param1, param2)
 	sts,res,err = pcall(tCommands[cmnd].cmnd, base_pos, mem, param1, param2)
 	if not sts then

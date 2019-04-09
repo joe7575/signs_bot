@@ -95,8 +95,8 @@ minetest.register_node("signs_bot:connector", {
 minetest.register_craft({
 	output = "signs_bot:connector",
 	recipe = {
-		{"basic_materials:plastic_strip", "dye:black", ""},
-		{"", "basic_materials:silicon", ""},
-		{"", "", "basic_materials:plastic_strip"}
+		{"dye:yellow", "default:mese_crystal", "dye:yellow"},
+		{"", "default:stick", ""},
+		{"", "default:stick", ""}
 	}
 })
