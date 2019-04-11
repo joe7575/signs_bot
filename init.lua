@@ -39,5 +39,6 @@ dofile(MP.."/nodes.lua")
 dofile(MP.."/bot_sensor.lua")
 dofile(MP.."/node_sensor.lua")
 dofile(MP.."/crop_sensor.lua")
+dofile(MP.."/chest.lua")
 
 dofile(MP.."/tool.lua")

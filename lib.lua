@@ -261,4 +261,10 @@ function signs_bot.lib.trim_text(text)
 	return table.concat(tbl, "\n")
 end
 
+function signs_bot.lib.fake_player(name)
+	return {
+		get_player_name = function() return name end,
+		is_player = function() return false end,
+	}
+end
 

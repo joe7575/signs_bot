@@ -162,6 +162,36 @@ signs_bot.register_botcommand("place_below", {
 	end,
 })
 
+local function place_item_above(base_pos, robot_pos, param2, slot)
+	local pos1 = {x=robot_pos.x,y=robot_pos.y+1,z=robot_pos.z}
+	if lib.not_protected(base_pos, pos1) and lib.is_air_like(pos1) then
+		local src_inv, src_list = get_own_inv(base_pos)
+		local taken = lib.get_inv_items(src_inv, src_list, slot, 1)
+		if taken then
+			local name = taken:get_name()
+			local def = minetest.registered_nodes[name]
+			if not def then return end
+			minetest.set_node(pos1, {name=name, param2=param2})
+		end
+	end
+end
+
+signs_bot.register_botcommand("place_above", {
+	mod = "place",
+	params = "<slot>",	
+	description = I("Place a block above the robot.\n"..
+		"<slot> is the inventory slot (1..8)"),
+	check = function(slot)
+		slot = tonumber(slot or 1)
+		return slot and slot > 0 and slot < 9
+	end,
+	cmnd = function(base_pos, mem, slot)
+		slot = tonumber(slot or 1)
+		place_item_above(base_pos, mem.robot_pos, mem.robot_param2, slot)
+		return lib.DONE
+	end,
+})
+
 local function dig_item(base_pos, robot_pos, param2, slot, route, level)
 	local pos1 = lib.dest_pos(robot_pos, param2, route)
 	pos1.y = pos1.y + level
@@ -264,6 +294,32 @@ signs_bot.register_botcommand("dig_below", {
 	end,
 })
 
+local function dig_item_above(base_pos, robot_pos, param2, slot)
+	local pos1 = {x=robot_pos.x,y=robot_pos.y+1,z=robot_pos.z}
+	local node = lib.get_node_lvm(pos1)
+	if lib.not_protected(base_pos, pos1) and lib.is_simple_node(node) then
+		local dst_inv, dst_list = get_own_inv(base_pos)
+		if lib.put_inv_items(dst_inv, dst_list, slot, ItemStack(node.name)) then
+			minetest.remove_node(pos1)
+		end
+	end
+end
+
+signs_bot.register_botcommand("dig_above", {
+	mod = "place",
+	params = "<slot>",	
+	description = I("Dig the block above the robot.\n"..
+		"<slot> is the inventory slot (1..8)"),
+	check = function(slot)
+		slot = tonumber(slot or 1)
+		return slot and slot > 0 and slot < 9
+	end,
+	cmnd = function(base_pos, mem, slot)
+		slot = tonumber(slot or 1)
+		dig_item_above(base_pos, mem.robot_pos, mem.robot_param2, slot, 1)
+		return lib.DONE
+	end,
+})
 
 local function rotate_item(base_pos, robot_pos, param2, route, level, steps)
 	local pos1 = lib.dest_pos(robot_pos, param2, route)

@@ -29,9 +29,10 @@ The state of the actuator is saved with the pairing and restored by the signal. 
 An actuator can receive signals from many sensors. A sensor can only be connected to an actuator. However, if several actuators are to be controlled by one sensor, a signal extender block must be used. This connects to a sensor when it is placed next to the sensor. This extender can then be paired with another actuator.
 
 Sensors are:
-- Bot Sensor: sends a signal when the robot passes by
-- Node Sensor: sends a signal when it detects a change (tree, cactus, flower, etc.) in front of the sensor (over 3 positions)
-- Crop Sendor: Sends a signal when, for example, the wheat is fully grown
+- Bot Sensor: Sends a signal when the robot passes by
+- Node Sensor: Sends a signal when it detects a change (tree, cactus, flower, etc.) in front of the sensor (over 3 positions)
+- Crop Sensor: Sends a signal when, for example, the wheat is fully grown
+- Bot Chest: Sends a signal depending on the chest state. Possible states are "empty", "not empty", "almost full". The state to be sent is defined while pairing.
 
 Actuators are:
 - Control Unit: Can place up to 4 signs and steer the bot e.g. in different directions.
@@ -72,10 +73,12 @@ For all Inventory commands applies: If the inventory stack specified by <slot> i
     place_left <slot> <lvl>   - Set block to the left
     place_right <slot> <lvl>  - set block to the right
     place_below <slot>        - set block under the robot
+    place_above <slot>        - set block above the robot
     dig_front <slot> <lvl>    - remove block in front of the robot
     dig_left <slot> <lvl>     - remove block on the left
     dig_right <slot> <lvl>    - remove block on the right
     dig_below <slot>          - dig block under the robot
+    dig_above <slot>          - dig block above the robot
     place_sign <slot>         - set sign
     place_sign_behind <slot>  - put a sign behind the bot
     dig_sign <slot>           - remove the sign
@@ -104,4 +107,4 @@ optional: farming redo
 - 2019-03-23  v0.01  * first draft
 - 2019-04-06  v0.02  * completely reworked
 - 2019-04-08  v0.03  * 'plant_sapling', 'place_below', 'dig_below' added, many bugs fixed
-
+- 2019-04-11  v0.04  * support for 'node_io' added, chest added, further commands added
