@@ -191,6 +191,22 @@ function signs_bot.lib.dig_sign(pos, node)
 	end
 end
 
+function signs_bot.lib.after_dig_sign_node(pos, oldnode, oldmetadata, digger)
+	local sign = ItemStack(oldnode.name)
+	local smeta = sign:get_meta()
+	smeta:set_string("cmnd", oldmetadata.fields.signs_bot_cmnd)
+	smeta:set_string("description", oldmetadata.fields.sign_name)
+	if oldmetadata.fields.err_code then
+		smeta:set_int("err_code", tonumber(oldmetadata.fields.err_code))
+		smeta:set_string("err_msg", oldmetadata.fields.err_msg or "")
+	end
+	local inv = minetest.get_inventory({type="player", name=digger:get_player_name()})
+	local left_over = inv:add_item("main", sign)
+	if left_over:get_count() > 0 then
+		minetest.add_item(pos, sign)
+	end
+end
+
 local function activate_extender_node(pos)
 	local node = get_node_lvm(pos)
 	if node.name == "signs_bot:sensor_extender" then

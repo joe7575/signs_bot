@@ -21,6 +21,7 @@ local M = minetest.get_meta
 local MP = minetest.get_modpath("signs_bot")
 local I,_ = dofile(MP.."/intllib.lua")
 
+local lib = signs_bot.lib
 
 local formspec = "size[8,7.3]"..
 	default.gui_bg..
@@ -32,15 +33,14 @@ local formspec = "size[8,7.3]"..
 	"list[context;temp;3,1;1,1;]"..
 	"label[0.3,2;"..I("Output:").."]"..
 	"list[context;outp;3,2;1,1;]"..
-	"label[4,0;"..I("1. Place one sign to be\n    used as template.\n")..
-			I("2. Add 'command signs' to\n    the input inventory.\n")..
+	"label[4,0;"..I("1. Place one 'cmnd' sign to be\n    used as template.\n")..
+			I("2. Add 'blank signs' to\n    the input inventory.\n")..
 			I("3. Take the copies\n    from the output inventory.").."]"..
 	"list[current_player;main;0,3.5;8,4;]"..
 	"listring[context;inp]"..
 	"listring[current_player;main]"..
 	"listring[current_player;main]"..
 	"listring[context;outp]"
-
 
 local function allow_metadata_inventory_put(pos, listname, index, stack, player)
 	if minetest.is_protected(pos, player:get_player_name()) then
@@ -71,19 +71,16 @@ local function move_to_output(pos)
 	local temp_stack = inv:get_stack("temp", 1)
 	local outp_stack = inv:get_stack("outp", 1)
 	
-	if inp_stack:get_name() == "signs_bot:sign_cmnd" 
+	if (inp_stack:get_name() == "signs_bot:sign_blank" 
+	or inp_stack:get_name() == "signs_bot:sign_user")
 	and temp_stack:get_name() == "signs_bot:sign_cmnd"
 	and outp_stack:get_name() == "" then
-		local stack = ItemStack("signs_bot:sign_cmnd")
+		local stack = ItemStack("signs_bot:sign_user")
 		stack:set_count(inp_stack:get_count())
 		local meta = stack:get_meta()
 		local temp_meta = temp_stack:get_meta()
-		
 		meta:set_string("cmnd", temp_meta:get_string("cmnd"))
 		meta:set_string("description", temp_meta:get_string("description"))
-		meta:set_string("err_msg", temp_meta:get_string("err_msg"))
-		meta:set_int("err_code", temp_meta:get_int("err_code"))
-		
 		inp_stack:clear()
 		inv:set_stack("inp", 1, inp_stack)
 		inv:set_stack("outp", 1, stack)
@@ -146,4 +143,69 @@ minetest.register_craft({
 	}
 })
 
+local function formspec_user(cmnd)
+	cmnd = minetest.formspec_escape(cmnd)
+	return "size[4,7]"..
+	default.gui_bg..
+	default.gui_bg_img..
+	default.gui_slots..
+	"label[0.2,0;"..cmnd.."]"
+end
+
+minetest.register_node("signs_bot:sign_user", {
+	description = I('Sign "user"'),
+	drawtype = "nodebox",
+	inventory_image = "signs_bot_sign_user.png",
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{ -1/16, -8/16, -1/16,   1/16, 4/16, 1/16},
+			{ -6/16, -5/16, -2/16,   6/16, 3/16, -1/16},
+		},
+	},
+	paramtype2 = "facedir",
+	tiles = {
+		"default_wood.png",
+		"default_wood.png",
+		"default_wood.png",
+		"default_wood.png",
+		"default_wood.png",
+		"default_wood.png^signs_bot_sign_user.png",
+	},
+	after_place_node = function(pos, placer, itemstack)
+		local imeta = itemstack:get_meta()
+		local nmeta = minetest.get_meta(pos)
+		if imeta:get_string("description") ~= ""  then
+			nmeta:set_string("signs_bot_cmnd", imeta:get_string("cmnd"))
+			nmeta:set_string("sign_name", imeta:get_string("description"))
+		end
+		nmeta:set_string("infotext", nmeta:get_string("sign_name"))
+		nmeta:set_string("formspec", formspec_user(imeta:get_string("cmnd")))
+	end,
+	
+	after_dig_node = lib.after_dig_sign_node,
+	drop = "",
+	on_rotate = screwdriver.disallow,
+	paramtype = "light",
+	sunlight_propagates = true,
+	is_ground_content = false,
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, sign_bot_sign = 1, not_in_creative_inventory = 1},
+	sounds = default.node_sound_wood_defaults(),
+})
+
+signs_bot.register_sign({
+	name = "sign_blank", 
+	description = I('Sign "blank"'), 
+	commands = "", 
+	image = "signs_bot_sign_blank.png",
+})
+
+minetest.register_craft({
+	output = "signs_bot:sign_blank 6",
+	recipe = {
+		{"group:wood", "default:stick", "group:wood"},
+		{"dye:yellow", "default:stick", "dye:yellow"},
+		{"", "", ""}
+	}
+})
 

@@ -172,16 +172,7 @@ minetest.register_node("signs_bot:sign_cmnd", {
 		end
 	end,
 	
-	on_dig = function(pos, node, digger)
-		if not minetest.is_protected(pos, digger:get_player_name()) then
-			local sign = lib.dig_sign(pos, node)
-			if sign then
-				local inv = minetest.get_inventory({type="player", name=digger:get_player_name()})
-				inv:add_item("main", sign)
-			end
-		end
-	end,
-	
+	after_dig_node = lib.after_dig_sign_node,
 	paramtype = "light",
 	sunlight_propagates = true,
 	is_ground_content = false,

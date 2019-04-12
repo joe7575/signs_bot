@@ -23,12 +23,11 @@ local I,_ = dofile(MP.."/intllib.lua")
 
 local function formspec(cmnd)
 	cmnd = minetest.formspec_escape(cmnd)
-	return "size[6,7]"..
+	return "size[4,7]"..
 	default.gui_bg..
 	default.gui_bg_img..
 	default.gui_slots..
-	"label[0.2,0;"..cmnd.."]"..
-	"button_exit[4,6.3;2,1;exit;"..I("Exit").."]"
+	"label[0.2,0;"..cmnd.."]"
 end
 
 local function register_sign(def)
@@ -150,3 +149,4 @@ minetest.register_craft({
 		{"", "", ""}
 	}
 })
+

@@ -28,21 +28,22 @@ local CYCLE_TIME = 1
 local function formspec(pos, mem)
 	mem.running = mem.running or false
 	local cmnd = mem.running and "stop;"..I("Off") or "start;"..I("On") 
-	local bot = not mem.running and "image[0.3,0.3;1,1;signs_bot_bot_inv.png]" or ""
-	return "size[10,8]"..
+	local bot = not mem.running and "image[0.5,1;1,1;signs_bot_bot_inv.png]" or ""
+	return "size[9,7.6]"..
 	default.gui_bg..
 	default.gui_bg_img..
 	default.gui_slots..
-	"label[2.8,0;"..I("Signs").."]label[6.3,0;"..I("Other items").."]"..
+	"label[2.1,0;"..I("Signs").."]label[5.3,0;"..I("Other items").."]"..
+	"image[0.5,1;1,1;signs_bot_form_mask.png]"..
 	bot..
-	"label[2.8,0.5;1]label[3.8,0.5;2]label[4.8,0.5;3]"..
-	"list[context;sign;2.5,1;3,2;]"..
-	"label[2.8,3;4]label[3.8,3;5]label[4.8,3;6]"..
-	"label[6.3,0.5;1]label[7.3,0.5;2]label[8.3,0.5;3]label[9.3,0.5;4]"..
-	"list[context;main;6,1;4,2;]"..
-	"label[6.3,3;5]label[7.3,3;6]label[8.3,3;7]label[9.3,3;8]"..
-	"button[0.4,2;1.8,1;"..cmnd.."]"..
-	"list[current_player;main;1,4;8,4;]"..
+	"label[2.1,0.5;1]label[3.1,0.5;2]label[4.1,0.5;3]"..
+	"list[context;sign;1.8,1;3,2;]"..
+	"label[2.1,3;4]label[3.1,3;5]label[4.1,3;6]"..
+	"label[5.3,0.5;1]label[6.3,0.5;2]label[7.3,0.5;3]label[8.3,0.5;4]"..
+	"list[context;main;5,1;4,2;]"..
+	"label[5.3,3;5]label[6.3,3;6]label[7.3,3;7]label[8.3,3;8]"..
+	"button[0.2,2;1.5,1;"..cmnd.."]"..
+	"list[current_player;main;0.5,3.8;8,4;]"..
 	"listring[context;main]"..
 	"listring[current_player;main]"
 end
