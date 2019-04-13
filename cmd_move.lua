@@ -248,7 +248,7 @@ signs_bot.register_botcommand("stop", {
 	params = "",	
 	description = I("Stop the robot."),
 	cmnd = function(base_pos, mem, slot)
-		return lib.BUSY
+		return lib.DONE
 	end,
 })
 
