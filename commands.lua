@@ -84,6 +84,18 @@ function signs_bot.check_commands(pos, text)
 	return true, I("Checked and approved"), 0
 end
 
+function signs_bot.get_comment_text(title, text)
+	local tbl = {title, " "}
+	for idx,line in ipairs(string.split(text, "\n", true)) do
+		local b = line:byte(1)
+		if b and b == 45 then -- comment line?
+			local _,comment = unpack(string.split(line, " ", false, 1))
+			tbl[#tbl+1] = comment
+		end
+	end
+	return table.concat(tbl, "\n")
+end
+
 --
 -- Command interpreter
 --
@@ -110,11 +122,14 @@ local function check_sign(pos, mem)
 		end
 		
 		local node = lib.get_node_lvm(pos)
-		-- wrong sign direction?
-		if node.name ~= "signs_bot:box" and mem.robot_param2 ~= node.param2 then
-			return false
+		-- correct sign direction?
+		if mem.robot_param2 == node.param2 then
+			return true
 		end
-		return true
+		-- special sign node?
+		if node.name == "signs_bot:bot_flap" or node.name == "signs_bot:box" then
+			return true
+		end
 	end
 	return false
 end
@@ -195,8 +210,8 @@ local function uncond_move(base_pos, mem)
 			activate_sensor(mem.robot_pos, (mem.robot_param2 + 1) % 4)
 			activate_sensor(mem.robot_pos, (mem.robot_param2 + 3) % 4)
 		end
+		mem.steps = mem.steps - 1
 	end
-	mem.steps = mem.steps - 1
 end	
 
 local function bot_error(base_pos, mem, err)

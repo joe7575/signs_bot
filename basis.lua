@@ -51,6 +51,7 @@ end
 function signs_bot.infotext(pos, state)
 	local meta = minetest.get_meta(pos)
 	local number = meta:get_string("number")
+	state = state or "<unknown>"
 	meta:set_string("infotext", I("Robot Box ")..number..": "..state)
 end
 
@@ -77,13 +78,19 @@ end
 
 function signs_bot.stop_robot(base_pos, mem)
 	local meta = minetest.get_meta(base_pos)
-	mem.running = false
-	minetest.get_node_timer(base_pos):stop()
-	signs_bot.infotext(base_pos, I("stopped"))
-	meta:set_string("formspec", formspec(base_pos, mem))
-	signs_bot.remove_robot(mem.robot_pos)
+	if mem.signal_request ~= true then
+		mem.running = false
+		minetest.get_node_timer(base_pos):stop()
+		signs_bot.infotext(base_pos, I("stopped"))
+		meta:set_string("formspec", formspec(base_pos, mem))
+		signs_bot.remove_robot(mem.robot_pos)
+	else
+		mem.signal_request = false
+		start_robot(base_pos)
+	end
 end
 
+-- Used by the pairing tool
 local function signs_bot_get_signal(pos, node)
 	local mem = tubelib2.get_mem(pos)
 	if mem.running then
@@ -100,6 +107,8 @@ local function signs_bot_on_signal(pos, node, signal)
 		start_robot(pos)
 	elseif signal == "off" and mem.running then
 		signs_bot.stop_robot(pos, mem)
+	else
+		mem.signal_request = (signal == "on")
 	end
 end
 

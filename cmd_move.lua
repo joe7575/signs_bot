@@ -37,9 +37,9 @@ function signs_bot.move_robot(pos, param2)
 	local pos5 = {x=pos.x, y=pos.y-2, z=pos.z}
 	local new_pos = nil
 	
-	if lib.check_pos(pos1, pos2) then  -- one step forward
+	if lib.check_pos(pos1, pos2, param2) then  -- one step forward
 		new_pos = pos1
-	elseif lib.check_pos(pos3, pos1) then  -- one step up
+	elseif lib.check_pos(pos3, pos1, param2) then  -- one step up
 		local node = lib.get_node_lvm(pos4)
 		if node.name == "signs_bot:robot_leg" then 
 			return nil
@@ -49,9 +49,9 @@ function signs_bot.move_robot(pos, param2)
 		minetest.set_node(new_pos, {name="signs_bot:robot", param2=param2})
 		minetest.sound_play('signs_bot_step', {pos = new_pos})
 		return new_pos
-	elseif lib.check_pos(pos1, pos4) then  -- one step forward
+	elseif lib.check_pos(pos1, pos4, param2) then  -- one step forward
 		new_pos = pos1		
-	elseif lib.check_pos(pos4, pos5) then  -- one step down
+	elseif lib.check_pos(pos4, pos5, param2) then  -- one step down
 		new_pos = pos4		
 	else
 		return nil -- blocked
@@ -77,7 +77,7 @@ local function backward_robot(pos, param2)
 	local pos5 = {x=pos.x, y=pos.y-2, z=pos.z}
 	local new_pos = nil
 	
-	if lib.check_pos(pos1, pos2) then  -- one step forward
+	if lib.check_pos(pos1, pos2, param2) then  -- one step forward
 		new_pos = pos1
 	else
 		return nil -- blocked
@@ -159,7 +159,7 @@ signs_bot.register_botcommand("turn_around", {
 local function robot_up(pos, param2)
 	local pos1 = {x=pos.x, y=pos.y+1, z=pos.z}
 	local pos2 = {x=pos.x, y=pos.y-1, z=pos.z}
-	if lib.check_pos(pos1, pos2) then
+	if lib.check_pos(pos1, pos2, param2) then
 		local node = lib.get_node_lvm(pos2)
 		if node.name == "signs_bot:robot_leg" then 
 			return nil
@@ -198,8 +198,8 @@ local function robot_down(pos, param2)
 	local pos2 = {x=pos.x, y=pos.y-2, z=pos.z}
 	local pos3 = {x=pos.x, y=pos.y-3, z=pos.z}
 	local node1 = lib.get_node_lvm(pos1)
-	if lib.check_pos(pos1, pos2) 
-	or (node1.name == "air" and lib.check_pos(pos2, pos3))
+	if lib.check_pos(pos1, pos2, param2) 
+	or (node1.name == "air" and lib.check_pos(pos2, pos3, param2))
 	or (node1.name == "signs_bot:robot_leg" or node1.name == "signs_bot:robot_foot") then
 		minetest.remove_node(pos)
 		minetest.set_node(pos1, {name="signs_bot:robot", param2=param2})

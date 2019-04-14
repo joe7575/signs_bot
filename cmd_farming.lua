@@ -24,43 +24,41 @@ local lib = signs_bot.lib
 
 local function inv_get_item(pos, slot)
 	local inv = minetest.get_inventory({type="node", pos=pos})
-	return lib.get_inv_items(inv, "main", slot, 1)
+	return inv and lib.get_inv_items(inv, "main", slot, 1)
 end
 
 local function inv_put_item(pos, mem, name)
 	local inv = minetest.get_inventory({type="node", pos=pos})
-	local leftover = inv:add_item("main", ItemStack(name))
-	if leftover:get_count() > 0 then
+	local leftover = inv and inv:add_item("main", ItemStack(name))
+	if leftover and leftover:get_count() > 0 then
 		lib.drop_items(mem.robot_pos, leftover)
 	end
 end
 
-local function soil_availabe(pos)
+local function get_pointed_thing(pos)
 	local node = minetest.get_node_or_nil(pos)
 	if node.name == "air" then
-		node = minetest.get_node_or_nil({x=pos.x, y=pos.y-1, z=pos.z})
+		local pos1 = {x=pos.x, y=pos.y-1, z=pos.z}
+		node = minetest.get_node_or_nil(pos1)
 		if minetest.get_item_group(node.name, "soil") >= 1 then
-			return true
+			return {type = "node", under = pos1, above = pos}
 		end
 	end
-	return false
 end
 
 local function planting(base_pos, mem, slot)
 	local pos = mem.pos_tbl and mem.pos_tbl[mem.steps]
-	mem.steps = (mem.steps or 1) + 1
-	if pos and lib.not_protected(base_pos, pos) and soil_availabe(pos) then
-		local stack = inv_get_item(base_pos, slot)
-		local item = stack and signs_bot.FarmingSeed[stack:get_name()]
-		if item and item.seed then
-			minetest.set_node(pos, {name = item.seed, paramtype2 = "wallmounted", param2 = 1})
-			if item.t1 ~= nil then 
-				-- We have to simulate "on_place" and start the timer by hand
-				-- because the after_place_node function checks player rights and can't therefore
-				-- be used.
-				minetest.get_node_timer(pos):start(math.random(item.t1, item.t2))
-			end			
+	mem.steps = mem.steps + 1
+	local stack = inv_get_item(base_pos, slot)
+	local item = stack and signs_bot.FarmingSeed[stack:get_name()]
+	local pointed_thing = get_pointed_thing(pos)
+	if pointed_thing and item and item.seed then
+		if not farming.place_seed(stack, nil, pointed_thing, item.seed) then
+			return
 		end
+	end
+	if stack then
+		inv_put_item(pos, mem, stack:get_name())
 	end
 end	
 

@@ -145,7 +145,7 @@ minetest.register_craft({
 
 local function formspec_user(cmnd)
 	cmnd = minetest.formspec_escape(cmnd)
-	return "size[4,7]"..
+	return "size[6,5]"..
 	default.gui_bg..
 	default.gui_bg_img..
 	default.gui_slots..
@@ -180,7 +180,8 @@ minetest.register_node("signs_bot:sign_user", {
 			nmeta:set_string("sign_name", imeta:get_string("description"))
 		end
 		nmeta:set_string("infotext", nmeta:get_string("sign_name"))
-		nmeta:set_string("formspec", formspec_user(imeta:get_string("cmnd")))
+		local text = signs_bot.get_comment_text(nmeta:get_string("sign_name"), imeta:get_string("cmnd"))
+		nmeta:set_string("formspec", formspec_user(text))
 	end,
 	
 	after_dig_node = lib.after_dig_sign_node,

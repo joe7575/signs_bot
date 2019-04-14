@@ -21,7 +21,7 @@ local lib = signs_bot.lib
 
 -- Called when robot is started
 function signs_bot.place_robot(pos1, pos2, param2)	
-	if lib.check_pos(pos1, pos2) then
+	if lib.check_pos(pos1, pos2, param2) then
 		minetest.set_node(pos1, {name = "signs_bot:robot", param2 = param2})
 	end
 end

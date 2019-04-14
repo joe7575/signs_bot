@@ -17,10 +17,9 @@ signs_bot.FarmingCrop = {}
 signs_bot.TreeSaplings = {}
 
 -- inv_seed is the seed inventory name
--- seed is what has to be placed on the ground
--- t1/t2 is needed for farming nodes which require the node timer
-function signs_bot.register_farming_seed(inv_seed, seed, t1, t2)
-	signs_bot.FarmingSeed[inv_seed] = {seed = seed, t1 = t1 or 2400, t2 = t2 or 4800}
+-- seed is what has to be placed on the ground (stage 1)
+function signs_bot.register_farming_seed(inv_seed, seed)
+	signs_bot.FarmingSeed[inv_seed] = {seed = seed}
 end
 
 -- crop is the farming crop in the final stage

@@ -76,15 +76,24 @@ local next_pos = signs_bot.lib.next_pos
 local dest_pos = signs_bot.lib.dest_pos
 local get_node_lvm = signs_bot.lib.get_node_lvm
 
+local function poke_objects(pos, param2, objects)
+	minetest.sound_play('signs_bot_go_away', {pos = pos})
+	for _,obj in ipairs(objects) do
+		local pos1 = obj:get_pos()
+		pos1 = vector.add(pos1, vector.multiply(Face2Dir[param2], 0.2))
+		obj:move_to(pos1)
+	end
+end	
+
 -- check if posA == air-like and posB == solid and no player around
-function signs_bot.lib.check_pos(posA, posB)
+function signs_bot.lib.check_pos(posA, posB, param2)
 	local nodeA = get_node_lvm(posA)
 	local nodeB = get_node_lvm(posB)
 	if not minetest.registered_nodes[nodeA.name].walkable and 
 			minetest.registered_nodes[nodeB.name].walkable then
 		local objects = minetest.get_objects_inside_radius(posA, 0.7)
 		if #objects ~= 0 then
-			minetest.sound_play('signs_bot_go_away', {pos = posA})
+			poke_objects(posA, param2, objects)
 			return false
 		else
 			return true
@@ -127,6 +136,17 @@ end
 -- start at slot 1.
 function signs_bot.lib.get_inv_items(src_inv, src_list, slot, num)
 	for idx = (slot or 1),src_inv:get_size(src_list) do
+		local stack = src_inv:get_stack(src_list, idx)
+		if stack:get_count() > 0 then
+			local taken = stack:take_item(num or 1)
+			src_inv:set_stack(src_list, idx, stack)
+			return taken
+		end
+	end
+end	
+
+function signs_bot.lib.get_inv_items_invers(src_inv, src_list, slot, num)
+	for idx = src_inv:get_size(src_list),(slot or 1),-1 do
 		local stack = src_inv:get_stack(src_list, idx)
 		if stack:get_count() > 0 then
 			local taken = stack:take_item(num or 1)

@@ -1,8 +1,6 @@
 Signs Bot [signs_bot]
 =====================
 
-## THIS IS WORK IN PROGRESS!
-
 **A robot controlled by signs.**
 
 Browse on: ![GitHub](https://github.com/joe7575/signs_bot)
@@ -42,6 +40,7 @@ In addition, there are currently the following blocks:
 - The duplicator is used to copy Command Signs, i.e. the signs with their own commands.
 - Bot Flap: The "cat flap" is a door for the bot, which he opens automatically and closes behind him.
 - Sensor Extender for controlling additional actuators from one sensor signal
+- A Timer can be used to start the Bot cyclically
 
 More information:
 - Using the signs "take" and "add", the bot can pick items from Chests and put them in. The signs must be placed on the box. So far, only a few blocks are supported with Inventory.
@@ -108,3 +107,4 @@ optional: farming redo
 - 2019-04-06  v0.02  * completely reworked
 - 2019-04-08  v0.03  * 'plant_sapling', 'place_below', 'dig_below' added, many bugs fixed
 - 2019-04-11  v0.04  * support for 'node_io' added, chest added, further commands added
+- 2019-04-14  v0.05  * timer added, user signs added, bug fixes
