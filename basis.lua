@@ -49,7 +49,7 @@ local function formspec(pos, mem)
 end
 
 function signs_bot.infotext(pos, state)
-	local meta = minetest.get_meta(pos)
+	local meta = M(pos)
 	local number = meta:get_string("number")
 	state = state or "<unknown>"
 	meta:set_string("infotext", I("Robot Box ")..number..": "..state)
@@ -65,7 +65,7 @@ end
 
 local function start_robot(base_pos)
 	local mem = tubelib2.get_mem(base_pos)
-	local meta = minetest.get_meta(base_pos)
+	local meta = M(base_pos)
 	mem.lCmnd1 = {}
 	mem.lCmnd2 = {}
 	mem.running = true
@@ -77,7 +77,7 @@ local function start_robot(base_pos)
 end
 
 function signs_bot.stop_robot(base_pos, mem)
-	local meta = minetest.get_meta(base_pos)
+	local meta = M(base_pos)
 	if mem.signal_request ~= true then
 		mem.running = false
 		minetest.get_node_timer(base_pos):stop()
@@ -115,7 +115,7 @@ end
 
 local function node_timer(pos, elapsed)
 	local mem = tubelib2.get_mem(pos)
-	local res
+	local res = false
 	--local t = minetest.get_us_time()
 	if mem.running then
 		res = signs_bot.run_next_command(pos, mem)
@@ -195,7 +195,7 @@ minetest.register_node("signs_bot:box", {
 	},
 
 	on_construct = function(pos)
-		local meta = minetest.get_meta(pos)
+		local meta = M(pos)
 		local inv = meta:get_inventory()
 		inv:set_size('main', 8)
 		inv:set_size('sign', 6)
@@ -204,7 +204,7 @@ minetest.register_node("signs_bot:box", {
 	after_place_node = function(pos, placer)
 		local mem = tubelib2.init_mem(pos)
 		mem.running = false
-		local meta = minetest.get_meta(pos)
+		local meta = M(pos)
 		local number = "0000" --tubelib.add_node(pos, "signs_bot:base")
 		meta:set_string("owner", placer:get_player_name())
 		meta:set_string("number", number)

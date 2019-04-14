@@ -3,89 +3,92 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-04-14 19:34+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2019-04-14 19:36+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.6\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: basis.lua
 msgid "Off"
-msgstr ""
+msgstr "Aus"
 
 #: basis.lua
 msgid "On"
-msgstr ""
+msgstr "An"
 
 #: basis.lua
 msgid "Signs"
-msgstr ""
+msgstr "Zeichen"
 
 #: basis.lua
 msgid "Other items"
-msgstr ""
+msgstr "Andere Gegenstände"
 
 #: basis.lua
 msgid "Robot Box "
-msgstr ""
+msgstr "Roboter Kiste "
 
 #: basis.lua
 msgid "running"
-msgstr ""
+msgstr "läuft"
 
 #: basis.lua
 msgid "stopped"
-msgstr ""
+msgstr "gestoppt"
 
 #: basis.lua
 msgid "Signs Bot Box"
-msgstr ""
+msgstr "Signs Bot Kiste"
 
 #: bot_flap.lua
 msgid "Exit"
-msgstr ""
+msgstr "Beenden"
 
 #: bot_sensor.lua
 msgid "Bot Sensor: Connected with "
-msgstr ""
+msgstr "Bot Sensor: Verbunden mit "
 
 #: bot_sensor.lua
 msgid "Bot Sensor"
-msgstr ""
+msgstr "Bot Sensor"
 
 #: bot_sensor.lua
 msgid "Bot Sensor: Not connected"
-msgstr ""
+msgstr "Bot Sensor: Nicht verbunden"
 
 #: changer.lua
 msgid "Signs:"
-msgstr ""
+msgstr "Zeichen:"
 
 #: changer.lua
 msgid "Bot Control Unit"
-msgstr ""
+msgstr "Roboter Steuerungseinheit"
 
 #: chest.lua
 msgid "Bot Chest: Sends signal to "
-msgstr ""
+msgstr "Roboter Kiste: Sende Signal zu "
 
 #: chest.lua
 msgid "Signs Bot Chest"
-msgstr ""
+msgstr "Signs Bot Kiste"
 
 #: cmd_farming.lua
 msgid ""
 "Sow farming seeds\n"
 "in front of the robot"
 msgstr ""
+"Sähe Saatgut\n"
+"vor dem Roboter"
 
 #: cmd_farming.lua
 msgid ""
@@ -93,16 +96,21 @@ msgid ""
 "in front of the robot\n"
 "on a 3x3 field."
 msgstr ""
+"Ernte Früchte/Getreide\n"
+"in einem 3x3 großem Feld\n"
+"vor dem Roboter."
 
 #: cmd_farming.lua
 msgid ""
 "Plant a sapling\n"
 "in front of the robot"
 msgstr ""
+"Pflanze einen Setzling\n"
+"vor den Roboter"
 
 #: cmd_farming.lua
 msgid "Sign \"farming\""
-msgstr ""
+msgstr "Zeichen \"Farming\""
 
 #: cmd_item.lua
 msgid ""
@@ -110,6 +118,10 @@ msgid ""
 "and put it into the item inventory.\n"
 "<slot> is the inventory slot (1..8)"
 msgstr ""
+"Nehme <num> Gegenstände aus der\n"
+"Kiste oder dem Kisten-ähnlichen Block\n"
+"und tue diese in das eigene Inventar\n"
+"an der Position <slot>. Slot = (1..8)"
 
 #: cmd_item.lua
 msgid ""
@@ -117,6 +129,10 @@ msgid ""
 "taken from the item inventory.\n"
 "<slot> is the inventory slot (1..8)"
 msgstr ""
+"Lege <num> Gegenstände aus dem\n"
+"eigenen Inventar in die andere Kiste.\n"
+"<slot> ist die Position im\n"
+"eigenen Inventar (1--8)."
 
 #: cmd_item.lua
 msgid ""
@@ -124,56 +140,83 @@ msgid ""
 "in a 3x3 field.\n"
 "<slot> is the inventory slot (1..8)"
 msgstr ""
+"Hebe alle Objekte in einem\n"
+"3x3 Blöcke großen Feld auf\n"
+"und lege diese in das eigene\n"
+"Inventar an Position <slot> (1--8)"
 
 #: cmd_item.lua
 msgid ""
 "Drop items in front of the bot.\n"
 "<slot> is the inventory slot (1..8)"
 msgstr ""
+"Lasse ein Objekt aus dem eigenen\n"
+"Inventar vor dem Roboter fallen.\n"
+"<slot> ist die Position im\n"
+"eigenen Inventar (1--8)."
 
 #: cmd_move.lua
 msgid "Move the robot one step back"
 msgstr ""
+"Bewege den Roboter\n"
+"einen Schritt zurück."
 
 #: cmd_move.lua
 msgid "Turn the robot to the left"
 msgstr ""
+"Drehe den Roboter\n"
+"nach links."
 
 #: cmd_move.lua
 msgid "Turn the robot to the right"
 msgstr ""
+"Drehe den Roboter\n"
+"nach rechts."
 
 #: cmd_move.lua
 msgid "Turn the robot around"
 msgstr ""
+"Drehe den Roboter\n"
+"um (180 Grad)."
 
 #: cmd_move.lua
 msgid "Move the robot upwards"
 msgstr ""
+"Bewege den Roboter\n"
+"nach unten"
 
 #: cmd_move.lua
 msgid "Move the robot down"
 msgstr ""
+"Bewege den Roboter\n"
+"nach oben."
 
 #: cmd_move.lua
 msgid ""
 "Stop the robot for <sec> seconds\n"
 "(1..9999)"
 msgstr ""
+"Stoppe den Roboter\n"
+"für <sec> Sekunden (1.9999)"
 
 #: cmd_move.lua
 msgid "Stop the robot."
-msgstr ""
+msgstr "Stoppe den Roboter"
 
 #: cmd_move.lua
 msgid ""
 "Turn the robot off\n"
 "and put it back in the box."
 msgstr ""
+"Schalte den Roboter aus und\n"
+"setze ihn damit zurück in\n"
+"seine Box"
 
 #: cmd_pattern.lua
 msgid "Store pattern to be cloned."
 msgstr ""
+"Speichere die Vorlage\n"
+"die kopiert werden soll."
 
 #: cmd_pattern.lua
 msgid ""
@@ -183,14 +226,19 @@ msgid ""
 "5x1, 5x2, 5x3 (wide x deep)\n"
 "<lvl> pattern level offset (0..4)"
 msgstr ""
+"Kopiere die Blöcke von der\n"
+"\"Vorlage\" Position.\n"
+"<size> ist: 3x1, 3x2, 3x3,\n"
+"5x1, 5x2, 5x3 (Breite x Tiefe)\n"
+"<lvl> Vorlagenebene (0..4)"
 
 #: cmd_pattern.lua
 msgid "Sign \"pattern\""
-msgstr ""
+msgstr "Zeichen \"Vorlage\""
 
 #: cmd_pattern.lua
 msgid "Sign \"copy 3x3x3\""
-msgstr ""
+msgstr "Zeichen \"kopiere 3x3x3\""
 
 #: cmd_place.lua
 msgid ""
@@ -198,6 +246,10 @@ msgid ""
 "<slot> is the inventory slot (1..8)\n"
 "<lvl> is one of: -1   0   +1"
 msgstr ""
+"Setze einen Block vor den Roboter.\n"
+"<slot> ist die Position im\n"
+"eigenen Inventar (1--8).\n"
+"Für <lvl> ist zulässig: -1   0   +1"
 
 #: cmd_place.lua
 msgid ""
@@ -205,6 +257,10 @@ msgid ""
 "<slot> is the inventory slot (1..8)\n"
 "<lvl> is one of: -1   0   +1"
 msgstr ""
+"Setze einen Block links vorne.\n"
+"<slot> ist die Position im\n"
+"eigenen Inventar (1--8).\n"
+"Für <lvl> ist zulässig: -1   0   +1"
 
 #: cmd_place.lua
 msgid ""
@@ -212,6 +268,10 @@ msgid ""
 "<slot> is the inventory slot (1..8)\n"
 "<lvl> is one of: -1   0   +1"
 msgstr ""
+"Setze einen Block rechts vorne.\n"
+"<slot> ist die Position im\n"
+"eigenen Inventar (1--8).\n"
+"Für <lvl> ist zulässig: -1   0   +1"
 
 #: cmd_place.lua
 msgid ""
@@ -219,12 +279,18 @@ msgid ""
 "Hint: use 'move_up' first.\n"
 "<slot> is the inventory slot (1..8)"
 msgstr ""
+"Setze einen Block unter den Roboter.\n"
+"<slot> ist die Position im\n"
+"eigenen Inventar (1--8)."
 
 #: cmd_place.lua
 msgid ""
 "Place a block above the robot.\n"
 "<slot> is the inventory slot (1..8)"
 msgstr ""
+"Setze einen Block über den Roboter.\n"
+"<slot> ist die Position im\n"
+"eigenen Inventar (1--8)."
 
 #: cmd_place.lua
 msgid ""
@@ -232,6 +298,10 @@ msgid ""
 "<slot> is the inventory slot (1..8)\n"
 "<lvl> is one of: -1   0   +1"
 msgstr ""
+"Entferne einen Block vor den Roboter.\n"
+"<slot> ist die Position im\n"
+"eigenen Inventar (1--8).\n"
+"Für <lvl> ist zulässig: -1   0   +1"
 
 #: cmd_place.lua
 msgid ""
@@ -239,6 +309,10 @@ msgid ""
 "<slot> is the inventory slot (1..8)\n"
 "<lvl> is one of: -1   0   +1"
 msgstr ""
+"Entferne einen links vorne.\n"
+"<slot> ist die Position im\n"
+"eigenen Inventar (1--8).\n"
+"Für <lvl> ist zulässig: -1   0   +1"
 
 #: cmd_place.lua
 msgid ""
@@ -246,18 +320,30 @@ msgid ""
 "<slot> is the inventory slot (1..8)\n"
 "<lvl> is one of: -1   0   +1"
 msgstr ""
+"Entferne einen rechts vorne.\n"
+"<slot> ist die Position im\n"
+"eigenen Inventar (1--8).\n"
+"Für <lvl> ist zulässig: -1   0   +1"
 
 #: cmd_place.lua
 msgid ""
 "Dig the block under the robot.\n"
 "<slot> is the inventory slot (1..8)"
 msgstr ""
+"Entferne einen Block unter dem\n"
+"Roboter.\n"
+"<slot> ist die Position im\n"
+"eigenen Inventar (1--8)."
 
 #: cmd_place.lua
 msgid ""
 "Dig the block above the robot.\n"
 "<slot> is the inventory slot (1..8)"
 msgstr ""
+"Entferne einen Block über dem\n"
+"Roboter.\n"
+"<slot> ist die Position im\n"
+"eigenen Inventar (1--8)."
 
 #: cmd_place.lua
 msgid ""
@@ -265,42 +351,45 @@ msgid ""
 "<lvl> is one of:  -1   0   +1\n"
 "<steps> is one of:  1   2   3"
 msgstr ""
+"Rotiere den Block vor dem Roboter.\n"
+"Für <lvl> ist zulässig: -1   0   +1\n"
+"Für <steps> ist zulässig: 1   2   3"
 
 #: cmd_sign.lua
 msgid "Commands,Help"
-msgstr ""
+msgstr "Kommandos,Hilfe"
 
 #: cmd_sign.lua
 msgid "Sign name:"
-msgstr ""
+msgstr "Zeichenname:"
 
 #: cmd_sign.lua
 msgid "Cancel"
-msgstr ""
+msgstr "Abbruch"
 
 #: cmd_sign.lua
 msgid "Check"
-msgstr ""
+msgstr "Prüfen"
 
 #: cmd_sign.lua
 msgid "Copy Cmnd"
-msgstr ""
+msgstr "Kopiere Kommando"
 
 #: cmd_sign.lua
 msgid "Sign \"command\""
-msgstr ""
+msgstr "Zeichen \"Kommando\""
 
 #: cmd_sign.lua
 msgid "-- enter or copy commands from help page"
-msgstr ""
+msgstr "-- Kommandos eingeben oder von der Hilfeseite kopieren"
 
 #: cmd_sign.lua
 msgid "Error: Signs inventory empty"
-msgstr ""
+msgstr "Fehler: Zeichen Inventar ist leer"
 
 #: cmd_sign.lua
 msgid "Error: Position protected or occupied"
-msgstr ""
+msgstr "Fehler: Position ist geschützt oder belegt"
 
 #: cmd_sign.lua
 msgid ""
@@ -308,6 +397,9 @@ msgid ""
 "taken from the signs inventory\n"
 "<slot> is the inventory slot (1..6)"
 msgstr ""
+"Setze ein Zeichen vor den Roboter.\n"
+"<slot> ist die Position im\n"
+"eigenen Inventar (1--6)."
 
 #: cmd_sign.lua
 msgid ""
@@ -315,18 +407,21 @@ msgid ""
 "taken from the signs inventory\n"
 "<slot> is the inventory slot (1..6)"
 msgstr ""
+"Setze ein Zeichen hinter den Roboter.\n"
+"<slot> ist die Position im\n"
+"eigenen Inventar (1--6)."
 
 #: cmd_sign.lua
 msgid "Error: No sign available"
-msgstr ""
+msgstr "Fehler: Kein Zeichen verfügar"
 
 #: cmd_sign.lua
 msgid "Error: Signs inventory slot is occupied"
-msgstr ""
+msgstr "Fehler: Die Zeicheninventar Position ist belegt-"
 
 #: cmd_sign.lua
 msgid "Error: Position is protected"
-msgstr ""
+msgstr "Fehler: Die Position ist geschützt"
 
 #: cmd_sign.lua
 msgid ""
@@ -334,6 +429,9 @@ msgid ""
 "and add it to the signs inventory.\n"
 "<slot> is the inventory slot (1..6)"
 msgstr ""
+"Entferne das Zeichen vor den Roboter.\n"
+"<slot> ist die Position im\n"
+"eigenen Inventar (1--6)."
 
 #: cmd_sign.lua
 msgid ""
@@ -342,26 +440,29 @@ msgid ""
 "the item iventory.\n"
 "<slot> is the inventory slot (1..8)"
 msgstr ""
+"Entferne das Zeichen vor den Roboter.\n"
+"<slot> ist die Position im\n"
+"eigenen Inventar (1--6)."
 
 #: commands.lua
 msgid " commands:"
-msgstr ""
+msgstr "Kommandos:"
 
 #: commands.lua
 msgid "unknown command"
-msgstr ""
+msgstr "unbekanntes Kommando"
 
 #: commands.lua
 msgid "Parameter error in line "
-msgstr ""
+msgstr "Parameter Fehler in Zeile "
 
 #: commands.lua
 msgid "Command error in line "
-msgstr ""
+msgstr "Kommandozeilen Fehler in Zeile "
 
 #: commands.lua
 msgid "Checked and approved"
-msgstr ""
+msgstr "geprüft und genehmigt"
 
 #: commands.lua
 msgid ""
@@ -370,6 +471,10 @@ msgid ""
 "Up and down movements also become\n"
 "counted as steps."
 msgstr ""
+"Bewege den Roboter 1..99 Schritte\n"
+"vorwärts ohne auf Zeichen zu achten.\n"
+"Auf- und Ab-Bewegungen werden auch\n"
+"als Schritte gezählt."
 
 #: commands.lua
 msgid ""
@@ -378,113 +483,123 @@ msgid ""
 "After that it will go on with the next command\n"
 "on this sign."
 msgstr ""
+"Gehe bis zum nächsten Zeichen,\n"
+"das dann als Unterprogramm\n"
+"bearbeitet wird. Mache danach mit\n"
+"dem nächsten Kommando weiter."
 
 #: crop_sensor.lua
 msgid "Crop Sensor: Connected with "
-msgstr ""
+msgstr "Ernte Sensor: Verbunden mit "
 
 #: crop_sensor.lua
 msgid "Crop Sensor"
-msgstr ""
+msgstr "Ernte Sesor"
 
 #: duplicator.lua
 msgid "Input:"
-msgstr ""
+msgstr "Eingabe:"
 
 #: duplicator.lua
 msgid "Template:"
-msgstr ""
+msgstr "Vorlage:"
 
 #: duplicator.lua
 msgid "Output:"
-msgstr ""
+msgstr "Ausgabe:"
 
 #: duplicator.lua
 msgid ""
 "1. Place one 'cmnd' sign to be\n"
 "    used as template.\n"
 msgstr ""
+"1. Verwende ein Kommando-\n"
+"     Zeichen als Vorlage.\n"
 
 #: duplicator.lua
 msgid ""
 "2. Add 'blank signs' to\n"
 "    the input inventory.\n"
 msgstr ""
+"2. Füge 'leere Zeichen'\n"
+"     als Eingabe hinzu.\n"
 
 #: duplicator.lua
 msgid ""
 "3. Take the copies\n"
 "    from the output inventory."
 msgstr ""
+"3. Entnehme die Kopieren\n"
+"     aus der Ausgabe."
 
 #: duplicator.lua
 msgid "Signs Duplicator"
-msgstr ""
+msgstr "Zeichen Kopierer"
 
 #: duplicator.lua
 msgid "Sign \"user\""
-msgstr ""
+msgstr "\"Benutzer\" Zeichen"
 
 #: duplicator.lua
 msgid "Sign \"blank\""
-msgstr ""
+msgstr "\"Leeres\" Zeichen"
 
 #: extender.lua
 msgid "Sensor Extender: Connected with "
-msgstr ""
+msgstr "Sensor Erweiterung: Verbunden mit "
 
 #: extender.lua
 msgid "Sensor Extender"
-msgstr ""
+msgstr "Sensor Erweiterung"
 
 #: extender.lua
 msgid "Sensor Extender: Not connected"
-msgstr ""
+msgstr "Sensor Erweiterung: Nicht verbunden"
 
 #: node_sensor.lua
 msgid "Node Sensor: Connected with "
-msgstr ""
+msgstr "Block Sensor: Verbunden mit "
 
 #: node_sensor.lua
 msgid "Node Sensor"
-msgstr ""
+msgstr "Block Sensor"
 
 #: signs.lua
 msgid "Sign \"turn right\""
-msgstr ""
+msgstr "Zeichen \"rechts drehen\""
 
 #: signs.lua
 msgid "Sign \"turn left\""
-msgstr ""
+msgstr "Zeichen \"links drehen\""
 
 #: signs.lua
 msgid "Sign \"take item\""
-msgstr ""
+msgstr "Zeichen \"Nehme Gegenstand\""
 
 #: signs.lua
 msgid "Sign \"add item\""
-msgstr ""
+msgstr "Zeichen \"Lege Gegenstand\""
 
 #: signs.lua
 msgid "Sign \"stop\""
-msgstr ""
+msgstr "Zeichen \"Stopp\""
 
 #: tool.lua
 msgid "Sensor Connection Tool"
-msgstr ""
+msgstr "Sensor Verbindungswerkzeug"
 
 #: timer.lua
 msgid "Bot Timer"
-msgstr ""
+msgstr "Roboter Timer"
 
 #: timer.lua
 msgid "Connected with"
-msgstr ""
+msgstr "Verbunden mit"
 
 #: timer.lua
 msgid "Cycle time [min]:"
-msgstr ""
+msgstr "Zykluszeit [min]:"
 
 #: timer.lua
 msgid "Start"
-msgstr ""
+msgstr "Start"
