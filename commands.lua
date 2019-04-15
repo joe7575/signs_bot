@@ -46,7 +46,7 @@ end
 function signs_bot.get_commands()
 	local tbl = {}
 	for _,mod in ipairs(SortedMods) do
-		tbl[#tbl+1] = mod..I(" commands:")
+		tbl[#tbl+1] = mod.." "..I("commands:")
 		for _,cmnd in ipairs(SortedKeys[mod]) do
 			local item = tCommands[cmnd]
 			tbl[#tbl+1] = "    "..item.name.." "..item.params
@@ -186,7 +186,7 @@ end
 local function cond_move(base_pos, mem)
 	local any_sensor, sign_pos = scan_surrounding(mem)
 	if not sign_pos then
-		local new_pos = signs_bot.move_robot(mem.robot_pos, mem.robot_param2)
+		local new_pos = signs_bot.move_robot(mem)
 		if new_pos then  -- not blocked?
 			mem.robot_pos = new_pos
 			if any_sensor then
@@ -203,7 +203,7 @@ end
 
 local function uncond_move(base_pos, mem)
 	local any_sensor = scan_surrounding(mem)
-	local new_pos = signs_bot.move_robot(mem.robot_pos, mem.robot_param2)
+	local new_pos = signs_bot.move_robot(mem)
 	if new_pos then  -- not blocked?
 		mem.robot_pos = new_pos
 		if any_sensor then

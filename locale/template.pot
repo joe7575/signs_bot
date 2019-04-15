@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-14 19:34+0200\n"
+"POT-Creation-Date: 2019-04-15 20:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -129,6 +129,10 @@ msgstr ""
 msgid ""
 "Drop items in front of the bot.\n"
 "<slot> is the inventory slot (1..8)"
+msgstr ""
+
+#: cmd_item.lua
+msgid "Punch a rail cart to start it"
 msgstr ""
 
 #: cmd_move.lua
@@ -344,7 +348,7 @@ msgid ""
 msgstr ""
 
 #: commands.lua
-msgid " commands:"
+msgid "commands:"
 msgstr ""
 
 #: commands.lua

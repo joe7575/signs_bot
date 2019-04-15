@@ -134,9 +134,9 @@ local function on_receive_fields(pos, formname, fields, player)
 	
 	if fields.update then
 		meta:set_string("formspec", formspec(pos, mem))
-	elseif fields.start == I("On") then
+	elseif fields.start then
 		start_robot(pos)
-	elseif fields.stop == I("Off") then
+	elseif fields.stop then
 		signs_bot.stop_robot(pos, mem)
 	end
 end

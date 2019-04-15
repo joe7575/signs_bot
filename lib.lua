@@ -64,7 +64,7 @@ function signs_bot.lib.get_node_lvm(pos)
 	local data = vm:get_data()
 	local param2_data = vm:get_param2_data()
 	local area = VoxelArea:new({MinEdge = MinEdge, MaxEdge = MaxEdge})
-	local idx = area:index(pos.x, pos.y, pos.z)
+	local idx = area:indexp(pos)
 	node = {
 		name = minetest.get_name_from_content_id(data[idx]),
 		param2 = param2_data[idx]
@@ -85,10 +85,8 @@ local function poke_objects(pos, param2, objects)
 	end
 end	
 
--- check if posA == air-like and posB == solid and no player around
-function signs_bot.lib.check_pos(posA, posB, param2)
-	local nodeA = get_node_lvm(posA)
-	local nodeB = get_node_lvm(posB)
+-- check if nodeA on posA == air-like and nodeB == solid and no player around
+function signs_bot.lib.check_pos(posA, nodeA, nodeB, param2)
 	if not minetest.registered_nodes[nodeA.name].walkable and 
 			minetest.registered_nodes[nodeB.name].walkable then
 		local objects = minetest.get_objects_inside_radius(posA, 0.7)

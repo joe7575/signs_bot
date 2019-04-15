@@ -159,3 +159,25 @@ signs_bot.register_botcommand("drop_items", {
 	end,
 })
 
+signs_bot.register_botcommand("punch_cart", {
+	mod = "item",
+	params = "",	
+	description = I("Punch a rail cart to start it"),
+	cmnd = function(base_pos, mem)
+		local pos = lib.dest_pos(mem.robot_pos, mem.robot_param2, {0})
+		for _, object in pairs(minetest.get_objects_inside_radius(pos, 2)) do
+			if object:get_entity_name() == "carts:cart" then
+				local owner = M(base_pos):get_string("owner")
+				local player = minetest.get_player_by_name(owner)
+				if player then
+					object:punch(player, 1.0, {
+						full_punch_interval = 1.0,
+						damage_groups = {fleshy = 1},
+					}, nil)
+				end
+			end
+		end
+		return lib.DONE
+	end,
+})
+
