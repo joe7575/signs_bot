@@ -80,7 +80,6 @@ local function node_timer(pos)
 			minetest.get_node_timer(pos):start(cycle_time * 60)
 		end
 	end
-	print("node_timer", node.name, M(pos):get_int("cycle_time"))
 	minetest.swap_node(pos, node)
 	return false
 end
@@ -89,7 +88,6 @@ local function on_receive_fields(pos, formname, fields, player)
 	if minetest.is_protected(pos, player:get_player_name()) then
 		return
 	end
-	print(dump(fields))
 	if fields.key_enter_field == "time" or fields.start then
 		local cycle_time = tonumber(fields.time)
 		if cycle_time and cycle_time > 0 and cycle_time < 9999 then
