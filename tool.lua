@@ -53,7 +53,10 @@ local function pairing(actuator_pos, sensor_pos)
 	local signal = signs_bot.get_signal(actuator_pos)
 	signs_bot.store_signal(sensor_pos, actuator_pos, signal)
 	local node = lib.get_node_lvm(sensor_pos)
-	minetest.registered_nodes[node.name].update_infotext(sensor_pos, actuator_pos, signal)
+	local ndef = minetest.registered_nodes[node.name]
+	if ndef and ndef.update_infotext then
+		ndef.update_infotext(sensor_pos, actuator_pos, signal)
+	end
 end
 
 local function use_tool(itemstack, placer, pointed_thing)

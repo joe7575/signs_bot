@@ -109,3 +109,4 @@ optional: farming redo
 - 2019-04-11  v0.04  * support for 'node_io' added, chest added, further commands added
 - 2019-04-14  v0.05  * timer added, user signs added, bug fixes
 - 2019-04-15  v0.06  * nodes remove bugfix, punch_cart command added, cart sensor added
+- 2019-04-18  v0.07  * node_io is now optional, support for MTG chests and furnace added

@@ -87,8 +87,9 @@ end
 
 -- check if nodeA on posA == air-like and nodeB == solid and no player around
 function signs_bot.lib.check_pos(posA, nodeA, nodeB, param2)
-	if not minetest.registered_nodes[nodeA.name].walkable and 
-			minetest.registered_nodes[nodeB.name].walkable then
+	local ndefA = minetest.registered_nodes[nodeA.name]
+	local ndefB = minetest.registered_nodes[nodeB.name]
+	if ndefA and not ndefA.walkable and ndefB and ndefB.walkable then
 		local objects = minetest.get_objects_inside_radius(posA, 0.7)
 		if #objects ~= 0 then
 			poke_objects(posA, param2, objects)
@@ -103,7 +104,8 @@ end
 -- Has to be checked before a node is placed
 function signs_bot.lib.is_air_like(pos)
 	local node = get_node_lvm(pos)
-	if minetest.registered_nodes[node.name] and minetest.registered_nodes[node.name].buildable_to then
+	local ndef = minetest.registered_nodes[node.name]
+	if ndef and ndef.buildable_to then
 		return true
 	end
 	return false
@@ -112,7 +114,8 @@ end
 -- Has to be checked before a node is dug
 function signs_bot.lib.is_simple_node(node)
 	-- don't remove nodes with some intelligence
-	return node.name ~= "air" and not minetest.registered_nodes[node.name].after_dig_node
+	local ndef = minetest.registered_nodes[node.name]
+	return ndef and node.name ~= "air" and not ndef.after_dig_node
 end	
 
 -- Check rights before node is dug or inventory is used
@@ -143,13 +146,23 @@ function signs_bot.lib.get_inv_items(src_inv, src_list, slot, num)
 	end
 end	
 
-function signs_bot.lib.get_inv_items_invers(src_inv, src_list, slot, num)
-	for idx = src_inv:get_size(src_list),(slot or 1),-1 do
+function signs_bot.lib.get_inv_items_cond(src_inv, src_list, slot, num)
+	for idx = (slot or 1),src_inv:get_size(src_list) do
 		local stack = src_inv:get_stack(src_list, idx)
 		if stack:get_count() > 0 then
 			local taken = stack:take_item(num or 1)
 			src_inv:set_stack(src_list, idx, stack)
-			return taken
+			-- Check if at least one more item is available
+			local rest = ItemStack(taken:get_name())
+			if not src_inv:contains_item(src_list, rest) then
+				src_inv:add_item(src_list, rest)
+				if taken:get_count() > 1 then
+					taken:set_count(taken:get_count() - 1)
+					return taken
+				end
+			else
+				return taken
+			end
 		end
 	end
 end	
@@ -166,11 +179,26 @@ function signs_bot.lib.put_inv_items(dst_inv, dst_list, slot, items)
 	return false
 end
 
+function signs_bot.lib.put_inv_items_cond(dst_inv, dst_list, slot, items)
+	for idx = (slot or 1),dst_inv:get_size(dst_list) do
+		local stack = dst_inv:get_stack(dst_list, idx)
+		local minimum = ItemStack(items:get_name())
+		if dst_inv:contains_item(dst_list, minimum) and stack:item_fits(items) then
+			stack:add_item(items)
+			dst_inv:set_stack(dst_list, idx, stack)
+			return true
+		end
+	end
+	return false
+end
+
 -- In the case an inventory is full
 function signs_bot.lib.drop_items(robot_pos, items)
-	local pos = minetest.find_node_near(robot_pos, 1, {"air"})
-	if pos then
+	local pos1 = {x=robot_pos.x-1, y=robot_pos.y, z=robot_pos.z-1}
+	local pos2 = {x=robot_pos.x+1, y=robot_pos.y, z=robot_pos.z+1}
+	for _,pos in ipairs(minetest.find_nodes_in_area(pos1, pos2, {"air"})) do
 		minetest.add_item(pos, items)
+		return
 	end
 end
 
@@ -181,7 +209,10 @@ end
 function signs_bot.lib.place_sign(pos, sign, param2)				
 	if sign:get_name() then
 		minetest.set_node(pos, {name=sign:get_name(), param2=param2})
-		minetest.registered_nodes[sign:get_name()].after_place_node(pos, nil, sign)
+		local ndef = minetest.registered_nodes[sign:get_name()]
+		if ndef and ndef.after_place_node then
+			ndef.after_place_node(pos, nil, sign)
+		end
 	end
 end
 

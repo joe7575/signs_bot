@@ -179,7 +179,10 @@ local function activate_sensor(pos, param2)
 	if node.name == "signs_bot:bot_sensor" then
 		node.name = "signs_bot:bot_sensor_on"
 		minetest.swap_node(pos1, node)
-		minetest.registered_nodes[node.name].after_place_node(pos1)
+		local ndef = minetest.registered_nodes[node.name]
+		if ndef and ndef.after_place_node then
+			ndef.after_place_node(pos1)
+		end
 	end
 end
 
@@ -231,8 +234,8 @@ function signs_bot.run_next_command(base_pos, mem)
 		return bot_error(base_pos, mem, "Error: Invalid command")
 	end
 	--debug(mem, cmnd)
-	--sts,res,err = true, tCommands[cmnd].cmnd(base_pos, mem, param1, param2)
-	sts,res,err = pcall(tCommands[cmnd].cmnd, base_pos, mem, param1, param2)
+	sts,res,err = true, tCommands[cmnd].cmnd(base_pos, mem, param1, param2)
+	--sts,res,err = pcall(tCommands[cmnd].cmnd, base_pos, mem, param1, param2)
 	if not sts then
 		return bot_error(base_pos, mem, err)
 	end

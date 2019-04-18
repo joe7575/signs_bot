@@ -75,7 +75,8 @@ local function inv_get_item(pos, name)
 		return "air"
 	end
 	-- try to get the item
-	local inv =  minetest.get_inventory({type="node", pos=pos})
+	local inv = minetest.get_inventory({type="node", pos=pos})
+	if not inv then return "signs_bot:missing" end
 	local taken = inv:remove_item("main", ItemStack(name))
 	if taken:get_count() == 0 then
 		return "signs_bot:missing"
@@ -88,6 +89,7 @@ local function inv_put_item(pos, mem, name)
 		return
 	end
 	local inv = minetest.get_inventory({type="node", pos=pos})
+	if not inv then return end
 	local leftover = inv:add_item("main", ItemStack(name))
 	if leftover:get_count() > 0 then
 		lib.drop_items(mem.robot_pos, leftover)

@@ -69,6 +69,7 @@ local function start_robot(base_pos)
 	mem.lCmnd1 = {}
 	mem.lCmnd2 = {}
 	mem.running = true
+	mem.stored_node = nil
 	meta:set_string("formspec", formspec(base_pos, mem))
 	signs_bot.infotext(base_pos, I("running"))
 	reset_robot(base_pos, mem)
@@ -83,7 +84,7 @@ function signs_bot.stop_robot(base_pos, mem)
 		minetest.get_node_timer(base_pos):stop()
 		signs_bot.infotext(base_pos, I("stopped"))
 		meta:set_string("formspec", formspec(base_pos, mem))
-		signs_bot.remove_robot(mem.robot_pos)
+		signs_bot.remove_robot(mem)
 	else
 		mem.signal_request = false
 		start_robot(base_pos)

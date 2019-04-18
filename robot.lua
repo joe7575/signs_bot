@@ -29,19 +29,26 @@ function signs_bot.place_robot(pos1, pos2, param2)
 end
 
 -- Called when robot is removed
-function signs_bot.remove_robot(pos)	
+function signs_bot.remove_robot(mem)	
+	local pos = mem.robot_pos
 	local node = lib.get_node_lvm(pos)
 	if node.name == "signs_bot:robot" then
 		minetest.remove_node(pos)
 		local pos1 = {x=pos.x, y=pos.y-1, z=pos.z}
 		node = lib.get_node_lvm(pos1)
 		if node.name == "signs_bot:robot_foot" or node.name == "signs_bot:robot_leg" then
-			minetest.remove_node(pos1)
+			if node.name == "signs_bot:robot_foot" then
+				minetest.swap_node(pos1, mem.stored_node or {name = "air"})
+			else
+				minetest.remove_node(pos1)
+			end
 			pos1 = {x=pos.x, y=pos.y-2, z=pos.z}
 			node = lib.get_node_lvm(pos1)
 			if node.name == "signs_bot:robot_foot" then
-				minetest.remove_node(pos1)
+				minetest.swap_node(pos1, mem.stored_node or {name = "air"})
 			end
+		else
+			minetest.swap_node(pos, mem.stored_node or {name = "air"})
 		end
 	end
 end

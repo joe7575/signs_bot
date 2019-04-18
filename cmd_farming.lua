@@ -46,6 +46,17 @@ local function get_pointed_thing(pos)
 	end
 end
 
+local function soil_availabe(pos)
+	local node = minetest.get_node_or_nil(pos)
+	if node.name == "air" then
+		node = minetest.get_node_or_nil({x=pos.x, y=pos.y-1, z=pos.z})
+		if minetest.get_item_group(node.name, "soil") >= 1 then
+			return true
+		end
+	end
+	return false
+end
+
 local function planting(base_pos, mem, slot)
 	local pos = mem.pos_tbl and mem.pos_tbl[mem.steps]
 	mem.steps = mem.steps + 1
