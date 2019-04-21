@@ -327,7 +327,7 @@ signs_bot.register_botcommand("punch_cart", {
 	cmnd = function(base_pos, mem)
 		local pos = lib.dest_pos(mem.robot_pos, mem.robot_param2, {0})
 		for _, object in pairs(minetest.get_objects_inside_radius(pos, 2)) do
-			if object:get_entity_name() == "carts:cart" then
+			if object:get_entity_name() == "carts:cart" or object:get_entity_name() == "minecart:cart" then
 				local owner = M(base_pos):get_string("owner")
 				local player = minetest.get_player_by_name(owner)
 				if player then

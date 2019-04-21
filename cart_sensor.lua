@@ -41,7 +41,7 @@ end
 	
 local function check_cart(pos)	
 	for _, object in pairs(minetest.get_objects_inside_radius(pos, 1)) do
-		if object:get_entity_name() == "carts:cart" then
+		if object:get_entity_name() == "carts:cart" or object:get_entity_name() == "minecart:cart" then
 			return true
 		end
 	end
