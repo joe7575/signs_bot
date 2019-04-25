@@ -30,7 +30,7 @@ This can be done by means of the two signs "take item" and "add item". These sig
 
 With 3 of the 4 featured signs, you can implement your first bot job. 
 
-![Example1](https://github.com/joe7575/signs_bot/doc/blob/master/example01.png)
+![Example1](https://github.com/joe7575/signs_bot/blob/master/doc/example01.png)
 
 When started, the bot will run to the "turn right" sign and will go on to the first chest. Than the bot will execute the commands from the "take item" sign:
 
@@ -65,6 +65,6 @@ A successful pairing is indicated by a ping / pong noise.
 
 I will explain that with the next example, automated farming:
 
-![Example2](https://github.com/joe7575/signs_bot/doc/blob/master/example02.png)
+![Example2](https://github.com/joe7575/signs_bot/blob/master/doc/example02.png)
 
 to be finished...
