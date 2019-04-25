@@ -332,6 +332,7 @@ signs_bot.register_botcommand("punch_cart", {
 					full_punch_interval = 1.0,
 					damage_groups = {fleshy = 1},
 				}, minetest.facedir_to_dir(mem.robot_param2))
+				break -- start only one cart
 			end
 		end
 		return lib.DONE
