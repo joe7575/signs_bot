@@ -67,4 +67,32 @@ I will explain that with the next example, automated farming:
 
 ![Example2](https://github.com/joe7575/signs_bot/blob/master/doc/example02.png)
 
-to be finished...
+You need at least the farming sign (on the left) and a crop sensor (on the right).
+The farming sign has the commands:
+
+    dig_sign 1
+    move
+    harvest
+    sow_seed 1
+    backward
+    place_sign 1
+    turn_off
+
+When the Bot reaches this sign, the Bot will:
+* dig the sign and store it in the inventory
+* make one step forward
+* harvest all crops from the 3x3 field, which are in the final stage
+* sow the seed from its inventory slot 1 on all fields with soil
+* make one step backward
+* place the sign again
+* turn and move back
+
+"move" and "harvest" have not parameters here. The Bot will use the default values in this case, which is "1" for both commands.
+I the given inventory slot is busy (in this case with the seed) the Bot will take the next free slot. The same is the case
+for "take" commands. If the given slot is empty, the Bot will try to take something from the following slots.
+
+To start the Bot if crops are in the final stage, the crop sensor has to be paired with the Sign Bot Box by means of the Sensor Connection Tool. The sensor only observes the field in front of it. So, place the sensor in that way, that the red side shows to the field.
+
+The bot must be active (turned on) during the pairing process so that it will be started with the sensor signal.
+If the bot is turned off during the pairing process, the sensor would send an off signal and try turn off the bot.
+Hint: Before you do the pairing, place a stop sign between Box and farming sign. The Bot will stop in front of the sign but will be is still "on".
