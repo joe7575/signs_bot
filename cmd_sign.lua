@@ -347,6 +347,6 @@ minetest.register_craft({
 	recipe = {
 		{"group:wood", "default:stick", "group:wood"},
 		{"dye:yellow", "default:stick", "dye:yellow"},
-		{"", "", ""}
+		{"", "dye:black", ""}
 	}
 })

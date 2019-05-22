@@ -42,6 +42,7 @@ dofile(MP.."/crop_sensor.lua")
 dofile(MP.."/cart_sensor.lua")
 dofile(MP.."/chest.lua")
 dofile(MP.."/legacy.lua")
+dofile(MP.."/techage.lua")
 dofile(MP.."/timer.lua")
 
 dofile(MP.."/tool.lua")

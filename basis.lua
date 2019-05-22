@@ -24,18 +24,21 @@ local I,_ = dofile(MP.."/intllib.lua")
 local lib = signs_bot.lib
 
 local CYCLE_TIME = 1
+local MAX_CAPA = 100
 
 local function formspec(pos, mem)
 	mem.running = mem.running or false
 	local cmnd = mem.running and "stop;"..I("Off") or "start;"..I("On") 
-	local bot = not mem.running and "image[0.5,1;1,1;signs_bot_bot_inv.png]" or ""
+	local bot = not mem.running and "image[0.6,1;1,1;signs_bot_bot_inv.png]" or ""
+	local current_capa = mem.capa or 95
 	return "size[9,7.6]"..
 	default.gui_bg..
 	default.gui_bg_img..
 	default.gui_slots..
 	"label[2.1,0;"..I("Signs").."]label[5.3,0;"..I("Other items").."]"..
-	"image[0.5,1;1,1;signs_bot_form_mask.png]"..
+	"image[0.6,1;1,1;signs_bot_form_mask.png]"..
 	bot..
+	signs_bot.formspec_battery_capa(MAX_CAPA, current_capa)..
 	"label[2.1,0.5;1]label[3.1,0.5;2]label[4.1,0.5;3]"..
 	"list[context;sign;1.8,1;3,2;]"..
 	"label[2.1,3;4]label[3.1,3;5]label[4.1,3;6]"..
@@ -244,12 +247,52 @@ minetest.register_node("signs_bot:box", {
 })
 
 
-minetest.register_craft({
-	output = "signs_bot:box",
-	recipe = {
-		{"default:steel_ingot", "group:wood", "default:steel_ingot"},
-		{"basic_materials:motor", "default:mese_crystal", "basic_materials:gear_steel"},
-		{"default:tin_ingot", "", "default:tin_ingot"}
-	}
-})
+if minetest.global_exists("techage") then
+	minetest.register_craft({
+		output = "signs_bot:box",
+		recipe = {
+			{"default:steel_ingot", "group:wood", "default:steel_ingot"},
+			{"basic_materials:motor", "techage:wlanchip", "basic_materials:gear_steel"},
+			{"default:tin_ingot", "", "default:tin_ingot"}
+		}
+	})
+else
+	minetest.register_craft({
+		output = "signs_bot:box",
+		recipe = {
+			{"default:steel_ingot", "group:wood", "default:steel_ingot"},
+			{"basic_materials:motor", "default:mese_crystal", "basic_materials:gear_steel"},
+			{"default:tin_ingot", "", "default:tin_ingot"}
+		}
+	})
+end
 
+if minetest.global_exists("techage") then
+	techage.register_node("signs_bot:box", {}, {
+		on_pull_item = function(pos, in_dir, num)
+			local meta = minetest.get_meta(pos)
+			local inv = meta:get_inventory()
+			return techage.get_items(inv, "main", num)
+		end,
+		on_push_item = function(pos, in_dir, stack)
+			local meta = minetest.get_meta(pos)
+			local inv = meta:get_inventory()
+			return techage.put_items(inv, "main", stack)
+		end,
+		on_unpull_item = function(pos, in_dir, stack)
+			local meta = minetest.get_meta(pos)
+			local inv = meta:get_inventory()
+			return techage.put_items(inv, "main", stack)
+		end,
+		
+		on_recv_message = function(pos, topic, payload)
+			if topic == "state" then
+				local meta = minetest.get_meta(pos)
+				return techage.get_inv_state(meta, "main")
+			else
+				return "unsupported"
+			end
+		end,
+	})	
+	
+end
