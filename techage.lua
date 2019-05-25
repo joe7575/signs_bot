@@ -1,3 +1,7 @@
+-- Load support for intllib.
+local MP = minetest.get_modpath("techage")
+local S, NS = dofile(MP.."/intllib.lua")
+
 if minetest.global_exists("techage") then
 	signs_bot.register_inventory({"techage:chest_ta2", "techage:chest_ta3", "techage:chest_ta4"}, {
 		allow_inventory_put = function(pos, stack, player_name)
@@ -37,6 +41,21 @@ if minetest.global_exists("techage") then
 		return "image[0.1,1;0.5,1;signs_bot_form_level_bg.png^[lowpart:"..
 				percent..":signs_bot_form_level_fg.png]"
 	end
+
+	signs_bot.register_botcommand("ignite", {
+		mod = "techage",
+		params = "",	
+		description = S("Ignite the techage charcoal lighter"),
+		cmnd = function(base_pos, mem)
+			local pos = signs_bot.lib.dest_pos(mem.robot_pos, mem.robot_param2, {0})
+			local node = signs_bot.lib.get_node_lvm(pos)
+			if minetest.registered_nodes[node.name]
+			and minetest.registered_nodes[node.name].on_ignite then
+				minetest.registered_nodes[node.name].on_ignite(pos)
+			end
+			return true
+		end,
+	})
 else
 	function signs_bot.formspec_battery_capa(max_capa, current_capa)
 		return ""

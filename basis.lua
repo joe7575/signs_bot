@@ -111,8 +111,8 @@ local function signs_bot_on_signal(pos, node, signal)
 		start_robot(pos)
 	elseif signal == "off" and mem.running then
 		signs_bot.stop_robot(pos, mem)
-	else
-		mem.signal_request = (signal == "on")
+--	else
+--		mem.signal_request = (signal == "on")
 	end
 end
 

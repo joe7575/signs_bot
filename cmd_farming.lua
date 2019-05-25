@@ -35,17 +35,6 @@ local function inv_put_item(pos, mem, name)
 	end
 end
 
-local function get_pointed_thing(pos)
-	local node = minetest.get_node_or_nil(pos)
-	if node.name == "air" then
-		local pos1 = {x=pos.x, y=pos.y-1, z=pos.z}
-		node = minetest.get_node_or_nil(pos1)
-		if minetest.get_item_group(node.name, "soil") >= 1 then
-			return {type = "node", under = pos1, above = pos}
-		end
-	end
-end
-
 local function soil_availabe(pos)
 	local node = minetest.get_node_or_nil(pos)
 	if node.name == "air" then
@@ -59,17 +48,18 @@ end
 
 local function planting(base_pos, mem, slot)
 	local pos = mem.pos_tbl and mem.pos_tbl[mem.steps]
-	mem.steps = mem.steps + 1
-	local stack = inv_get_item(base_pos, slot)
-	local item = stack and signs_bot.FarmingSeed[stack:get_name()]
-	local pointed_thing = get_pointed_thing(pos)
-	if pointed_thing and item and item.seed then
-		if not farming.place_seed(stack, nil, pointed_thing, item.seed) then
-			return
+	mem.steps = (mem.steps or 1) + 1
+	if pos and lib.not_protected(base_pos, pos) and soil_availabe(pos) then
+		local stack = inv_get_item(base_pos, slot)
+		local plant = stack:get_name()
+		local item = stack and signs_bot.FarmingSeed[plant]
+		if item and item.seed then
+			local p2 = minetest.registered_nodes[plant].place_param2 or 1
+			minetest.set_node(pos, {name = item.seed, param2 = p2})
+			minetest.sound_play("default_place_node", {pos = pos, gain = 1.0})
+		else
+			inv_put_item(base_pos, mem, plant)
 		end
-	end
-	if stack then
-		inv_put_item(pos, mem, stack:get_name())
 	end
 end	
 
