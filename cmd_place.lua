@@ -196,9 +196,10 @@ local function dig_item(base_pos, robot_pos, param2, slot, route, level)
 	local pos1 = lib.dest_pos(robot_pos, param2, route)
 	pos1.y = pos1.y + level
 	local node = lib.get_node_lvm(pos1)
-	if lib.not_protected(base_pos, pos1) and lib.is_simple_node(node) then
+	local dug_name = lib.is_simple_node(node)
+	if lib.not_protected(base_pos, pos1) and dug_name then
 		local dst_inv, dst_list = get_own_inv(base_pos)
-		if lib.put_inv_items(dst_inv, dst_list, slot, ItemStack(node.name)) then
+		if lib.put_inv_items(dst_inv, dst_list, slot, ItemStack(dug_name)) then
 			minetest.remove_node(pos1)
 		end
 	end
@@ -270,9 +271,10 @@ signs_bot.register_botcommand("dig_right", {
 local function dig_item_below(base_pos, robot_pos, param2, slot)
 	local pos1 = {x=robot_pos.x,y=robot_pos.y-1,z=robot_pos.z}
 	local node = lib.get_node_lvm(pos1)
-	if lib.not_protected(base_pos, pos1) and lib.is_simple_node(node) then
+	local dug_name = lib.is_simple_node(node)
+	if lib.not_protected(base_pos, pos1) and dug_name then
 		local dst_inv, dst_list = get_own_inv(base_pos)
-		if lib.put_inv_items(dst_inv, dst_list, slot, ItemStack(node.name)) then
+		if lib.put_inv_items(dst_inv, dst_list, slot, ItemStack(dug_name)) then
 			minetest.set_node(pos1, {name="signs_bot:robot_foot"})
 		end
 	end
@@ -297,9 +299,10 @@ signs_bot.register_botcommand("dig_below", {
 local function dig_item_above(base_pos, robot_pos, param2, slot)
 	local pos1 = {x=robot_pos.x,y=robot_pos.y+1,z=robot_pos.z}
 	local node = lib.get_node_lvm(pos1)
-	if lib.not_protected(base_pos, pos1) and lib.is_simple_node(node) then
+	local dug_name = lib.is_simple_node(node)
+	if lib.not_protected(base_pos, pos1) and dug_name then
 		local dst_inv, dst_list = get_own_inv(base_pos)
-		if lib.put_inv_items(dst_inv, dst_list, slot, ItemStack(node.name)) then
+		if lib.put_inv_items(dst_inv, dst_list, slot, ItemStack(dug_name)) then
 			minetest.remove_node(pos1)
 		end
 	end

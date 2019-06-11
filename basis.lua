@@ -268,7 +268,7 @@ else
 end
 
 if minetest.global_exists("techage") then
-	techage.register_node("signs_bot:box", {}, {
+	techage.register_node({"signs_bot:box"}, {
 		on_pull_item = function(pos, in_dir, num)
 			local meta = minetest.get_meta(pos)
 			local inv = meta:get_inventory()

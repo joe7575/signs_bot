@@ -1,5 +1,5 @@
 -- Load support for intllib.
-local MP = minetest.get_modpath("techage")
+local MP = minetest.get_modpath("signs_bot")
 local S, NS = dofile(MP.."/intllib.lua")
 
 if minetest.global_exists("techage") then

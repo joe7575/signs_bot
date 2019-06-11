@@ -113,9 +113,13 @@ end
 
 -- Has to be checked before a node is dug
 function signs_bot.lib.is_simple_node(node)
-	-- don't remove nodes with some intelligence
+	-- don't remove nodes with some intelligence or undiggable nodes
 	local ndef = minetest.registered_nodes[node.name]
-	return ndef and node.name ~= "air" and not ndef.after_dig_node
+	if not ndef or node.name == "air" then return false end
+	if ndef.drop == "" then return false end
+	if ndef.diggable == false then return false end
+	if ndef.after_dig_node then return false end
+	return ndef.drop or node.name
 end	
 
 -- Check rights before node is dug or inventory is used
