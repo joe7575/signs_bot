@@ -24,13 +24,13 @@ local I,_ = dofile(MP.."/intllib.lua")
 local lib = signs_bot.lib
 
 local CYCLE_TIME = 1
-local MAX_CAPA = 100
+signs_bot.MAX_CAPA = 600
 
 local function formspec(pos, mem)
 	mem.running = mem.running or false
 	local cmnd = mem.running and "stop;"..I("Off") or "start;"..I("On") 
 	local bot = not mem.running and "image[0.6,1;1,1;signs_bot_bot_inv.png]" or ""
-	local current_capa = mem.capa or 95
+	local current_capa = mem.capa or (signs_bot.MAX_CAPA * 0.9)
 	return "size[9,7.6]"..
 	default.gui_bg..
 	default.gui_bg_img..
@@ -38,7 +38,7 @@ local function formspec(pos, mem)
 	"label[2.1,0;"..I("Signs").."]label[5.3,0;"..I("Other items").."]"..
 	"image[0.6,1;1,1;signs_bot_form_mask.png]"..
 	bot..
-	signs_bot.formspec_battery_capa(MAX_CAPA, current_capa)..
+	signs_bot.formspec_battery_capa(signs_bot.MAX_CAPA, current_capa)..
 	"label[2.1,0.5;1]label[3.1,0.5;2]label[4.1,0.5;3]"..
 	"list[context;sign;1.8,1;3,2;]"..
 	"label[2.1,3;4]label[3.1,3;5]label[4.1,3;6]"..
@@ -73,6 +73,11 @@ local function start_robot(base_pos)
 	mem.lCmnd2 = {}
 	mem.running = true
 	mem.stored_node = nil
+	if minetest.global_exists("techage") then
+		mem.capa = mem.capa or 0 -- enable power consumption
+	else
+		mem.capa = nil
+	end
 	meta:set_string("formspec", formspec(base_pos, mem))
 	signs_bot.infotext(base_pos, I("running"))
 	reset_robot(base_pos, mem)
@@ -143,6 +148,11 @@ local function on_receive_fields(pos, formname, fields, player)
 	elseif fields.stop then
 		signs_bot.stop_robot(pos, mem)
 	end
+end
+
+local function on_rightclick(pos)
+	local mem = tubelib2.get_mem(pos)
+	M(pos):set_string("formspec", formspec(pos, mem))
 end
 
 local function allow_metadata_inventory_put(pos, listname, index, stack, player)
@@ -221,6 +231,7 @@ minetest.register_node("signs_bot:box", {
 	signs_bot_get_signal = signs_bot_get_signal,
 	signs_bot_on_signal = signs_bot_on_signal,
 	on_receive_fields = on_receive_fields,
+	on_rightclick = on_rightclick,
 	allow_metadata_inventory_put = allow_metadata_inventory_put,
 	allow_metadata_inventory_take = allow_metadata_inventory_take,
 	allow_metadata_inventory_move = allow_metadata_inventory_move,

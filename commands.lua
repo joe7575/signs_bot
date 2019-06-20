@@ -27,6 +27,7 @@ local tCommands = {}
 local SortedKeys = {}
 local SortedMods = {}
 local tMods = {}
+local ExpensiveCmnds = {}
 
 --
 -- Command register API function
@@ -34,6 +35,9 @@ local tMods = {}
 function signs_bot.register_botcommand(name, def)
 	tCommands[name] = def
 	tCommands[name].name = name
+	if def.expensive then
+		ExpensiveCmnds[name] = true
+	end
 	if not SortedKeys[def.mod] then
 		SortedKeys[def.mod] = {}
 		SortedMods[#SortedMods+1] = def.mod
@@ -224,6 +228,18 @@ local function bot_error(base_pos, mem, err)
 	return false
 end
 
+local function power_consumption(mem, cmnd)
+	if mem.capa then
+		if ExpensiveCmnds[cmnd] then
+			mem.capa = mem.capa - 2
+		else
+			mem.capa = mem.capa - 1
+		end
+		return mem.capa > 0
+	end
+	return true
+end
+
 function signs_bot.run_next_command(base_pos, mem)
 	mem.lCmnd1 = mem.lCmnd1 or {} -- forground job
 	mem.lCmnd2 = mem.lCmnd2 or {} -- background job
@@ -236,6 +252,10 @@ function signs_bot.run_next_command(base_pos, mem)
 	--debug(mem, cmnd)
 	sts,res,err = true, tCommands[cmnd].cmnd(base_pos, mem, param1, param2)
 	--sts,res,err = pcall(tCommands[cmnd].cmnd, base_pos, mem, param1, param2)
+	if not power_consumption(mem, cmnd) then 
+		signs_bot.stop_robot(base_pos, mem)
+		res = lib.TURN_OFF
+	end
 	if not sts then
 		return bot_error(base_pos, mem, err)
 	end

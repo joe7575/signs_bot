@@ -224,6 +224,7 @@ signs_bot.register_botcommand("dig_front", {
 		dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0}, level)
 		return lib.DONE
 	end,
+	expensive = true,
 })
 
 signs_bot.register_botcommand("dig_left", {
@@ -245,6 +246,7 @@ signs_bot.register_botcommand("dig_left", {
 		dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0,3}, level)
 		return lib.DONE
 	end,
+	expensive = true,
 })
 
 signs_bot.register_botcommand("dig_right", {
@@ -266,6 +268,7 @@ signs_bot.register_botcommand("dig_right", {
 		dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0,1}, level)
 		return lib.DONE
 	end,
+	expensive = true,
 })
 
 local function dig_item_below(base_pos, robot_pos, param2, slot)
@@ -294,6 +297,7 @@ signs_bot.register_botcommand("dig_below", {
 		dig_item_below(base_pos, mem.robot_pos, mem.robot_param2, slot)
 		return lib.DONE
 	end,
+	expensive = true,
 })
 
 local function dig_item_above(base_pos, robot_pos, param2, slot)
@@ -322,6 +326,7 @@ signs_bot.register_botcommand("dig_above", {
 		dig_item_above(base_pos, mem.robot_pos, mem.robot_param2, slot, 1)
 		return lib.DONE
 	end,
+	expensive = true,
 })
 
 local function rotate_item(base_pos, robot_pos, param2, route, level, steps)
