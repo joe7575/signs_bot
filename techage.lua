@@ -57,6 +57,25 @@ if minetest.global_exists("techage") then
 		end,
 	})
 
+	signs_bot.register_botcommand("low_batt", {
+		mod = "techage",
+		params = "<percent>",	
+		description = S("Turn the bot off if the\nbattery power is below the\ngiven value (1..99)"),
+		check = function(val)
+			val = tonumber(val or 5)
+			return val and val > 0 and val < 100
+		end,
+		cmnd = function(base_pos, mem, val)
+			val = tonumber(val or 5)
+			local pwr = percent_value(signs_bot.MAX_CAPA, mem.capa)
+			if pwr < val then
+				signs_bot.stop_robot(base_pos, mem)
+				return signs_bot.lib.TURN_OFF
+			end
+			return true
+		end,
+	})
+	
 	local Cable = techage.ElectricCable
 	local consume_power = techage.power.consume_power
 	local power_available = techage.power.power_available

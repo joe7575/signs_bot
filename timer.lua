@@ -179,3 +179,16 @@ minetest.register_lbm({
 		minetest.get_node_timer(pos):start(2)
 	end
 })
+
+if minetest.get_modpath("doc") then
+	doc.add_entry("signs_bot", "timer", {
+		name = I("Bot Timer"),
+		data = {
+			item = "signs_bot:timer",
+			text = table.concat({
+				I("Special kind of sensor."),
+				I("Can be programmed with a time in seconds, e.g. to start the bot cyclically."), 
+			}, "\n")		
+		},
+	})
+end

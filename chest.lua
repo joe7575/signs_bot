@@ -233,3 +233,19 @@ signs_bot.register_inventory({"signs_bot:chest"}, {
 		listname = "main",
 	},
 })
+
+if minetest.get_modpath("doc") then
+	doc.add_entry("signs_bot", "chest", {
+		name = I("Signs Bot Chest"),
+		data = {
+			item = "signs_bot:chest",
+			text = table.concat({
+				I("The Signs Bot Chest is a special chest with sensor function."),
+				I("It sends a signal depending on the chest state."), 
+				I("Possible states are 'empty', 'not empty', 'almost full'"),
+				"",
+				I("A typical use case is to turn off the bot, when the chest is almost full or empty."),
+			}, "\n")		
+		},
+	})
+end

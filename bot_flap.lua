@@ -66,3 +66,17 @@ minetest.register_craft({
 		{"", "", ""}
 	}
 })
+
+if minetest.get_modpath("doc") then
+	doc.add_entry("signs_bot", "bot_flap", {
+		name = I("Bot Flap"),
+		data = {
+			item = "signs_bot:bot_flap",
+			text = table.concat({
+				I("The flap is a simple block used as door for the bot."),
+				I("Place the flap in any wall, and the bot will automatically open"),
+				I("and close the flap as it passes through it."),
+			}, "\n")		
+		},
+	})
+end

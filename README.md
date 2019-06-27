@@ -49,6 +49,9 @@ More information:
 
 The copy function can be used to clone node cubes up to 5x3x3 nodes. There is the pattern shield for the template position and the copy shield for the "3x3x3" copy. Since the bot also copies air blocks, the function can also be used for mining or tunnels. The items to be placed must be in the inventory. Items that the bot degrades are in Inventory afterwards. If there are missing items in the inventory during copying, he will set "missing items" blocks, which dissolve into air when degrading.
 
+In-game help:
+The mod has an in-game help to all blocks and signs. Therefore, it is highly recommended that you have installed the mods 'doc' and 'unified_inventory'.
+
 Commands:
 The commands are also all described as help in the "Sign command" node.
 All blocks or signs that are set are taken from the bot inventory.
@@ -99,7 +102,7 @@ Code: Licensed under the GNU LGPL version 2.1 or later. See LICENSE.txt
 
 ### Dependencies 
 default, farming, basic_materials, tubelib2
-optional: farming redo
+optional: farming redo, node_io, doc, techage
 
 
 ### History
@@ -111,3 +114,4 @@ optional: farming redo
 - 2019-04-15  v0.06  * nodes remove bugfix, punch_cart command added, cart sensor added
 - 2019-04-18  v0.07  * node_io is now optional, support for MTG chests and furnace added
 - 2019-05-22  v0.08  * recipe bug fixes and prepared for techage
+- 2019-05-25  v0.09  * in-game help added for the mod 'doc'

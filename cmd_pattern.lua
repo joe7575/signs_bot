@@ -218,3 +218,33 @@ minetest.register_craft({
 		{"", "", ""}
 	}
 })
+
+if minetest.get_modpath("doc") then
+	doc.add_entry("signs_bot", "pattern", {
+		name = I("Sign 'pattern'"),
+		data = {
+			item = "signs_bot:pattern",
+			text = table.concat({
+				I("Used to make a copy of a 3x3x3 cube."),
+				I("Place the sign in front of the pattern to be copied."), 
+				I("Use the copy sign to make the copy of this pattern on a different location."),
+				I("The bot must first reach the pattern sign, then the copy sign."),
+			}, "\n")		
+		},
+	})
+end
+
+if minetest.get_modpath("doc") then
+	doc.add_entry("signs_bot", "copy3x3x3", {
+		name = I("Sign 'copy3x3x3'"),
+		data = {
+			item = "signs_bot:copy3x3x3",
+			text = table.concat({
+				I("Used to make a copy of a 3x3x3 cube."),
+				I("Place the sign in front of the location, where the copy should be made."), 
+				I("Use the pattern sign to mark the pattern."),
+			}, "\n")		
+		},
+	})
+end
+

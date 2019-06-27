@@ -159,3 +159,22 @@ minetest.register_craft({
 		{"default:steel_ingot", "default:mese_crystal_fragment", "default:steel_ingot"}
 	}
 })
+
+if minetest.get_modpath("doc") then
+	doc.add_entry("signs_bot", "changer", {
+		name = I("Bot Control Unit"),
+		data = {
+			item = "signs_bot:changer1",
+			text = table.concat({
+				I("The Bot Control Unit is used to lead the bot by means of signs."),
+				I("The unit can be loaded with up to 4 different signs and can be programmed by means of sensors."), 
+				"",
+				I("To load the unit, place a sign on the red side of the unit and click on the unit."),
+				I("The sign disappears / is moved to the inventory of the unit."),
+				I("This can be repeated 3 times."),
+				"",
+				I("Use the connection tool to connect up to 4 sensors with the Bot Control Unit."),
+			}, "\n")		
+		},
+	})
+end

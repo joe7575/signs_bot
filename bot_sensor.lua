@@ -116,3 +116,16 @@ minetest.register_craft({
 	}
 })
 
+if minetest.get_modpath("doc") then
+	doc.add_entry("signs_bot", "bot_sensor", {
+		name = I("Bot Sensor"),
+		data = {
+			item = "signs_bot:bot_sensor",
+			text = table.concat({
+				I("The Bot Sensor detects any bot and sends a signal, if a bot is nearby."),
+				I("the sensor range is one node/meter."), 
+				I("The sensor direction does not care."),
+			}, "\n")		
+		},
+	})
+end

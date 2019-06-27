@@ -157,3 +157,18 @@ minetest.register_lbm({
 		minetest.get_node_timer(pos):start(CYCLE_TIME)
 	end
 })
+
+if minetest.get_modpath("doc") then
+	doc.add_entry("signs_bot", "node_sensor", {
+		name = I("Node Sensor"),
+		data = {
+			item = "signs_bot:node_sensor",
+			text = table.concat({
+				I("The Node Sensor sends a signal when it detects any node change (nodes appear or disappear)."),
+				I("Valid nodes are all kind of blocks and plants."),
+				I("The sensor range is 3 nodes/meters in one direction."), 
+				I("The sensor has an active side (red) that must point to the observed area."),
+			}, "\n")		
+		},
+	})
+end

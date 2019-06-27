@@ -200,6 +200,8 @@ local function cond_move(base_pos, mem)
 				activate_sensor(mem.robot_pos, (mem.robot_param2 + 1) % 4)
 				activate_sensor(mem.robot_pos, (mem.robot_param2 + 3) % 4)
 			end
+		else
+			return lib.DONE
 		end
 		return lib.BUSY
 	else

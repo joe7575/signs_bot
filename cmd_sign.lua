@@ -350,3 +350,19 @@ minetest.register_craft({
 		{"", "dye:black", ""}
 	}
 })
+
+if minetest.get_modpath("doc") then
+	doc.add_entry("signs_bot", "sign_cmnd", {
+		name = I("Sign 'command'"),
+		data = {
+			item = "signs_bot:sign_cmnd",
+			text = table.concat({
+				I("The 'command' sign can be programmed by the player."),
+				I("Place the sign in front of you and use the node menu to program your sequence of bot commands."), 
+				I("The menu has an edit field for your commands and a help page with all available commands."),
+				I("The help page has a copy button to simplify the programming."),
+			}, "\n")		
+		},
+	})
+end
+

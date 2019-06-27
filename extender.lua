@@ -125,3 +125,17 @@ minetest.register_craft({
 	}
 })
 
+if minetest.get_modpath("doc") then
+	doc.add_entry("signs_bot", "sensor_extender", {
+		name = I("Sensor Extender"),
+		data = {
+			item = "signs_bot:sensor_extender",
+			text = table.concat({
+				I("With the Sensor Extender, sensor signals can be sent to more than one actuator."),
+				I("Place one or more extender nearby the sensor and connect each extender"), 
+				I("with one further actuator by means of the Connection Tool."), 
+			}, "\n")		
+		},
+	})
+end
+

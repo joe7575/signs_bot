@@ -307,3 +307,26 @@ if minetest.global_exists("techage") then
 	})	
 	
 end
+
+if minetest.get_modpath("doc") then
+	doc.add_entry("signs_bot", "box", {
+		name = I("Signs Bot Box"),
+		data = {
+			item = "signs_bot:box",
+			text = table.concat({
+				I("The Box is the housing of the bot."),
+				I("Place the box and start the bot by means of the 'On' button."), 
+				I("If the mod techage is installed, the bot needs electrical power."),
+				"",
+				I("The bot leaves the box on the right side."),
+				I("It will not start, if this position is blocked."),
+				"",
+				I("To stop and remove the bot, press the 'Off' button."),
+				"",
+				I("The box inventory simulates the inventory of the bot."),
+				I("You will not be able to access the inventory, if the bot is running."),
+				I("The bot can carry up to 8 stacks and 6 signs with it."),
+			}, "\n")		
+		},
+	})
+end

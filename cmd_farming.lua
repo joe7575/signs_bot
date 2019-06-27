@@ -161,7 +161,7 @@ harvest
 sow_seed 1
 backward
 place_sign 1
-turn_off]]
+turn_around]]
 
 signs_bot.register_sign({
 	name = "farming", 
@@ -178,3 +178,18 @@ minetest.register_craft({
 		{"dye:grey", "", ""}
 	}
 })
+
+if minetest.get_modpath("doc") then
+	doc.add_entry("signs_bot", "farming", {
+		name = I("Sign 'farming'"),
+		data = {
+			item = "signs_bot:farming",
+			text = table.concat({
+				I("Used to harvest and seed a 3x3 field."),
+				I("Place the sign in front of the field."), 
+				I("The seed to be placed has to be in the first inventory slot of the bot."),
+				I("When finished, the bot turns."),
+			}, "\n")		
+		},
+	})
+end

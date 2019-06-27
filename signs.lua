@@ -150,3 +150,56 @@ minetest.register_craft({
 	}
 })
 
+if minetest.get_modpath("doc") then
+	doc.add_entry("signs_bot", "sign_right", {
+		name = I('Sign "turn right"'),
+		data = {
+			item = "signs_bot:sign_right",
+			text = I("The Bot turns right when it detects this sign in front of it.")		
+		},
+	})
+end
+
+if minetest.get_modpath("doc") then
+	doc.add_entry("signs_bot", "sign_left", {
+		name = I('Sign "turn left"'),
+		data = {
+			item = "signs_bot:sign_left",
+			text = I("The Bot turns left when it detects this sign in front of it.")		
+		},
+	})
+end
+
+if minetest.get_modpath("doc") then
+	doc.add_entry("signs_bot", "sign_take", {
+		name = I('Sign "take item"'),
+		data = {
+			item = "signs_bot:sign_take",
+			text = table.concat({
+				I("The Bot takes items out of a chest in front of it and then turns around."),
+				I("This sign has to be placed on top of the chest."), 
+			}, "\n")			},
+	})
+end
+
+if minetest.get_modpath("doc") then
+	doc.add_entry("signs_bot", "sign_add", {
+		name = I('Sign "add item"'),
+		data = {
+			item = "signs_bot:sign_add",
+			text = table.concat({
+				I("The Bot puts items into a chest in front of it and then turns around."),
+				I("This sign has to be placed on top of the chest."), 
+			}, "\n")			},
+	})
+end
+
+if minetest.get_modpath("doc") then
+	doc.add_entry("signs_bot", "sign_stop", {
+		name = I('Sign "stop"'),
+		data = {
+			item = "signs_bot:sign_stop",
+			text = I("The Bot will stop in front of this sign until the sign is removed or the bot is turned off.")		
+		},
+	})
+end

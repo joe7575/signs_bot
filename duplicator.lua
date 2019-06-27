@@ -49,7 +49,8 @@ local function allow_metadata_inventory_put(pos, listname, index, stack, player)
 	if listname == "outp" then
 		return 0
 	end
-	if minetest.get_item_group(stack:get_name(), "sign_bot_sign") ~= 1 then
+	if minetest.get_item_group(stack:get_name(), "sign_bot_sign") ~= 1 
+			and stack:get_name() ~= "default:book_written" then
 		return 0
 	end
 	if listname == "temp" then
@@ -72,15 +73,28 @@ local function move_to_output(pos)
 	local outp_stack = inv:get_stack("outp", 1)
 	
 	if (inp_stack:get_name() == "signs_bot:sign_blank" 
-	or inp_stack:get_name() == "signs_bot:sign_user")
-	and temp_stack:get_name() == "signs_bot:sign_cmnd"
-	and outp_stack:get_name() == "" then
+			or inp_stack:get_name() == "signs_bot:sign_user")
+			and temp_stack:get_name() == "signs_bot:sign_cmnd"
+			and outp_stack:get_name() == "" then
 		local stack = ItemStack("signs_bot:sign_user")
 		stack:set_count(inp_stack:get_count())
 		local meta = stack:get_meta()
 		local temp_meta = temp_stack:get_meta()
 		meta:set_string("cmnd", temp_meta:get_string("cmnd"))
 		meta:set_string("description", temp_meta:get_string("description"))
+		inp_stack:clear()
+		inv:set_stack("inp", 1, inp_stack)
+		inv:set_stack("outp", 1, stack)
+	elseif (inp_stack:get_name() == "signs_bot:sign_blank" 
+			or inp_stack:get_name() == "signs_bot:sign_user")
+			and temp_stack:get_name() == "default:book_written"
+			and outp_stack:get_name() == "" then
+		local stack = ItemStack("signs_bot:sign_user")
+		stack:set_count(inp_stack:get_count())
+		local meta = stack:get_meta()
+		local temp_data = temp_stack:get_meta():to_table().fields
+		meta:set_string("cmnd", temp_data.text)
+		meta:set_string("description", temp_data.title)
 		inp_stack:clear()
 		inv:set_stack("inp", 1, inp_stack)
 		inv:set_stack("outp", 1, stack)
@@ -210,3 +224,30 @@ minetest.register_craft({
 	}
 })
 
+if minetest.get_modpath("doc") then
+	doc.add_entry("signs_bot", "duplicator", {
+		name = I("Signs Duplicator"),
+		data = {
+			item = "signs_bot:duplicator",
+			text = table.concat({
+				I("The Duplicator can be used to make copies of signs."),
+				I("1. Put one 'cmnd' sign to be used as template into the 'Template' inventory"), 
+				I("2. Add one or several 'blank signs' to the 'Input' inventory."),
+				I("3. Take the copies from the 'Output' inventory."),
+				"",
+				I("Written books [default:book_written] can alternatively be used as template"),
+				I("Already written signs can be used as input, too."),
+			}, "\n")		
+		},
+	})
+end
+
+if minetest.get_modpath("doc") then
+	doc.add_entry("signs_bot", "sign_blank", {
+		name = I('Sign "blank"'),
+		data = {
+			item = "signs_bot:sign_blank",
+			text = I("Needed as input for the Duplicator.")		
+		},
+	})
+end

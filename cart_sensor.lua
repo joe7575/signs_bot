@@ -149,3 +149,17 @@ minetest.register_lbm({
 		minetest.get_node_timer(pos):start(CYCLE_TIME)
 	end
 })
+
+if minetest.get_modpath("doc") then
+	doc.add_entry("signs_bot", "cart_sensor", {
+		name = I("Cart Sensor"),
+		data = {
+			item = "signs_bot:cart_sensor",
+			text = table.concat({
+				I("The Cart Sensor detects and sends a signal, if a cart (Minecart) is nearby."),
+				I("the sensor range is one node/meter."), 
+				I("The sensor has an active side (red) that must point to the rail/cart."),
+			}, "\n")		
+		},
+	})
+end

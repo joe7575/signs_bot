@@ -141,3 +141,18 @@ minetest.register_lbm({
 		minetest.get_node_timer(pos):start(CYCLE_TIME)
 	end
 })
+
+if minetest.get_modpath("doc") then
+	doc.add_entry("signs_bot", "crop_sensor", {
+		name = I("Crop Sensor"),
+		data = {
+			item = "signs_bot:crop_sensor",
+			text = table.concat({
+				I("The Crop Sensor sends a signal when, for example wheat is fully grown."),
+				I("The sensor range is one node/meter."), 
+				I("The sensor has an active side (red) that must point to the crop/field."),
+
+			}, "\n")		
+		},
+	})
+end
