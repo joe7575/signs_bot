@@ -35,7 +35,8 @@ if minetest.global_exists("techage") then
 	local function percent_value(max_val, curr_val)
 		return math.min(math.ceil(((curr_val or 0) * 100.0) / (max_val or 1.0)), 100)
 	end
-
+	signs_bot.percent_value = percent_value
+	
 	function signs_bot.formspec_battery_capa(max_capa, current_capa)
 		local percent = percent_value(max_capa, current_capa)
 		return "image[0.1,1;0.5,1;signs_bot_form_level_bg.png^[lowpart:"..

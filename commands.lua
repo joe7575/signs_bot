@@ -220,6 +220,9 @@ local function uncond_move(base_pos, mem)
 			activate_sensor(mem.robot_pos, (mem.robot_param2 + 3) % 4)
 		end
 		mem.steps = mem.steps - 1
+		mem.blocked = false  -- for state requests
+	else
+		mem.blocked = true
 	end
 end	
 
@@ -227,6 +230,7 @@ local function bot_error(base_pos, mem, err)
 	minetest.sound_play('signs_bot_error', {pos = base_pos})
 	minetest.sound_play('signs_bot_error', {pos = mem.robot_pos})
 	signs_bot.infotext(base_pos, err)
+	mem.error = true
 	return false
 end
 
@@ -252,6 +256,7 @@ function signs_bot.run_next_command(base_pos, mem)
 		return bot_error(base_pos, mem, "Error: Invalid command")
 	end
 	--debug(mem, cmnd)
+	mem.curr_cmnd = cmnd -- for status message
 	sts,res,err = true, tCommands[cmnd].cmnd(base_pos, mem, param1, param2)
 	--sts,res,err = pcall(tCommands[cmnd].cmnd, base_pos, mem, param1, param2)
 	if not power_consumption(mem, cmnd) then 

@@ -72,6 +72,7 @@ local function start_robot(base_pos)
 	mem.lCmnd1 = {}
 	mem.lCmnd2 = {}
 	mem.running = true
+	mem.error = false
 	mem.stored_node = nil
 	if minetest.global_exists("techage") then
 		mem.capa = mem.capa or 0 -- enable power consumption
@@ -218,8 +219,12 @@ minetest.register_node("signs_bot:box", {
 	after_place_node = function(pos, placer)
 		local mem = tubelib2.init_mem(pos)
 		mem.running = false
+		mem.error = false
 		local meta = M(pos)
-		local number = "0000" --tubelib.add_node(pos, "signs_bot:base")
+		local number = ""
+		if minetest.global_exists("techage") then
+			number = techage.add_node(pos, "signs_bot:box")
+		end
 		meta:set_string("owner", placer:get_player_name())
 		meta:set_string("number", number)
 		meta:set_string("formspec", formspec(pos, mem))
@@ -240,7 +245,7 @@ minetest.register_node("signs_bot:box", {
 		if minetest.is_protected(pos, puncher:get_player_name()) then
 			return
 		end
-		local mem = tubelib2.init_mem(pos)
+		local mem = tubelib2.get_mem(pos)
 		if mem.running then
 			return
 		end
@@ -297,9 +302,31 @@ if minetest.global_exists("techage") then
 		end,
 		
 		on_recv_message = function(pos, topic, payload)
+			local mem = tubelib2.get_mem(pos)
 			if topic == "state" then
-				local meta = minetest.get_meta(pos)
-				return techage.get_inv_state(meta, "main")
+				if mem.error then
+					return "fault"
+				elseif mem.running then
+					if mem.curr_cmnd == "stop" then
+						return "standby"
+					elseif mem.blocked then
+						return "blocked"
+					else
+						return "running"
+					end
+				elseif mem.capa then
+					if mem.capa <= 0 then
+						return "nopower"
+					elseif mem.capa >= signs_bot.MAX_CAPA then
+						return "stopped"
+					else
+						return "loading"
+					end
+				else
+					return "stopped"
+				end
+			elseif topic == "fuel" then
+				return signs_bot.percent_value(signs_bot.MAX_CAPA, mem.capa)
 			else
 				return "unsupported"
 			end
