@@ -301,10 +301,10 @@ signs_bot.register_botcommand("move", {
 	end,
 })
 
-local DESCR2 = I([[Go to the next sign
-to be executed as a sub-process.
-After that it will go on with the next command
-on this sign.]])
+local DESCR2 = I([[Walk until a sign or obstacle is
+reached. Then continue with the next command.
+When a sign has been reached, 
+it is executed as sub-process.]])
 
 signs_bot.register_botcommand("cond_move", {
 	mod = "move",

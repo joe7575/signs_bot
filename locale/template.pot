@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-25 23:36+0200\n"
+"POT-Creation-Date: 2019-06-29 00:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -607,10 +607,10 @@ msgstr ""
 
 #: commands.lua
 msgid ""
-"Go to the next sign\n"
-"to be executed as a sub-process.\n"
-"After that it will go on with the next command\n"
-"on this sign."
+"Walk until a sign or obstacle is\n"
+"reached. Then continue with the next command.\n"
+"When a sign has been reached, \n"
+"it is executed as sub-process."
 msgstr ""
 
 #: crop_sensor.lua
