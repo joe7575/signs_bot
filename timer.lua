@@ -21,6 +21,8 @@ local M = minetest.get_meta
 local MP = minetest.get_modpath("signs_bot")
 local I,_ = dofile(MP.."/intllib.lua")
 
+local CYCLE_TIME = 4
+
 local lib = signs_bot.lib
 
 local function update_infotext(pos, dest_pos, cmnd)
@@ -37,6 +39,7 @@ end
 
 local function update_infotext_local(pos)
 	local meta = M(pos)
+	local mem = tubelib2.get_mem(pos)
 	local cycle_time = meta:get_int("cycle_time")
 	local dest_pos = meta:get_string("signal_pos")
 	local signal = meta:get_string("signal_data")
@@ -48,6 +51,10 @@ local function update_infotext_local(pos)
 	end
 	if cycle_time > 0 then
 		text1 = " ("..cycle_time.." min): "
+	end
+	if dest_pos ~= "" and signal ~= "" and cycle_time > 0 then
+		mem.running = true
+		minetest.get_node_timer(pos):start(CYCLE_TIME)
 	end
 	meta:set_string("infotext", I("Bot Timer")..text1..text2)
 end	
@@ -64,24 +71,28 @@ local function formspec(meta)
 	"button_exit[1,2.2;2,1;start;"..I("Start").."]"
 end
 
-local function node_timer(pos)
+-- switch to normal texture
+local function turn_off(pos)	
 	local node = minetest.get_node(pos)
-	if node.name == "signs_bot:timer" then
+	node.name = "signs_bot:timer"
+	minetest.swap_node(pos, node)
+end
+
+local function node_timer(pos)
+	local mem = tubelib2.get_mem(pos)
+	mem.time = mem.time or 0
+	if mem.time > CYCLE_TIME then
+		mem.time = mem.time - CYCLE_TIME
+	else
+		local node = minetest.get_node(pos)
 		node.name = "signs_bot:timer_on"
+		minetest.swap_node(pos, node)
 		signs_bot.send_signal(pos)
 		signs_bot.lib.activate_extender_nodes(pos, true)
-		minetest.get_node_timer(pos):stop()
-		minetest.get_node_timer(pos):start(2)
-	else
-		node.name = "signs_bot:timer"
-		minetest.get_node_timer(pos):stop()
-		local cycle_time = M(pos):get_int("cycle_time")
-		if cycle_time > 0 then
-			minetest.get_node_timer(pos):start(cycle_time * 60)
-		end
+		minetest.after(2, turn_off, pos)
+		mem.time = M(pos):get_int("cycle_time") * 60
 	end
-	minetest.swap_node(pos, node)
-	return false
+	return mem.time > 0
 end
 
 local function on_receive_fields(pos, formname, fields, player)
@@ -89,10 +100,15 @@ local function on_receive_fields(pos, formname, fields, player)
 		return
 	end
 	if fields.key_enter_field == "time" or fields.start then
+		local mem = tubelib2.get_mem(pos)
 		local cycle_time = tonumber(fields.time)
 		if cycle_time and cycle_time > 0 and cycle_time < 9999 then
 			M(pos):set_int("cycle_time", cycle_time)
-			minetest.get_node_timer(pos):start(cycle_time * 60)
+			mem.time = cycle_time * 60
+		elseif cycle_time == 0 then
+			minetest.get_node_timer(pos):stop()
+			mem.time = 0
+			M(pos):set_int("cycle_time", 0)
 		end
 	end
 	local meta = M(pos)
@@ -173,10 +189,13 @@ minetest.register_craft({
 minetest.register_lbm({
 	label = "[signs_bot] Restart timer",
 	name = "signs_bot:timer_restart",
-	nodenames = {"signs_bot:timer_on"},
+	nodenames = {"signs_bot:timer", "signs_bot:timer_on"},
 	run_at_every_load = true,
 	action = function(pos, node)
-		minetest.get_node_timer(pos):start(2)
+		local mem = tubelib2.get_mem(pos)
+		if mem.running then
+			minetest.get_node_timer(pos):start(CYCLE_TIME)
+		end
 	end
 })
 

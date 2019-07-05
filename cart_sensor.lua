@@ -41,7 +41,7 @@ end
 	
 local function check_cart(pos)	
 	for _, object in pairs(minetest.get_objects_inside_radius(pos, 1)) do
-		if object:get_entity_name() == "carts:cart" or object:get_entity_name() == "minecart:cart" then
+		if object:get_entity_name() == "minecart:cart" then
 			return true
 		end
 	end
@@ -147,6 +147,10 @@ minetest.register_lbm({
 	run_at_every_load = true,
 	action = function(pos, node)
 		minetest.get_node_timer(pos):start(CYCLE_TIME)
+		if node.name == "signs_bot:cart_sensor_on" then
+			signs_bot.send_signal(pos)
+			signs_bot.lib.activate_extender_nodes(pos, true)
+		end
 	end
 })
 

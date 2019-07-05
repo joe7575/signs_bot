@@ -102,7 +102,7 @@ Code: Licensed under the GNU LGPL version 2.1 or later. See LICENSE.txt
 
 ### Dependencies 
 default, farming, basic_materials, tubelib2
-optional: farming redo, node_io, doc, techage
+optional: farming redo, node_io, doc, techage, minecart
 
 
 ### History
@@ -115,3 +115,5 @@ optional: farming redo, node_io, doc, techage
 - 2019-04-18  v0.07  * node_io is now optional, support for MTG chests and furnace added
 - 2019-05-22  v0.08  * recipe bug fixes and prepared for techage
 - 2019-05-25  v0.09  * in-game help added for the mod 'doc'
+- 2019-07-05  v0.10  * Timer, sensor and cart handling improvements
+
