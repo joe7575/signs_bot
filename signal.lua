@@ -23,10 +23,15 @@ local lib = signs_bot.lib
 function signs_bot.get_node_type(pos)
 	local node = lib.get_node_lvm(pos)
 	local ndef = minetest.registered_nodes[node.name]
-	if ndef	and ndef.signs_bot_get_signal then
-		return "actuator"
-	elseif minetest.get_item_group(node.name, "sign_bot_sensor") == 1 then
-		return "sensor"
+	local is_sensor = minetest.get_item_group(node.name, "sign_bot_sensor") == 1
+	if ndef then
+		if ndef.signs_bot_get_signal and is_sensor then
+			return "repeater"
+		elseif ndef.signs_bot_get_signal then
+			return "actuator"
+		elseif is_sensor then
+			return "sensor"
+		end
 	end
 end
 

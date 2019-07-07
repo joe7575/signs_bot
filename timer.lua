@@ -96,22 +96,22 @@ local function node_timer(pos)
 end
 
 local function on_receive_fields(pos, formname, fields, player)
+	local mem = tubelib2.get_mem(pos)
+	local meta = M(pos)
 	if minetest.is_protected(pos, player:get_player_name()) then
 		return
 	end
 	if fields.key_enter_field == "time" or fields.start then
-		local mem = tubelib2.get_mem(pos)
 		local cycle_time = tonumber(fields.time)
 		if cycle_time and cycle_time > 0 and cycle_time < 9999 then
-			M(pos):set_int("cycle_time", cycle_time)
+			meta:set_int("cycle_time", cycle_time)
 			mem.time = cycle_time * 60
 		elseif cycle_time == 0 then
 			minetest.get_node_timer(pos):stop()
 			mem.time = 0
-			M(pos):set_int("cycle_time", 0)
+			meta:set_int("cycle_time", 0)
 		end
 	end
-	local meta = M(pos)
 	meta:set_string("formspec", formspec(meta))
 	update_infotext_local(pos)
 end

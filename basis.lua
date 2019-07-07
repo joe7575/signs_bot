@@ -241,16 +241,20 @@ minetest.register_node("signs_bot:box", {
 	allow_metadata_inventory_take = allow_metadata_inventory_take,
 	allow_metadata_inventory_move = allow_metadata_inventory_move,
 	
-	on_dig = function(pos, node, puncher, pointed_thing)
-		if minetest.is_protected(pos, puncher:get_player_name()) then
+	can_dig = function(pos, player)
+		if minetest.is_protected(pos, player:get_player_name()) then
 			return
 		end
 		local mem = tubelib2.get_mem(pos)
 		if mem.running then
 			return
 		end
+		local inv = M(pos):get_inventory()
+		return inv:is_empty("main") and inv:is_empty("sign")
+	end,
+	
+	on_dig = function(pos, node, puncher, pointed_thing)
 		minetest.node_dig(pos, node, puncher, pointed_thing)
-		--tubelib.remove_node(pos)
 	end,
 	
 	on_timer = node_timer,
@@ -268,7 +272,7 @@ if minetest.global_exists("techage") then
 		output = "signs_bot:box",
 		recipe = {
 			{"default:steel_ingot", "group:wood", "default:steel_ingot"},
-			{"basic_materials:motor", "techage:wlanchip", "basic_materials:gear_steel"},
+			{"basic_materials:motor", "techage:ta4_wlanchip", "basic_materials:gear_steel"},
 			{"default:tin_ingot", "", "default:tin_ingot"}
 		}
 	})
