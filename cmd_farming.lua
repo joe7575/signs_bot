@@ -51,14 +51,18 @@ local function planting(base_pos, mem, slot)
 	mem.steps = (mem.steps or 1) + 1
 	if pos and lib.not_protected(base_pos, pos) and soil_availabe(pos) then
 		local stack = inv_get_item(base_pos, slot)
-		local plant = stack:get_name()
-		local item = stack and signs_bot.FarmingSeed[plant]
-		if plant and minetest.registered_nodes[plant] and item and item.seed then
-			local p2 = minetest.registered_nodes[plant].place_param2 or 1
-			minetest.set_node(pos, {name = item.seed, param2 = p2})
-			minetest.sound_play("default_place_node", {pos = pos, gain = 1.0})
-		else
-			inv_put_item(base_pos, mem, plant)
+		if stack and stack ~= "" then
+			local plant = stack:get_name()
+			if plant then
+				local item = signs_bot.FarmingSeed[plant]
+				if item and minetest.registered_nodes[plant] and item.seed then
+					local p2 = minetest.registered_nodes[plant].place_param2 or 1
+					minetest.set_node(pos, {name = item.seed, param2 = p2})
+					minetest.sound_play("default_place_node", {pos = pos, gain = 1.0})
+				else
+					inv_put_item(base_pos, mem, plant)
+				end
+			end
 		end
 	end
 end	
