@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-29 00:01+0200\n"
+"POT-Creation-Date: 2019-07-08 23:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -979,13 +979,37 @@ msgid "Node Sensor: Connected with "
 msgstr ""
 
 #: node_sensor.lua
+msgid "added"
+msgstr ""
+
+#: node_sensor.lua
+msgid "removed"
+msgstr ""
+
+#: node_sensor.lua
+msgid "added or removed"
+msgstr ""
+
+#: node_sensor.lua
+msgid "Send signal if nodes have been:]"
+msgstr ""
+
+#: node_sensor.lua
+msgid "accept"
+msgstr ""
+
+#: node_sensor.lua
 msgid "Node Sensor"
 msgstr ""
 
 #: node_sensor.lua
 msgid ""
-"The Node Sensor sends a signal when it detects any node change (nodes appear "
-"or disappear)."
+"The node sensor can send a signal when it detects that nodes appear or "
+"disappear,"
+msgstr ""
+
+#: node_sensor.lua
+msgid "but has to be configured accordingly."
 msgstr ""
 
 #: node_sensor.lua
@@ -1064,7 +1088,7 @@ msgstr ""
 msgid "Cycle time [min]:"
 msgstr ""
 
-#: timer.lua
+#: timer.lua delayer.lua
 msgid "Start"
 msgstr ""
 
@@ -1075,4 +1099,24 @@ msgstr ""
 #: timer.lua
 msgid ""
 "Can be programmed with a time in seconds, e.g. to start the bot cyclically."
+msgstr ""
+
+#: delayer.lua
+msgid "Signal Delayer: Connected with "
+msgstr ""
+
+#: delayer.lua
+msgid "Delay time [sec]:"
+msgstr ""
+
+#: delayer.lua
+msgid "Signal Delayer"
+msgstr ""
+
+#: delayer.lua
+msgid "Signals are forwarded delayed. Subsequent signals are queued."
+msgstr ""
+
+#: delayer.lua
+msgid "The delay time can be configured."
 msgstr ""

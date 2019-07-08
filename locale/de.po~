@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-25 23:36+0200\n"
-"PO-Revision-Date: 2019-06-27 21:14+0200\n"
+"POT-Creation-Date: 2019-07-08 23:15+0200\n"
+"PO-Revision-Date: 2019-07-08 23:22+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -36,7 +36,7 @@ msgstr "Andere Gegenstände"
 
 #: basis.lua
 msgid "Robot Box "
-msgstr "Roboter Box"
+msgstr "Roboter Box "
 
 #: basis.lua
 msgid "running"
@@ -761,15 +761,17 @@ msgstr ""
 
 #: commands.lua
 msgid ""
-"Go to the next sign\n"
-"to be executed as a sub-process.\n"
-"After that it will go on with the next command\n"
-"on this sign."
+"Walk until a sign or obstacle is\n"
+"reached. Then continue with the next command.\n"
+"When a sign has been reached, \n"
+"it is executed as sub-process."
 msgstr ""
-"Gehe bis zum nächsten Zeichen,\n"
-"das dann als Unterprogramm\n"
-"bearbeitet wird. Mache danach mit\n"
-"dem nächsten Kommando weiter."
+"Gehe bis ein Zeichen oder Hindernis\n"
+"erreicht wurde. Führe dann das nächste\n"
+"Kommando aus. \n"
+"Wurde ein Zeichen erreicht, so arbeite\n"
+"die Kommandos des Zeichens als\n"
+"Unter-Prozess ab."
 
 #: crop_sensor.lua
 msgid "Crop Sensor: Connected with "
@@ -777,7 +779,7 @@ msgstr "Ernte Sensor: Verbunden mit "
 
 #: crop_sensor.lua
 msgid "Crop Sensor"
-msgstr "Ernte Sesor"
+msgstr "Ernte Sensor"
 
 #: crop_sensor.lua
 msgid "The Crop Sensor sends a signal when, for example wheat is fully grown."
@@ -1217,16 +1219,40 @@ msgid "Node Sensor: Connected with "
 msgstr "Block Sensor: Verbunden mit "
 
 #: node_sensor.lua
+msgid "added"
+msgstr "mehr Blöcken"
+
+#: node_sensor.lua
+msgid "removed"
+msgstr "weniger Blöcken"
+
+#: node_sensor.lua
+msgid "added or removed"
+msgstr "mehr oder weniger"
+
+#: node_sensor.lua
+msgid "Send signal if nodes have been:]"
+msgstr "Sende ein Signal bei"
+
+#: node_sensor.lua
+msgid "accept"
+msgstr "übernehmen"
+
+#: node_sensor.lua
 msgid "Node Sensor"
 msgstr "Block Sensor"
 
 #: node_sensor.lua
 msgid ""
-"The Node Sensor sends a signal when it detects any node change (nodes appear "
-"or disappear)."
+"The node sensor can send a signal when it detects that nodes appear or "
+"disappear,"
 msgstr ""
-"Der Block Sensor sendet ein Signal, wenn er eine Veränderung von Blocken vor "
-"sich entdeckt (ein Block erscheint oder verschwindet)."
+"Der Block Sensor kann ein Signal senden, wenn er eine Veränderung von "
+"Blöcken vor sich entdeckt (ein Block erscheint oder verschwindet),"
+
+#: node_sensor.lua
+msgid "but has to be configured accordingly."
+msgstr "aber muss entsprechend konfiguriert werden."
 
 #: node_sensor.lua
 msgid "Valid nodes are all kind of blocks and plants."
@@ -1323,3 +1349,14 @@ msgid ""
 msgstr ""
 "Kann mit einer Zeit in Sekunden programmiert werden, um bspw. den Roboter "
 "zyklisch zu starten."
+
+#~ msgid ""
+#~ "Go to the next sign\n"
+#~ "to be executed as a sub-process.\n"
+#~ "After that it will go on with the next command\n"
+#~ "on this sign."
+#~ msgstr ""
+#~ "Gehe bis zum nächsten Zeichen,\n"
+#~ "das dann als Unterprogramm\n"
+#~ "bearbeitet wird. Mache danach mit\n"
+#~ "dem nächsten Kommando weiter."

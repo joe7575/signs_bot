@@ -45,5 +45,6 @@ dofile(MP.."/chest.lua")
 dofile(MP.."/legacy.lua")
 dofile(MP.."/techage.lua")
 dofile(MP.."/timer.lua")
+dofile(MP.."/delayer.lua")
 
 dofile(MP.."/tool.lua")

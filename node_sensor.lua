@@ -39,6 +39,24 @@ local function swap_node(pos, name)
 	return true
 end
 	
+	
+local DropdownValues = {
+	["added"] = 1,
+	["removed"] = 2,
+	["added or removed"] = 3,
+}
+
+local function formspec(mem)
+	local label = I("added")..","..I("removed")..","..I("added or removed")
+	return "size[6,3]"..
+	default.gui_bg..
+	default.gui_bg_img..
+	default.gui_slots..
+	"label[0.2,0.4;"..I("Send signal if nodes have been:]")..
+	"dropdown[0.2,1;6,1;mode;"..label..";"..(mem.mode or 3).."]"..
+	"button_exit[1.5,2.2;3,1;accept;"..I("accept").."]"
+end
+
 local function any_node_changed(pos)
 	local mem = tubelib2.get_mem(pos)
 	if not mem.pos1 or not mem.pos2 or not mem.num then
@@ -50,11 +68,33 @@ local function any_node_changed(pos)
 		return false
 	end
 	local num = #minetest.find_nodes_in_area(mem.pos1, mem.pos2, {"air"})
+	
 	if mem.num ~= num then
+		if mem.mode == 1 and num < mem.num then 
+			mem.num = num
+			return true
+		elseif mem.mode == 2 and num > mem.num then 
+			mem.num = num
+			return true
+		elseif mem.mode == 3 then
+			mem.num = num
+			return true
+		end
 		mem.num = num
-		return true
 	end
 	return false
+end
+
+local function on_receive_fields(pos, formname, fields, player)
+	local mem = tubelib2.get_mem(pos)
+	local meta = M(pos)
+	if minetest.is_protected(pos, player:get_player_name()) then
+		return
+	end
+	if fields.accept then
+		mem.mode = DropdownValues[fields.mode] or 3
+	end
+	meta:set_string("formspec", formspec(mem))
 end
 
 local function node_timer(pos)
@@ -93,12 +133,15 @@ minetest.register_node("signs_bot:node_sensor", {
 		local meta = M(pos)
 		local mem = tubelib2.init_mem(pos)
 		meta:set_string("infotext", "Node Sensor: Not connected")
+		mem.mode = 3 -- default legacy mode
+		meta:set_string("formspec", formspec(mem))
 		minetest.get_node_timer(pos):start(CYCLE_TIME)
 		any_node_changed(pos)
 	end,
 	
 	on_timer = node_timer,
 	update_infotext = update_infotext,
+	on_receive_fields = on_receive_fields,
 	on_rotate = screwdriver.disallow,
 	paramtype = "light",
 	sunlight_propagates = true,
@@ -168,7 +211,8 @@ if minetest.get_modpath("doc") then
 		data = {
 			item = "signs_bot:node_sensor",
 			text = table.concat({
-				I("The Node Sensor sends a signal when it detects any node change (nodes appear or disappear)."),
+				I("The node sensor can send a signal when it detects that nodes appear or disappear,"),
+				I("but has to be configured accordingly."),
 				I("Valid nodes are all kind of blocks and plants."),
 				I("The sensor range is 3 nodes/meters in one direction."), 
 				I("The sensor has an active side (red) that must point to the observed area."),
