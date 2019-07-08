@@ -41,6 +41,7 @@ In addition, there are currently the following blocks:
 - Bot Flap: The "cat flap" is a door for the bot, which he opens automatically and closes behind him.
 - Sensor Extender for controlling additional actuators from one sensor signal
 - A Timer can be used to start the Bot cyclically
+- A Delayer can be used to delay and queue signals
 
 More information:
 - Using the signs "take" and "add", the bot can pick items from Chests and put them in. The signs must be placed on the box. So far, only a few blocks are supported with Inventory.
@@ -116,4 +117,5 @@ optional: farming redo, node_io, doc, techage, minecart
 - 2019-05-22  v0.08  * recipe bug fixes and prepared for techage
 - 2019-05-25  v0.09  * in-game help added for the mod 'doc'
 - 2019-07-05  v0.10  * Timer, sensor and cart handling improvements
+- 2019-07-08  v0.11  * Delayer added
 
