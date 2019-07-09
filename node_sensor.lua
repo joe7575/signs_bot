@@ -41,9 +41,9 @@ end
 	
 	
 local DropdownValues = {
-	["added"] = 1,
-	["removed"] = 2,
-	["added or removed"] = 3,
+	[I("added")] = 1,
+	[I("removed")] = 2,
+	[I("added or removed")] = 3,
 }
 
 local function formspec(mem)
@@ -52,7 +52,7 @@ local function formspec(mem)
 	default.gui_bg..
 	default.gui_bg_img..
 	default.gui_slots..
-	"label[0.2,0.4;"..I("Send signal if nodes have been:]")..
+	"label[0.2,0.4;"..I("Send signal if nodes have been:").."]"..
 	"dropdown[0.2,1;6,1;mode;"..label..";"..(mem.mode or 3).."]"..
 	"button_exit[1.5,2.2;3,1;accept;"..I("accept").."]"
 end
