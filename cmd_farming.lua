@@ -55,9 +55,13 @@ local function planting(base_pos, mem, slot)
 			local plant = stack:get_name()
 			if plant then
 				local item = signs_bot.FarmingSeed[plant]
-				if item and minetest.registered_nodes[plant] and item.seed then
-					local p2 = minetest.registered_nodes[plant].place_param2 or 1
-					minetest.set_node(pos, {name = item.seed, param2 = p2})
+				if item and item.seed then
+					if minetest.registered_nodes[plant] then
+						local p2 = minetest.registered_nodes[plant].place_param2 or 1
+						minetest.set_node(pos, {name = item.seed, param2 = p2})
+					else
+						minetest.set_node(pos, {name = item.seed})
+					end
 					minetest.sound_play("default_place_node", {pos = pos, gain = 1.0})
 				else
 					inv_put_item(base_pos, mem, plant)
