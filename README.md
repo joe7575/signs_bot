@@ -98,7 +98,7 @@ For all Inventory commands applies: If the inventory stack specified by <slot> i
 
 ### License
 Copyright (C) 2019 Joachim Stolberg  
-Code: Licensed under the GNU LGPL version 2.1 or later. See LICENSE.txt  
+Code: Licensed under the GNU GPL version 3 or later. See LICENSE.txt  
 
 
 ### Dependencies 
