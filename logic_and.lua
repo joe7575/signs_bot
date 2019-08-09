@@ -23,6 +23,18 @@ local I,_ = dofile(MP.."/intllib.lua")
 
 local lib = signs_bot.lib
 
+local function inputs(tbl)
+	local out = {}
+	for _,v in ipairs(tbl) do
+		if v then 
+			out[#out + 1] = "1"
+		else
+			out[#out + 1] = "0"
+		end
+	end
+	return table.concat(out, " ")
+end
+	
 local function update_infotext(pos, dest_pos, cmnd)
 	local mem = tubelib2.get_mem(pos)
 	local text = table.concat({
@@ -33,12 +45,14 @@ local function update_infotext(pos, dest_pos, cmnd)
 		I("Connected with"),
 		S(dest_pos),
 		"/",
-		cmnd
+		cmnd,
+		":",
+		inputs(mem.inputs or {})
 	}, " ")
 	M(pos):set_string("infotext", text)
 end	
 
-local function any_inputs(mem)
+local function all_inputs(mem)
 	mem.inputs = mem.inputs or {}
 	for _,v in ipairs(mem.inputs) do
 		if not v then return false end
@@ -96,6 +110,7 @@ local function not_zero(pos)
 		node.name = "signs_bot:and2"
 		minetest.swap_node(pos, node)
 	end
+	infotext(pos)
 end
 
 local function send_signal(pos)
@@ -110,6 +125,7 @@ local function send_signal(pos)
 	signs_bot.send_signal(pos)
 	signs_bot.lib.activate_extender_nodes(pos, true)
 	clear_inputs(mem)
+	infotext(pos)
 end
 
 -- To be called from sensors
@@ -119,7 +135,7 @@ local function signs_bot_on_signal(pos, node, signal)
 	mem.inputs = mem.inputs or {}
 	mem.inputs[signal] = true
 	
-	if any_inputs(mem) then
+	if all_inputs(mem) then
 		send_signal(pos)
 	else
 		not_zero(pos)
@@ -222,18 +238,6 @@ minetest.register_craft({
 		{"", "", ""},
 		{"default:steel_ingot", "", "default:mese_crystal_fragment"},
 	}
-})
-
-minetest.register_lbm({
-	label = "[signs_bot] Restart AND",
-	name = "signs_bot:and_restart",
-	nodenames = {"signs_bot:and1", "signs_bot:and2", "signs_bot:and3"},
-	run_at_every_load = true,
-	action = function(pos, node)
-		local mem = tubelib2.get_mem(pos)
-		clear_inputs(mem)
-		turn_off(pos)
-	end
 })
 
 if minetest.get_modpath("doc") then
