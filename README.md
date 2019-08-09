@@ -118,4 +118,5 @@ optional: farming redo, node_io, doc, techage, minecart
 - 2019-05-25  v0.09  * in-game help added for the mod 'doc'
 - 2019-07-05  v0.10  * Timer, sensor and cart handling improvements
 - 2019-07-08  v0.11  * Delayer added
+- 2019-08-09  v0.12  * bug fixes
 
