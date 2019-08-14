@@ -88,13 +88,13 @@ For all Inventory commands applies: If the inventory stack specified by <slot> i
     trash_sign <slot>         - Remove the sign, clear data and add to the item Inventory
     stop                      - Bot stops until the shield is removed
     pickup_items <slot>       - pickup items (in a 3x3 field)
-    drop_items <slot>         - drop items
+    drop_items <num> <slot>   - drop items
     harvest                   - harvest a 3x3 field (farming)
     sow_seed <slot>           - a 3x3 field sowing / planting
     plant_sapling <slot>      - plant a sapling in front of the robot
     pattern                   - save the blocks behind the shield (up to 5x3x3) as template
     copy <size>               - make a copy of "pattern". Size is e.g. 3x3 (see ingame help)
-
+    punch_cart                - Punch a rail cart to start it
 
 ### License
 Copyright (C) 2019 Joachim Stolberg  
@@ -119,4 +119,5 @@ optional: farming redo, node_io, doc, techage, minecart
 - 2019-07-05  v0.10  * Timer, sensor and cart handling improvements
 - 2019-07-08  v0.11  * Delayer added
 - 2019-08-09  v0.12  * bug fixes
+- 2019-08-14  v0.13  * Signs Bot Chest recipe added, Minecart signs added
 

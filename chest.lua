@@ -234,6 +234,15 @@ signs_bot.register_inventory({"signs_bot:chest"}, {
 	},
 })
 
+minetest.register_craft({
+	output = "signs_bot:chest",
+	recipe = {
+		{"default:steel_ingot", "", "default:steel_ingot"},
+		{"", "default:chest", ""},
+		{"default:tin_ingot", "", "default:tin_ingot"}
+	}
+})
+
 if minetest.get_modpath("doc") then
 	doc.add_entry("signs_bot", "chest", {
 		name = I("Signs Bot Chest"),

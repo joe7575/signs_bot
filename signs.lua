@@ -150,6 +150,40 @@ minetest.register_craft({
 	}
 })
 
+if minetest.get_modpath("minecart") then
+	register_sign({
+		name = "sign_add_cart", 
+		description = I('Sign "add to cart"'), 
+		commands = "drop_items 99 1\npunch_cart\nturn_around", 
+		image = "signs_bot_sign_add_cart.png",
+	})
+
+	minetest.register_craft({
+		output = "signs_bot:sign_add_cart 4",
+		recipe = {
+			{"group:wood", "default:stick", "group:wood"},
+			{"dye:black", "default:stick", "dye:yellow"},
+			{"dye:black", "", ""}
+		}
+	})
+
+	register_sign({
+		name = "sign_take_cart", 
+		description = I('Sign "take from cart"'), 
+		commands = "pickup_items 1\npunch_cart\nturn_around", 
+		image = "signs_bot_sign_take_cart.png",
+	})
+
+	minetest.register_craft({
+		output = "signs_bot:sign_take_cart 4",
+		recipe = {
+			{"group:wood", "default:stick", "group:wood"},
+			{"dye:black", "default:stick", "dye:yellow"},
+			{"", "dye:black", ""}
+		}
+	})
+end
+
 if minetest.get_modpath("doc") then
 	doc.add_entry("signs_bot", "sign_right", {
 		name = I('Sign "turn right"'),
@@ -158,9 +192,6 @@ if minetest.get_modpath("doc") then
 			text = I("The Bot turns right when it detects this sign in front of it.")		
 		},
 	})
-end
-
-if minetest.get_modpath("doc") then
 	doc.add_entry("signs_bot", "sign_left", {
 		name = I('Sign "turn left"'),
 		data = {
@@ -168,9 +199,6 @@ if minetest.get_modpath("doc") then
 			text = I("The Bot turns left when it detects this sign in front of it.")		
 		},
 	})
-end
-
-if minetest.get_modpath("doc") then
 	doc.add_entry("signs_bot", "sign_take", {
 		name = I('Sign "take item"'),
 		data = {
@@ -178,11 +206,9 @@ if minetest.get_modpath("doc") then
 			text = table.concat({
 				I("The Bot takes items out of a chest in front of it and then turns around."),
 				I("This sign has to be placed on top of the chest."), 
-			}, "\n")			},
+			}, "\n")			
+		},
 	})
-end
-
-if minetest.get_modpath("doc") then
 	doc.add_entry("signs_bot", "sign_add", {
 		name = I('Sign "add item"'),
 		data = {
@@ -190,16 +216,37 @@ if minetest.get_modpath("doc") then
 			text = table.concat({
 				I("The Bot puts items into a chest in front of it and then turns around."),
 				I("This sign has to be placed on top of the chest."), 
-			}, "\n")			},
+			}, "\n")			
+		},
 	})
-end
-
-if minetest.get_modpath("doc") then
 	doc.add_entry("signs_bot", "sign_stop", {
 		name = I('Sign "stop"'),
 		data = {
 			item = "signs_bot:sign_stop",
 			text = I("The Bot will stop in front of this sign until the sign is removed or the bot is turned off.")		
+		},
+	})
+end
+
+if minetest.get_modpath("doc") and minetest.get_modpath("minecart") then
+	doc.add_entry("signs_bot", "sign_add_cart", {
+		name = I('Sign "add to cart"'),
+		data = {
+			item = "signs_bot:sign_add_cart",
+			text = table.concat({
+				I("The Bot puts items into a minecart in front of it, pushes the cart and then turns around."),
+				I("This sign has to be placed on top of the rail at the cart end position."), 
+			}, "\n")			
+		},
+	})
+	doc.add_entry("signs_bot", "sign_take_cart", {
+		name = I('Sign "take from cart"'),
+		data = {
+			item = "signs_bot:sign_take_cart",
+			text = table.concat({
+				I("The Bot takes items out of a minecart in front of it, pushes the cart and then turns around."),
+				I("This sign has to be placed on top of the rail at the cart end position."), 
+			}, "\n")			
 		},
 	})
 end
