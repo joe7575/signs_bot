@@ -78,26 +78,42 @@ if minetest.global_exists("techage") then
 	})
 	
 	local Cable = techage.ElectricCable
-	local consume_power = techage.power.consume_power
-	local power_available = techage.power.power_available
+	local power = techage.power
 
 	local PWR_NEEDED = 8
 
-	local function on_power(pos)
-		local mem = tubelib2.get_mem(pos)
+	local function on_power(pos, mem)
+		mem.power_available = true
+	end
+
+	local function on_nopower(pos, mem)
+		mem.power_available = false
+	end
+
+    -- Bot in the box
+	function signs_bot.while_charging(pos, mem)
 		mem.capa = mem.capa or 0
-		if not mem.running and mem.capa < signs_bot.MAX_CAPA then  -- Bot in the box
-			local got = consume_power(pos, PWR_NEEDED)
-			if got >= PWR_NEEDED then
+		if mem.power_available then
+			if mem.capa < signs_bot.MAX_CAPA then
+				power.consumer_alive(pos, mem)
 				mem.capa = mem.capa + 4
+			else
+				power.consumer_stop(pos, mem)
+				minetest.get_node_timer(pos):stop()
+				mem.charging = false
+				return false
 			end
+		else
+			power.consumer_start(pos, mem, 2, PWR_NEEDED)
 		end
+		return true
 	end
 
 	techage.power.register_node({"signs_bot:box"}, {
 		power_network  = Cable,
 		conn_sides = {"L", "U", "D", "F", "B"},
 		on_power = on_power,
+		on_nopower = on_nopower,
 	})
 else
 	function signs_bot.formspec_battery_capa(max_capa, current_capa)

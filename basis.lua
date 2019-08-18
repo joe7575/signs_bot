@@ -72,6 +72,7 @@ local function start_robot(base_pos)
 	mem.lCmnd1 = {}
 	mem.lCmnd2 = {}
 	mem.running = true
+	mem.charging = false
 	mem.error = false
 	mem.stored_node = nil
 	if minetest.global_exists("techage") then
@@ -90,7 +91,13 @@ function signs_bot.stop_robot(base_pos, mem)
 	local meta = M(base_pos)
 	if mem.signal_request ~= true then
 		mem.running = false
-		minetest.get_node_timer(base_pos):stop()
+		if minetest.global_exists("techage") then
+			minetest.get_node_timer(base_pos):start(2)
+			mem.charging = true
+		else
+			minetest.get_node_timer(base_pos):stop()
+			mem.charging = false
+		end
 		signs_bot.infotext(base_pos, I("stopped"))
 		meta:set_string("formspec", formspec(base_pos, mem))
 		signs_bot.remove_robot(mem)
@@ -125,14 +132,18 @@ end
 
 local function node_timer(pos, elapsed)
 	local mem = tubelib2.get_mem(pos)
-	local res = false
-	--local t = minetest.get_us_time()
-	if mem.running then
-		res = signs_bot.run_next_command(pos, mem)
+	if mem.charging and signs_bot.while_charging then
+		return signs_bot.while_charging(pos, mem)
+	else
+		local res = false
+		--local t = minetest.get_us_time()
+		if mem.running then
+			res = signs_bot.run_next_command(pos, mem)
+		end
+		--t = minetest.get_us_time() - t
+		--print("node_timer", t)
+		return res and mem.running
 	end
-	--t = minetest.get_us_time() - t
-	--print("node_timer", t)
-	return res and mem.running
 end
 
 local function on_receive_fields(pos, formname, fields, player)
