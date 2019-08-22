@@ -5,7 +5,7 @@
 
 	Copyright (C) 2019 Joachim Stolberg
 
-	LGPLv2.1+
+	GPLv3
 	See LICENSE.txt for more information
 	
 	Signs Bot: Bot Flap
