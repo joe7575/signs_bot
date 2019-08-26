@@ -39,7 +39,7 @@ local function soil_availabe(pos)
 	local node = minetest.get_node_or_nil(pos)
 	if node.name == "air" then
 		node = minetest.get_node_or_nil({x=pos.x, y=pos.y-1, z=pos.z})
-		if minetest.get_item_group(node.name, "soil") >= 1 then
+		if node and minetest.get_item_group(node.name, "soil") >= 1 then
 			return true
 		end
 	end
