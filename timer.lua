@@ -27,19 +27,22 @@ local lib = signs_bot.lib
 
 local function update_infotext(pos, dest_pos, cmnd)
 	local meta = M(pos)
+	local mem = tubelib2.get_mem(pos)
+	local rest = math.floor((mem.time or 0) / 60)
 	local cycle_time = meta:get_int("cycle_time")
 	local text
 	if cycle_time > 0 then
-		text = I("Bot Timer").." ("..cycle_time.." min): "..I("Connected with")
+		text = I("Bot Timer").." ("..rest.."/"..cycle_time.." min): "..I("Connected with")
 	else
 		text = I("Bot Timer").." (-- min): "..I("Connected with")
 	end
-	meta:set_string("infotext", text.." "..S(dest_pos).." / "..cmnd)
+	meta:set_string("infotext", text.." "..S(dest_pos).." / "..cmnd.."    ")
 end	
 
 local function update_infotext_local(pos)
 	local meta = M(pos)
 	local mem = tubelib2.get_mem(pos)
+	local rest = math.floor((mem.time or 0) / 60)
 	local cycle_time = meta:get_int("cycle_time")
 	local dest_pos = meta:get_string("signal_pos")
 	local signal = meta:get_string("signal_data")
@@ -50,13 +53,13 @@ local function update_infotext_local(pos)
 		text2 = I("Connected with").." "..dest_pos.." / "..signal
 	end
 	if cycle_time > 0 then
-		text1 = " ("..cycle_time.." min): "
+		text1 = " ("..rest.."/"..cycle_time.." min): "
 	end
 	if dest_pos ~= "" and signal ~= "" and cycle_time > 0 then
 		mem.running = true
 		minetest.get_node_timer(pos):start(CYCLE_TIME)
 	end
-	meta:set_string("infotext", I("Bot Timer")..text1..text2)
+	meta:set_string("infotext", I("Bot Timer")..text1..text2.."    ")
 end	
 
 
@@ -83,6 +86,10 @@ local function node_timer(pos)
 	mem.time = mem.time or 0
 	if mem.time > CYCLE_TIME then
 		mem.time = mem.time - CYCLE_TIME
+		if ((mem.time or 0) % 60) == 0 then
+			local meta = M(pos)
+			update_infotext(pos, P(meta:get_string("signal_pos")), meta:get_string("signal_data"))
+		end
 	else
 		local node = minetest.get_node(pos)
 		node.name = "signs_bot:timer_on"
@@ -90,7 +97,9 @@ local function node_timer(pos)
 		signs_bot.send_signal(pos)
 		signs_bot.lib.activate_extender_nodes(pos, true)
 		minetest.after(2, turn_off, pos)
-		mem.time = M(pos):get_int("cycle_time") * 60
+		local meta = M(pos)
+		mem.time = meta:get_int("cycle_time") * 60
+		update_infotext(pos, P(meta:get_string("signal_pos")), meta:get_string("signal_data"))
 	end
 	return mem.time > 0
 end
