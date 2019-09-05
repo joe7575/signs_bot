@@ -86,7 +86,7 @@ if farming.mod == "redo" then
 	fc("farming:barley_7",    "farming:seed_barley",    "farming:seed_barley")
 	fs("farming:chili_pepper", "farming:chili_1")
 	fc("farming:chili_8",     "farming:chili_pepper",   "farming:chili_pepper")
-	fs("farming:hemp_leaf",   "farming:hemp_1")
+	fs("farming:seed_hemp",   "farming:hemp_1")
 	fc("farming:hemp_8",      "farming:hemp_leaf",      "farming:hemp_leaf")
 	fs("farming:oat",         "farming:oat_1")
 	fc("farming:oat_8",       "farming:oat",            "farming:oat")

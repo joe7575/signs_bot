@@ -145,7 +145,7 @@ msgstr "Wagen Sensor: Verbunden mit "
 
 #: cart_sensor.lua
 msgid "Cart Sensor"
-msgstr "Wagen Sesor"
+msgstr "Wagen Sensor"
 
 #: cart_sensor.lua
 msgid ""

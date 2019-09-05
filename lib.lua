@@ -34,7 +34,12 @@ signs_bot.lib.DONE = 2
 signs_bot.lib.ERROR = 3
 signs_bot.lib.TURN_OFF = 4
 
+-- allowed for digging
+local NotSoSimpleNodes = {}
 
+function signs_bot.lib.register_node_to_be_dug(name)
+	NotSoSimpleNodes[name] = true
+end
 
 -- Determine the next robot position based on the robot position, 
 -- the robot param2.
@@ -133,10 +138,12 @@ end
 function signs_bot.lib.is_simple_node(node)
 	-- don't remove nodes with some intelligence or undiggable nodes
 	local ndef = minetest.registered_nodes[node.name]
-	if not ndef or node.name == "air" then return false end
-	if ndef.drop == "" then return false end
-	if ndef.diggable == false then return false end
-	if ndef.after_dig_node then return false end
+	if not NotSoSimpleNodes[node.name] then
+		if not ndef or node.name == "air" then return false end
+		if ndef.drop == "" then return false end
+		if ndef.diggable == false then return false end
+		if ndef.after_dig_node then return false end
+	end
 	if type(ndef.drop) == "table" then
 		return handle_drop(ndef.drop)
 	end
@@ -358,3 +365,5 @@ function signs_bot.lib.fake_player(name)
 	}
 end
 
+signs_bot.lib.register_node_to_be_dug("default:cactus")
+signs_bot.lib.register_node_to_be_dug("default:papyrus")

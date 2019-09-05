@@ -88,7 +88,11 @@ local function node_timer(pos)
 		mem.time = mem.time - CYCLE_TIME
 		if ((mem.time or 0) % 60) == 0 then
 			local meta = M(pos)
-			update_infotext(pos, P(meta:get_string("signal_pos")), meta:get_string("signal_data"))
+			local dest_pos = meta:get_string("signal_pos")
+			local signal = meta:get_string("signal_data")
+			if dest_pos ~= "" and signal ~= "" then
+				update_infotext(pos, P(dest_pos), signal)
+			end
 		end
 	else
 		local node = minetest.get_node(pos)
@@ -99,7 +103,11 @@ local function node_timer(pos)
 		minetest.after(2, turn_off, pos)
 		local meta = M(pos)
 		mem.time = meta:get_int("cycle_time") * 60
-		update_infotext(pos, P(meta:get_string("signal_pos")), meta:get_string("signal_data"))
+		local dest_pos = meta:get_string("signal_pos")
+		local signal = meta:get_string("signal_data")
+		if dest_pos ~= "" and signal ~= "" then
+			update_infotext(pos, P(dest_pos), signal)
+		end
 	end
 	return mem.time > 0
 end

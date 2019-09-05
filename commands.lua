@@ -142,16 +142,16 @@ end
 --  - true if a sensor could be available, else false
 --  - the sign pos or nil
 local function scan_surrounding(mem)
+	local pos1 = lib.next_pos(mem.robot_pos, mem.robot_param2)
+	if check_sign(pos1, mem) then
+		return true, pos1
+	end
+	local pos2 = {x=pos1.x, y=pos1.y+1, z=pos1.z}
+	if check_sign(pos2, mem) then
+		return true, pos2
+	end
 	if minetest.find_node_near(mem.robot_pos, 1, {
-			"signs_bot:box", "signs_bot:bot_sensor", "group:sign_bot_sign"}) then  -- something around?
-		local pos1 = lib.next_pos(mem.robot_pos, mem.robot_param2)
-		if check_sign(pos1, mem) then
-			return true, pos1
-		end
-		local pos2 = {x=pos1.x, y=pos1.y+1, z=pos1.z}
-		if check_sign(pos2, mem) then
-			return true, pos2
-		end
+			"signs_bot:box", "signs_bot:bot_sensor"}) then  -- something around?
 		return true
 	end
 	return false
