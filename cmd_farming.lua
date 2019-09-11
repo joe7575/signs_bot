@@ -106,6 +106,11 @@ local function harvesting(base_pos, mem)
 			minetest.remove_node(pos)
 			inv_put_item(base_pos, mem, item.inv_crop)
 			inv_put_item(base_pos, mem, item.inv_seed)
+			if math.random(2) == 1 then
+				inv_put_item(base_pos, mem, item.inv_crop)
+			else
+				inv_put_item(base_pos, mem, item.inv_seed)
+			end
 		end
 	end
 end
