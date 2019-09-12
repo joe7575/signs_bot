@@ -67,8 +67,9 @@ function signs_bot.robot_put(base_pos, robot_pos, param2, num, slot)
 		
 		if def and (not def.allow_put or def.allow_put(target_pos, taken, owner)) then
 			local dst_inv = minetest.get_inventory({type="node", pos=target_pos})
-			if not lib.put_inv_items(dst_inv, def.put_listname, 1, taken) then
-				lib.drop_items(robot_pos, taken)
+			local leftover = dst_inv and dst_inv:add_item(def.put_listname, taken)
+			if leftover and leftover:get_count() > 0 then
+				lib.drop_items(robot_pos, leftover)
 			end
 		elseif NODE_IO then
 			local side = node_io.get_target_side(robot_pos, target_pos)
