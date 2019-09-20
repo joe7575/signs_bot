@@ -178,9 +178,10 @@ function signs_bot.lib.get_inv_items(src_inv, src_list, slot, num)
 	end
 end	
 
--- use only the given slot and return num (or count) items from this 
+-- use only the given slot and return num (or count) items from this slot
 function signs_bot.lib.get_inv_items_from_slot(src_inv, src_list, slot, num)
-	if slot < 1 or slot > 8 or num <  1 then 
+	local max_count = src_inv:get_size(src_list)
+	if slot < 1 or slot > max_count or num <  1 then 
 		return 
 	end
 	local to_take = num
