@@ -58,7 +58,7 @@ end
 -- From robot to chest
 function signs_bot.robot_put(base_pos, robot_pos, param2, num, slot)
 	local src_inv = minetest.get_inventory({type="node", pos=base_pos})
-	local taken = lib.get_inv_items(src_inv, "main", slot, num)
+	local taken = lib.get_inv_items_from_slot(src_inv, "main", slot, num)
 	if taken then
 		local target_pos = lib.next_pos(robot_pos, param2)
 		local node = lib.get_node_lvm(target_pos)
@@ -85,7 +85,7 @@ end
 -- From robot to furnace
 function signs_bot.robot_put_fuel(base_pos, robot_pos, param2, num, slot)
 	local src_inv = minetest.get_inventory({type="node", pos=base_pos})
-	local taken = lib.get_inv_items(src_inv, "main", slot, num)
+	local taken = lib.get_inv_items_from_slot(src_inv, "main", slot, num)
 	if taken then
 		local target_pos = lib.next_pos(robot_pos, param2)
 		local node = lib.get_node_lvm(target_pos)
@@ -131,7 +131,7 @@ end
 -- From robot to chest
 function signs_bot.robot_put_cond(base_pos, robot_pos, param2, num, slot)
 	local src_inv = minetest.get_inventory({type="node", pos=base_pos})
-	local taken = lib.get_inv_items(src_inv, "main", slot, num)
+	local taken = lib.get_inv_items_from_slot(src_inv, "main", slot, num)
 	if taken then
 		local target_pos = lib.next_pos(robot_pos, param2)
 		local node = lib.get_node_lvm(target_pos)

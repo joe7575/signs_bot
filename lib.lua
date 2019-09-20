@@ -178,6 +178,28 @@ function signs_bot.lib.get_inv_items(src_inv, src_list, slot, num)
 	end
 end	
 
+-- use only the given slot and return num (or count) items from this 
+function signs_bot.lib.get_inv_items_from_slot(src_inv, src_list, slot, num)
+	if slot < 1 or slot > 8 or num <  1 then 
+		return 
+	end
+	local to_take = num
+	local stack = src_inv:get_stack(src_list, slot)
+	local item_count = stack:get_count()
+	if item_count == 0 then 
+		-- there is no item in slot, so we leave 
+		return 
+	elseif item_count >= num then
+		-- the slot has enough items
+	else
+		-- the slot has fewer items as needed
+		to_take = item_count
+	end
+	local taken = stack:take_item(to_take)
+	src_inv:set_stack(src_list, slot, stack)
+	return taken
+end
+
 function signs_bot.lib.get_inv_items_cond(src_inv, src_list, slot, num)
 	for idx = (slot or 1),src_inv:get_size(src_list) do
 		local stack = src_inv:get_stack(src_list, idx)
