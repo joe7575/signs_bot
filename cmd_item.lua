@@ -205,7 +205,7 @@ signs_bot.register_botcommand("add_item", {
 		"<slot> is the inventory slot (1..8)"),
 	check = function(num, slot)
 		num = tonumber(num or 1)
-		if not num or num < 1 or num > 99 then 
+		if not num or num == 0 or num < -99 or num > 99 then 
 			return false 
 		end
 		slot = tonumber(slot or 1)

@@ -180,22 +180,23 @@ end
 
 -- use only the given slot and return num (or count) items from this slot
 function signs_bot.lib.get_inv_items_from_slot(src_inv, src_list, slot, num)
-	local max_count = src_inv:get_size(src_list)
-	if slot < 1 or slot > max_count or num <  1 then 
-		return 
-	end
-	local to_take = num
+	local to_take = math.abs(num)
 	local stack = src_inv:get_stack(src_list, slot)
 	local item_count = stack:get_count()
+	local item_leave_one = 0
+	if num < 0 then 
+		item_leave_one = 1 
+	end
 	if item_count == 0 then 
 		-- there is no item in slot, so we leave 
 		return 
-	elseif item_count >= num then
+	elseif item_count >= (to_take + item_leave_one) then
 		-- the slot has enough items
 	else
 		-- the slot has fewer items as needed
 		to_take = item_count
 	end
+	to_take = to_take - item_leave_one
 	local taken = stack:take_item(to_take)
 	src_inv:set_stack(src_list, slot, stack)
 	return taken
