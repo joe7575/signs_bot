@@ -59,6 +59,20 @@ function signs_bot.lib.dest_pos(pos, param2, route)
 	return pos, p2
 end
 
+function signs_bot.lib.find_inv_slot(src_inv, src_list, item_name)
+	if not item_name then
+		return
+	end
+	for idx = 1, src_inv:get_size(src_list) do
+		local stack = src_inv:get_stack(src_list, idx)
+		if stack:get_count() > 1 then
+			if stack:get_name() == item_name then
+				return idx
+			end
+		end
+	end		
+end
+
 function signs_bot.lib.get_node_lvm(pos)
 	local node = minetest.get_node_or_nil(pos)
 	if node then
@@ -194,9 +208,8 @@ function signs_bot.lib.get_inv_items_from_slot(src_inv, src_list, slot, num)
 		-- the slot has enough items
 	else
 		-- the slot has fewer items as needed
-		to_take = item_count
+		to_take = item_count - item_leave_one
 	end
-	to_take = to_take - item_leave_one
 	local taken = stack:take_item(to_take)
 	src_inv:set_stack(src_list, slot, stack)
 	return taken
