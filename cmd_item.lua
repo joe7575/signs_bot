@@ -31,34 +31,80 @@ local RegisteredInventories = {
 -- Move from/to inventories
 --
 -- From chest to robot
-function signs_bot.robot_take(base_pos, robot_pos, param2, want_count, slot)
-	local target_pos = lib.next_pos(robot_pos, param2)
-	local node = lib.get_node_lvm(target_pos)
-	local def = RegisteredInventories[node.name]	
+function signs_bot.robot_take(base_pos, robot_pos, param2, num, slot) 
+	-- find parameter from the chest
+	local target_pos = lib.next_pos(robot_pos, param2) 
+	local node = lib.get_node_lvm(target_pos) 
+	local def = RegisteredInventories[node.name]
+	local src_inv = minetest.get_inventory({type="node", pos=target_pos}) 
+	if not src_inv then
+		return
+	end
+
+	-- find parameter from robot
+	local dst_inv = minetest.get_inventory({type="node", pos=base_pos}) 
+	if not dst_inv then
+		return
+	end
+	local dst_stack = dst_inv:get_stack("main", slot)
+	local dst_max_item_count = dst_stack:get_count()
+	local dst_item_name = dst_stack:get_name()
+	if not dst_item_name then
+		return
+	end
+
+	-- check for negative num
+	local want_count = math.abs(num)
+	local item_leave_one = 0
+	if num < 0 then 
+		item_leave_one = 1 
+	end
+
+	-- check for robot has enough items, no more items needed  
+	if  dst_max_item_count >= want_count then
+		return
+	end
+
 	local owner = M(base_pos):get_string("owner")
-	local taken
+	local to_take_left = want_count
 	if def and (not def.allow_take or def.allow_take(target_pos, nil, owner)) then
-		local src_inv = minetest.get_inventory({type="node", pos=target_pos})
-		taken = lib.get_inv_items(src_inv, def.take_listname, 1, want_count)
+
+		while to_take_left > 0 do
+			-- find first slot in chest with has correct item, and get his parameter
+			local src_slot = lib.find_inv_slot(src_inv, "main", dst_item_name)
+
+			if  not src_slot or src_slot == 0 then
+				break
+			end
+			local src_stack = src_inv:get_stack("main", src_slot)
+			local src_max_item_count = src_stack:get_count()
+			local to_take = to_take_left
+			if src_max_item_count  >= (to_take + item_leave_one) then
+				-- the slot has enough items
+			else
+				-- the slot has fewer items as needed
+				to_take = src_max_item_count - item_leave_one					
+			end
+			local taken = lib.get_inv_items_from_slot(src_inv, def.take_listname, src_slot, to_take)
+			lib.put_inv_items(dst_inv, "main", slot, taken)
+			to_take_left = to_take_left - to_take
+		end
+
 	elseif NODE_IO then
 		local side = node_io.get_target_side(robot_pos, target_pos)
 		local fake_player = lib.fake_player(owner)
 		taken = node_io.take_item(target_pos, node, side, fake_player, nil, want_count)
+		lib.drop_items(robot_pos, taken)
 	else
 		return
 	end
-	if taken then
-		local dst_inv = minetest.get_inventory({type="node", pos=base_pos})
-		if not lib.put_inv_items(dst_inv, "main", slot, taken) then
-			lib.drop_items(robot_pos, taken)
-		end
-	end
+
 end
 
 -- From robot to chest
 function signs_bot.robot_put(base_pos, robot_pos, param2, num, slot)
 	local src_inv = minetest.get_inventory({type="node", pos=base_pos})
-	local taken = lib.get_inv_items(src_inv, "main", slot, num)
+	local taken = lib.get_inv_items_from_slot(src_inv, "main", slot, num)
 	if taken then
 		local target_pos = lib.next_pos(robot_pos, param2)
 		local node = lib.get_node_lvm(target_pos)
@@ -85,7 +131,7 @@ end
 -- From robot to furnace
 function signs_bot.robot_put_fuel(base_pos, robot_pos, param2, num, slot)
 	local src_inv = minetest.get_inventory({type="node", pos=base_pos})
-	local taken = lib.get_inv_items(src_inv, "main", slot, num)
+	local taken = lib.get_inv_items_from_slot(src_inv, "main", slot, num)
 	if taken then
 		local target_pos = lib.next_pos(robot_pos, param2)
 		local node = lib.get_node_lvm(target_pos)
@@ -131,7 +177,7 @@ end
 -- From robot to chest
 function signs_bot.robot_put_cond(base_pos, robot_pos, param2, num, slot)
 	local src_inv = minetest.get_inventory({type="node", pos=base_pos})
-	local taken = lib.get_inv_items(src_inv, "main", slot, num)
+	local taken = lib.get_inv_items_from_slot(src_inv, "main", slot, num)
 	if taken then
 		local target_pos = lib.next_pos(robot_pos, param2)
 		local node = lib.get_node_lvm(target_pos)
@@ -156,7 +202,7 @@ signs_bot.register_botcommand("take_item", {
 		"<slot> is the inventory slot (1..8)"),
 	check = function(num, slot)
 		num = tonumber(num or 1)
-		if not num or num < 1 or num > 99 then 
+		if not num or num == 0 or num < -99 or num > 99 then 
 			return false 
 		end
 		slot = tonumber(slot or 1)
@@ -205,7 +251,7 @@ signs_bot.register_botcommand("add_item", {
 		"<slot> is the inventory slot (1..8)"),
 	check = function(num, slot)
 		num = tonumber(num or 1)
-		if not num or num < 1 or num > 99 then 
+		if not num or num == 0 or num < -99 or num > 99 then 
 			return false 
 		end
 		slot = tonumber(slot or 1)
