@@ -74,6 +74,8 @@ function signs_bot.robot_take(base_pos, robot_pos, param2, num, slot)
 			local src_slot = lib.find_inv_slot(src_inv, "main", dst_item_name)
 
 			if  not src_slot or src_slot == 0 then
+				local taken = lib.get_inv_items(src_inv, def.take_listname, slot, num)
+				lib.put_inv_items(dst_inv, "main", slot, taken)
 				break
 			end
 			local src_stack = src_inv:get_stack("main", src_slot)
