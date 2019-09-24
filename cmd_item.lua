@@ -61,7 +61,7 @@ function signs_bot.robot_take(base_pos, robot_pos, param2, num, slot)
 	end
 
 	-- check for robot has enough items, no more items needed  
-	if  dst_max_item_count >= want_count then
+	if slot > 0 and  dst_max_item_count >= want_count then
 		return
 	end
 
