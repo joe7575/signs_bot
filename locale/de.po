@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-13 15:00+0200\n"
-"PO-Revision-Date: 2019-07-13 15:03+0200\n"
+"POT-Creation-Date: 2019-10-10 22:32+0200\n"
+"PO-Revision-Date: 2019-10-10 22:40+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -33,6 +33,18 @@ msgstr "Zeichen"
 #: basis.lua
 msgid "Other items"
 msgstr "Andere Gegenstände"
+
+#: basis.lua
+msgid "Config"
+msgstr "Konfig."
+
+#: basis.lua
+msgid "Preassign slots items"
+msgstr "Vorbelegte Inventar Gegenstände"
+
+#: basis.lua
+msgid "Back"
+msgstr "zurück"
 
 #: basis.lua
 msgid "Robot Box "
@@ -286,86 +298,64 @@ msgstr "Der Roboter dreht um, wenn er fertig ist."
 msgid ""
 "Take <num> items from a chest like node\n"
 "and put it into the item inventory.\n"
-"<slot> is the inventory slot (1..8)"
+"<slot> is the inventory slot (1..8) or 0 for any one"
 msgstr ""
 "Nehme <num> Gegenstände aus der\n"
 "Kiste oder dem Kisten-ähnlichen Block\n"
 "und tue diese in das eigene Inventar\n"
-"an der Position <slot>. Slot = (1..8)"
-
-#: cmd_item.lua
-msgid ""
-"Take <num> items from a chest like node\n"
-"and put it into the item inventory.\n"
-"Take care that at least one more\n"
-"item of this type is available.\n"
-"<slot> is the inventory slot (1..8)"
-msgstr ""
-"Nehme <num> Gegenstände aus der\n"
-"Kiste oder dem Kisten-ähnlichen Block\n"
-"und tue diese in das eigene Inventar.\n"
-"Achte darauf, dass mindestens ein\n"
-"weiterer Gegenstand von diesem Typ\n"
-"verfügbar ist.\n"
-"<slot> ist die Inventar Position (1..8)"
+"an der Position <slot>. Slot = (1..8)\n"
+"oder 0 für irgend eine Position"
 
 #: cmd_item.lua
 msgid ""
 "Add <num> items to a chest like node\n"
 "taken from the item inventory.\n"
-"<slot> is the inventory slot (1..8)"
+"<slot> is the inventory slot (1..8) or 0 for any one"
 msgstr ""
 "Lege <num> Gegenstände aus dem\n"
 "eigenen Inventar in die andere Kiste.\n"
 "<slot> ist die Position im\n"
-"eigenen Inventar (1--8)."
-
-#: cmd_item.lua
-msgid ""
-"Add <num> items to a chest like node\n"
-"taken from the item inventory,\n"
-"but only if at least one item\n"
-"of this type is already available.\n"
-"<slot> is the inventory slot (1..8)"
-msgstr ""
-"Lege <num> Gegenstände aus dem\n"
-"eigenen Inventar in die andere Kiste,\n"
-"aber nur, wenn bereits mindestens ein\n"
-"Gegenstand von gleichen Typ verfügbar\n"
-"ist. <slot> ist die Position im\n"
-"eigenen Inventar (1--8)."
+"eigenen Inventar (1--8).\n"
+"oder 0 für irgend eine Position"
 
 #: cmd_item.lua
 msgid ""
 "Add <num> fuel to a furnace like node\n"
 "taken from the item inventory.\n"
-"<slot> is the inventory slot (1..8)"
+"<slot> is the inventory slot (1..8) or 0 for any one"
 msgstr ""
 "Lege <num> Brennstoffe aus dem\n"
 "eigenen Inventar in den anderen Block.\n"
 "<slot> ist die Position im\n"
-"eigenen Inventar (1--8)."
+"eigenen Inventar (1--8).\n"
+"oder 0 für irgend eine Position"
+
+#: cmd_item.lua
+msgid "deprecated, use bot inventory configuration instead"
+msgstr "veraltet, benutze stattdessen die Inventar Konfigurationsmöglichkeit"
 
 #: cmd_item.lua
 msgid ""
 "Pick up all objects\n"
 "in a 3x3 field.\n"
-"<slot> is the inventory slot (1..8)"
+"<slot> is the inventory slot (1..8) or 0 for any one"
 msgstr ""
 "Hebe alle Objekte in einem\n"
 "3x3 Blöcke großen Feld auf\n"
 "und lege diese in das eigene\n"
-"Inventar an Position <slot> (1--8)"
+"Inventar an Position <slot> (1-8)\n"
+"oder 0 für irgend eine Position"
 
 #: cmd_item.lua
 msgid ""
 "Drop items in front of the bot.\n"
-"<slot> is the inventory slot (1..8)"
+"<slot> is the inventory slot (1..8) or 0 for any one"
 msgstr ""
 "Lasse ein Objekt aus dem eigenen\n"
 "Inventar vor dem Roboter fallen.\n"
 "<slot> ist die Position im\n"
-"eigenen Inventar (1--8)."
+"eigenen Inventar (1--8).\n"
+"oder 0 für irgend eine Position"
 
 #: cmd_item.lua
 msgid "Punch a rail cart to start it"
@@ -1290,6 +1280,14 @@ msgid "Sign \"stop\""
 msgstr "Zeichen \"Stopp\""
 
 #: signs.lua
+msgid "Sign \"add to cart\""
+msgstr "Zeichen \"Lege in den Wagen\""
+
+#: signs.lua
+msgid "Sign \"take from cart\""
+msgstr "Zeichen \"Nehme aus dem Wagen\""
+
+#: signs.lua
 msgid "The Bot turns right when it detects this sign in front of it."
 msgstr "Der Roboter dreht nach rechts, wenn er dieses Zeichen vor sich hat."
 
@@ -1318,6 +1316,27 @@ msgid ""
 msgstr ""
 "Der Roboter stoppt vor diesem Zeichen, bis das Zeichen entfernt, oder der "
 "Roboter ausgeschaltet wird."
+
+#: signs.lua
+msgid ""
+"The Bot puts items into a minecart in front of it, pushes the cart and then "
+"turns around."
+msgstr ""
+"Der Roboter legt Gegenstände in den Wagen vor sich, startet den Wagen und "
+"dreht dann um."
+
+#: signs.lua
+msgid "This sign has to be placed on top of the rail at the cart end position."
+msgstr ""
+"Das Zeichen muss auf dem Gleis und damit über dem Wagen platziert werden."
+
+#: signs.lua
+msgid ""
+"The Bot takes items out of a minecart in front of it, pushes the cart and "
+"then turns around."
+msgstr ""
+"Der Roboter nimmt Gegenstände aus dem Wagen vor sich, startet den Wagen und "
+"dreht dann um."
 
 #: tool.lua
 msgid "Sensor Connection Tool"
@@ -1387,6 +1406,35 @@ msgstr "Signal UND"
 #: logic_and.lua
 msgid "Signal is sent, if all input signals are received."
 msgstr "Signal wird gesendet, wenn all Eingangssignale empfangen wurden."
+
+#~ msgid ""
+#~ "Take <num> items from a chest like node\n"
+#~ "and put it into the item inventory.\n"
+#~ "Take care that at least one more\n"
+#~ "item of this type is available.\n"
+#~ "<slot> is the inventory slot (1..8)"
+#~ msgstr ""
+#~ "Nehme <num> Gegenstände aus der\n"
+#~ "Kiste oder dem Kisten-ähnlichen Block\n"
+#~ "und tue diese in das eigene Inventar.\n"
+#~ "Achte darauf, dass mindestens ein\n"
+#~ "weiterer Gegenstand von diesem Typ\n"
+#~ "verfügbar ist.\n"
+#~ "<slot> ist die Inventar Position (1..8)"
+
+#~ msgid ""
+#~ "Add <num> items to a chest like node\n"
+#~ "taken from the item inventory,\n"
+#~ "but only if at least one item\n"
+#~ "of this type is already available.\n"
+#~ "<slot> is the inventory slot (1..8)"
+#~ msgstr ""
+#~ "Lege <num> Gegenstände aus dem\n"
+#~ "eigenen Inventar in die andere Kiste,\n"
+#~ "aber nur, wenn bereits mindestens ein\n"
+#~ "Gegenstand von gleichen Typ verfügbar\n"
+#~ "ist. <slot> ist die Position im\n"
+#~ "eigenen Inventar (1--8)."
 
 #~ msgid ""
 #~ "Go to the next sign\n"

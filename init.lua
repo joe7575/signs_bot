@@ -17,6 +17,7 @@ signs_bot = {}
 signs_bot.S = minetest.get_translator("signs_bot")
 local MP = minetest.get_modpath("signs_bot")
 dofile(MP.."/doc.lua")
+dofile(MP.."/random.lua")
 dofile(MP.."/lib.lua")
 dofile(MP.."/basis.lua")
 dofile(MP.."/robot.lua")

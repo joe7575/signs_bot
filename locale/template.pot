@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-13 15:00+0200\n"
+"POT-Creation-Date: 2019-10-10 22:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,6 +31,18 @@ msgstr ""
 
 #: basis.lua
 msgid "Other items"
+msgstr ""
+
+#: basis.lua
+msgid "Config"
+msgstr ""
+
+#: basis.lua
+msgid "Preassign slots items"
+msgstr ""
+
+#: basis.lua
+msgid "Back"
 msgstr ""
 
 #: basis.lua
@@ -256,52 +268,38 @@ msgstr ""
 msgid ""
 "Take <num> items from a chest like node\n"
 "and put it into the item inventory.\n"
-"<slot> is the inventory slot (1..8)"
-msgstr ""
-
-#: cmd_item.lua
-msgid ""
-"Take <num> items from a chest like node\n"
-"and put it into the item inventory.\n"
-"Take care that at least one more\n"
-"item of this type is available.\n"
-"<slot> is the inventory slot (1..8)"
+"<slot> is the inventory slot (1..8) or 0 for any one"
 msgstr ""
 
 #: cmd_item.lua
 msgid ""
 "Add <num> items to a chest like node\n"
 "taken from the item inventory.\n"
-"<slot> is the inventory slot (1..8)"
-msgstr ""
-
-#: cmd_item.lua
-msgid ""
-"Add <num> items to a chest like node\n"
-"taken from the item inventory,\n"
-"but only if at least one item\n"
-"of this type is already available.\n"
-"<slot> is the inventory slot (1..8)"
+"<slot> is the inventory slot (1..8) or 0 for any one"
 msgstr ""
 
 #: cmd_item.lua
 msgid ""
 "Add <num> fuel to a furnace like node\n"
 "taken from the item inventory.\n"
-"<slot> is the inventory slot (1..8)"
+"<slot> is the inventory slot (1..8) or 0 for any one"
+msgstr ""
+
+#: cmd_item.lua
+msgid "deprecated, use bot inventory configuration instead"
 msgstr ""
 
 #: cmd_item.lua
 msgid ""
 "Pick up all objects\n"
 "in a 3x3 field.\n"
-"<slot> is the inventory slot (1..8)"
+"<slot> is the inventory slot (1..8) or 0 for any one"
 msgstr ""
 
 #: cmd_item.lua
 msgid ""
 "Drop items in front of the bot.\n"
-"<slot> is the inventory slot (1..8)"
+"<slot> is the inventory slot (1..8) or 0 for any one"
 msgstr ""
 
 #: cmd_item.lua
@@ -1046,6 +1044,14 @@ msgid "Sign \"stop\""
 msgstr ""
 
 #: signs.lua
+msgid "Sign \"add to cart\""
+msgstr ""
+
+#: signs.lua
+msgid "Sign \"take from cart\""
+msgstr ""
+
+#: signs.lua
 msgid "The Bot turns right when it detects this sign in front of it."
 msgstr ""
 
@@ -1070,6 +1076,22 @@ msgstr ""
 msgid ""
 "The Bot will stop in front of this sign until the sign is removed or the bot "
 "is turned off."
+msgstr ""
+
+#: signs.lua
+msgid ""
+"The Bot puts items into a minecart in front of it, pushes the cart and then "
+"turns around."
+msgstr ""
+
+#: signs.lua
+msgid "This sign has to be placed on top of the rail at the cart end position."
+msgstr ""
+
+#: signs.lua
+msgid ""
+"The Bot takes items out of a minecart in front of it, pushes the cart and "
+"then turns around."
 msgstr ""
 
 #: tool.lua
