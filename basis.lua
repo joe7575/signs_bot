@@ -42,12 +42,13 @@ end
 	
 -- put items into the bot inventory and return leftover
 function signs_bot.bot_inv_put_item(pos, slot, items)
+	if not items then return end
 	local inv = M(pos):get_inventory()
 	if slot and slot > 0 then
 		local name = inv:get_stack("filter", slot):get_name()
 		if name == "" or name == items:get_name() then
 			local stack = inv:get_stack("main", slot)
-			local items = stack:add_item(items)
+			items = stack:add_item(items)
 			inv:set_stack("main", slot, stack)
 		end
 	else
@@ -55,10 +56,9 @@ function signs_bot.bot_inv_put_item(pos, slot, items)
 			local name = inv:get_stack("filter", idx):get_name()
 			if name == "" or name == items:get_name() then
 				local stack = inv:get_stack("main", idx)
-				local leftover = stack:add_item(items)
+				items = stack:add_item(items)
 				inv:set_stack("main", idx, stack)
-				if leftover:get_count() == 0 then return leftover end
-				items = leftover
+				if items:get_count() == 0 then return items end
 			end
 		end
 	end

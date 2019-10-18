@@ -63,6 +63,8 @@ function signs_bot.robot_put(base_pos, robot_pos, param2, num, slot)
 		if leftover and leftover:get_count() > 0 then
 			signs_bot.bot_inv_put_item(base_pos, slot, leftover)
 		end
+	elseif taken then
+		signs_bot.bot_inv_put_item(base_pos, slot, taken)
 	end
 end
 

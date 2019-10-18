@@ -54,7 +54,7 @@ local function planting(base_pos, mem, slot)
 					end
 					minetest.sound_play("default_place_node", {pos = pos, gain = 1.0})
 				else
-					bot_inv_put_item(base_pos, 0, plant)
+					bot_inv_put_item(base_pos, 0,  ItemStack(plant))
 				end
 			end
 		end
@@ -94,12 +94,12 @@ local function harvesting(base_pos, mem)
 		local item = signs_bot.FarmingCrop[node.name]
 		if item and item.inv_crop and item.inv_seed then
 			minetest.remove_node(pos)
-			bot_inv_put_item(base_pos, 0, item.inv_crop)
-			bot_inv_put_item(base_pos, 0, item.inv_seed)
+			bot_inv_put_item(base_pos, 0,  ItemStack(item.inv_crop))
+			bot_inv_put_item(base_pos, 0,  ItemStack(item.inv_seed))
 			if math.random(2) == 1 then
-				bot_inv_put_item(base_pos, 0, item.inv_crop)
+				bot_inv_put_item(base_pos, 0,  ItemStack(item.inv_crop))
 			else
-				bot_inv_put_item(base_pos, 0, item.inv_seed)
+				bot_inv_put_item(base_pos, 0,  ItemStack(item.inv_seed))
 			end
 		end
 	end

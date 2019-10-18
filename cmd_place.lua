@@ -22,9 +22,12 @@ local MP = minetest.get_modpath("signs_bot")
 local I,_ = dofile(MP.."/intllib.lua")
 
 local lib = signs_bot.lib
-local bot_inv_put_item = signs_bot.bot_inv_put_item
 local bot_inv_take_item = signs_bot.bot_inv_take_item
 
+local function bot_inv_put_item(pos, slot, items)
+	local leftover = signs_bot.bot_inv_put_item(pos, slot, items)
+	return leftover:get_count() > 0
+end
 
 local tValidLevels = {["-1"] = -1, ["0"] = 0, ["+1"] = 1}
 
