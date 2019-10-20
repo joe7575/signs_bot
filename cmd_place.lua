@@ -63,6 +63,9 @@ local function place_item(base_pos, robot_pos, param2, slot, route, level)
 				minetest.check_single_for_falling(pos1)
 			end
 		end
+		return lib.DONE
+	else
+		return lib.ERROR, I("Error: Position protected or invalid")
 	end
 end
 
@@ -82,8 +85,7 @@ signs_bot.register_botcommand("place_front", {
 	cmnd = function(base_pos, mem, slot, lvl)
 		slot = tonumber(slot or 1)
 		local level = tValidLevels[lvl]
-		place_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0}, level)
-		return lib.DONE
+		return place_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0}, level)
 	end,
 })
 	
@@ -103,8 +105,7 @@ signs_bot.register_botcommand("place_left", {
 	cmnd = function(base_pos, mem, slot, lvl)
 		slot = tonumber(slot or 1)
 		local level = tValidLevels[lvl]
-		place_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0,3}, level)
-		return lib.DONE
+		return place_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0,3}, level)
 	end,
 })
 	
@@ -124,8 +125,7 @@ signs_bot.register_botcommand("place_right", {
 	cmnd = function(base_pos, mem, slot, lvl)
 		slot = tonumber(slot or 1)
 		local level = tValidLevels[lvl]
-		place_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0,1}, level)
-		return lib.DONE
+		return place_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0,1}, level)
 	end,
 })
 
@@ -142,6 +142,9 @@ local function place_item_below(base_pos, robot_pos, param2, slot)
 				minetest.set_node(pos1, {name=name, param2=param2})
 			end
 		end
+		return lib.DONE
+	else
+		return lib.ERROR, I("Error: Position protected")
 	end
 end
 
@@ -157,8 +160,7 @@ signs_bot.register_botcommand("place_below", {
 	end,
 	cmnd = function(base_pos, mem, slot)
 		slot = tonumber(slot or 1)
-		place_item_below(base_pos, mem.robot_pos, mem.robot_param2, slot)
-		return lib.DONE
+		return place_item_below(base_pos, mem.robot_pos, mem.robot_param2, slot)
 	end,
 })
 
@@ -172,6 +174,9 @@ local function place_item_above(base_pos, robot_pos, param2, slot)
 			if not def then return end
 			minetest.set_node(pos1, {name=name, param2=param2})
 		end
+		return lib.DONE
+	else
+		return lib.ERROR, I("Error: Position protected or invalid")
 	end
 end
 
@@ -186,8 +191,7 @@ signs_bot.register_botcommand("place_above", {
 	end,
 	cmnd = function(base_pos, mem, slot)
 		slot = tonumber(slot or 1)
-		place_item_above(base_pos, mem.robot_pos, mem.robot_param2, slot)
-		return lib.DONE
+		return place_item_above(base_pos, mem.robot_pos, mem.robot_param2, slot)
 	end,
 })
 
@@ -199,7 +203,12 @@ local function dig_item(base_pos, robot_pos, param2, slot, route, level)
 	if lib.not_protected(base_pos, pos1) and dug_name then
 		if bot_inv_put_item(base_pos, slot, ItemStack(dug_name)) then
 			minetest.remove_node(pos1)
+			return lib.DONE
+		else
+			return lib.ERROR, I("Error: No free inventory space")
 		end
+	else
+		return lib.ERROR, I("Error: Position protected or invalid node")
 	end
 end
 
@@ -219,8 +228,7 @@ signs_bot.register_botcommand("dig_front", {
 	cmnd = function(base_pos, mem, slot, lvl)
 		slot = tonumber(slot or 1)
 		local level = tValidLevels[lvl]
-		dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0}, level)
-		return lib.DONE
+		return dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0}, level)
 	end,
 	expensive = true,
 })
@@ -241,8 +249,7 @@ signs_bot.register_botcommand("dig_left", {
 	cmnd = function(base_pos, mem, slot, lvl)
 		slot = tonumber(slot or 1)
 		local level = tValidLevels[lvl]
-		dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0,3}, level)
-		return lib.DONE
+		return dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0,3}, level)
 	end,
 	expensive = true,
 })
@@ -263,8 +270,7 @@ signs_bot.register_botcommand("dig_right", {
 	cmnd = function(base_pos, mem, slot, lvl)
 		slot = tonumber(slot or 1)
 		local level = tValidLevels[lvl]
-		dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0,1}, level)
-		return lib.DONE
+		return dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0,1}, level)
 	end,
 	expensive = true,
 })
@@ -277,6 +283,9 @@ local function dig_item_below(base_pos, robot_pos, param2, slot)
 		if bot_inv_put_item(base_pos, slot, ItemStack(dug_name)) then
 			minetest.set_node(pos1, {name="signs_bot:robot_foot"})
 		end
+		return lib.DONE
+	else
+		return lib.ERROR, I("Error: Position protected or invalid node")
 	end
 end
 
@@ -291,8 +300,7 @@ signs_bot.register_botcommand("dig_below", {
 	end,
 	cmnd = function(base_pos, mem, slot)
 		slot = tonumber(slot or 1)
-		dig_item_below(base_pos, mem.robot_pos, mem.robot_param2, slot)
-		return lib.DONE
+		return dig_item_below(base_pos, mem.robot_pos, mem.robot_param2, slot)
 	end,
 	expensive = true,
 })
@@ -305,6 +313,9 @@ local function dig_item_above(base_pos, robot_pos, param2, slot)
 		if bot_inv_put_item(base_pos, slot, ItemStack(dug_name)) then
 			minetest.remove_node(pos1)
 		end
+		return lib.DONE
+	else
+		return lib.ERROR, I("Error: Position protected or invalid node")
 	end
 end
 
@@ -319,8 +330,7 @@ signs_bot.register_botcommand("dig_above", {
 	end,
 	cmnd = function(base_pos, mem, slot)
 		slot = tonumber(slot or 1)
-		dig_item_above(base_pos, mem.robot_pos, mem.robot_param2, slot, 1)
-		return lib.DONE
+		return dig_item_above(base_pos, mem.robot_pos, mem.robot_param2, slot, 1)
 	end,
 	expensive = true,
 })
@@ -334,6 +344,9 @@ local function rotate_item(base_pos, robot_pos, param2, route, level, steps)
 		if p2 then
 			minetest.swap_node(pos1, {name=node.name, param2=p2})
 		end
+		return lib.DONE
+	else
+		return lib.ERROR, I("Error: Position protected or invalid node")
 	end
 end
 
@@ -353,8 +366,7 @@ signs_bot.register_botcommand("rotate_item", {
 	cmnd = function(base_pos, mem, lvl, steps)
 		local level = tValidLevels[lvl]
 		steps = tonumber(steps or 1)
-		rotate_item(base_pos, mem.robot_pos, mem.robot_param2, {0}, level, steps)
-		return lib.DONE
+		return rotate_item(base_pos, mem.robot_pos, mem.robot_param2, {0}, level, steps)
 	end,
 })
 	
