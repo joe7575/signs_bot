@@ -76,14 +76,14 @@ signs_bot.register_botcommand("place_front", {
 		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
-		slot = tonumber(slot or 1)
-		if not slot or slot < 1 or slot > 8 then 
+		slot = tonumber(slot or 0)
+		if not slot or slot < 0 or slot > 8 then 
 			return false 
 		end
 		return tValidLevels[lvl] ~= nil
 	end,
 	cmnd = function(base_pos, mem, slot, lvl)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot or 0)
 		local level = tValidLevels[lvl]
 		return place_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0}, level)
 	end,
@@ -96,14 +96,14 @@ signs_bot.register_botcommand("place_left", {
 		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
-		slot = tonumber(slot or 1)
-		if not slot or slot < 1 or slot > 8 then 
+		slot = tonumber(slot or 0)
+		if not slot or slot < 0 or slot > 8 then 
 			return false 
 		end
 		return tValidLevels[lvl] ~= nil
 	end,
 	cmnd = function(base_pos, mem, slot, lvl)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot or 0)
 		local level = tValidLevels[lvl]
 		return place_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0,3}, level)
 	end,
@@ -116,14 +116,14 @@ signs_bot.register_botcommand("place_right", {
 		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
-		slot = tonumber(slot or 1)
-		if not slot or slot < 1 or slot > 8 then 
+		slot = tonumber(slot or 0)
+		if not slot or slot < 0 or slot > 8 then 
 			return false 
 		end
 		return tValidLevels[lvl] ~= nil
 	end,
 	cmnd = function(base_pos, mem, slot, lvl)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot or 0)
 		local level = tValidLevels[lvl]
 		return place_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0,1}, level)
 	end,
@@ -155,11 +155,11 @@ signs_bot.register_botcommand("place_below", {
 		"Hint: use 'move_up' first.\n"..
 		"<slot> is the inventory slot (1..8)"),
 	check = function(slot)
-		slot = tonumber(slot or 1)
-		return slot and slot > 0 and slot < 9
+		slot = tonumber(slot or 0)
+		return slot and slot >= 0 and slot < 9
 	end,
 	cmnd = function(base_pos, mem, slot)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot or 0)
 		return place_item_below(base_pos, mem.robot_pos, mem.robot_param2, slot)
 	end,
 })
@@ -186,11 +186,11 @@ signs_bot.register_botcommand("place_above", {
 	description = I("Place a block above the robot.\n"..
 		"<slot> is the inventory slot (1..8)"),
 	check = function(slot)
-		slot = tonumber(slot or 1)
-		return slot and slot > 0 and slot < 9
+		slot = tonumber(slot or 0)
+		return slot and slot >= 0 and slot < 9
 	end,
 	cmnd = function(base_pos, mem, slot)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot or 0)
 		return place_item_above(base_pos, mem.robot_pos, mem.robot_param2, slot)
 	end,
 })
@@ -219,14 +219,14 @@ signs_bot.register_botcommand("dig_front", {
 		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
-		slot = tonumber(slot or 1)
-		if not slot or slot < 1 or slot > 8 then 
+		slot = tonumber(slot or 0)
+		if not slot or slot < 0 or slot > 8 then 
 			return false 
 		end
 		return tValidLevels[lvl] ~= nil
 	end,
 	cmnd = function(base_pos, mem, slot, lvl)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot or 0)
 		local level = tValidLevels[lvl]
 		return dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0}, level)
 	end,
@@ -240,14 +240,14 @@ signs_bot.register_botcommand("dig_left", {
 		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
-		slot = tonumber(slot or 1)
-		if not slot or slot < 1 or slot > 8 then 
+		slot = tonumber(slot or 0)
+		if not slot or slot < 0 or slot > 8 then 
 			return false 
 		end
 		return tValidLevels[lvl] ~= nil
 	end,
 	cmnd = function(base_pos, mem, slot, lvl)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot or 0)
 		local level = tValidLevels[lvl]
 		return dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0,3}, level)
 	end,
@@ -261,14 +261,14 @@ signs_bot.register_botcommand("dig_right", {
 		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
-		slot = tonumber(slot or 1)
-		if not slot or slot < 1 or slot > 8 then 
+		slot = tonumber(slot or 0)
+		if not slot or slot < 0 or slot > 8 then 
 			return false 
 		end
 		return tValidLevels[lvl] ~= nil
 	end,
 	cmnd = function(base_pos, mem, slot, lvl)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot or 0)
 		local level = tValidLevels[lvl]
 		return dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0,1}, level)
 	end,
@@ -295,11 +295,11 @@ signs_bot.register_botcommand("dig_below", {
 	description = I("Dig the block under the robot.\n"..
 		"<slot> is the inventory slot (1..8)"),
 	check = function(slot)
-		slot = tonumber(slot or 1)
-		return slot and slot > 0 and slot < 9
+		slot = tonumber(slot or 0)
+		return slot and slot >= 0 and slot < 9
 	end,
 	cmnd = function(base_pos, mem, slot)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot or 0)
 		return dig_item_below(base_pos, mem.robot_pos, mem.robot_param2, slot)
 	end,
 	expensive = true,
@@ -325,11 +325,11 @@ signs_bot.register_botcommand("dig_above", {
 	description = I("Dig the block above the robot.\n"..
 		"<slot> is the inventory slot (1..8)"),
 	check = function(slot)
-		slot = tonumber(slot or 1)
-		return slot and slot > 0 and slot < 9
+		slot = tonumber(slot or 0)
+		return slot and slot >= 0 and slot < 9
 	end,
 	cmnd = function(base_pos, mem, slot)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot or 0)
 		return dig_item_above(base_pos, mem.robot_pos, mem.robot_param2, slot, 1)
 	end,
 	expensive = true,
