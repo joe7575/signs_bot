@@ -1,15 +1,33 @@
---[[
+Skip to content
+Search or jump to…
 
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@gpn39f 
+Learn Git and GitHub without any code!
+Using the Hello World guide, you’ll start a branch, write comments, and open a pull request.
+
+
+3
+11joe7575/signs_bot
+ Code Issues 0 Pull requests 1 Projects 0 Wiki Security Insights
+signs_bot/cmd_item.lua
+@joe7575 joe7575 take/add/place item bugfixes
+a7c8d01 14 days ago
+@joe7575@gpn39f
+284 lines (258 sloc)  8.32 KB
+  
+--[[
 	Signs Bot
 	=========
-
 	Copyright (C) 2019 Joachim Stolberg
-
 	GPL v3
 	See LICENSE.txt for more information
 	
 	Signs Bot: More commands
-
 ]]--
 
 -- for lazy programmers
@@ -23,176 +41,65 @@ local I,_ = dofile(MP.."/intllib.lua")
 
 local lib = signs_bot.lib
 
-local NODE_IO = minetest.global_exists("node_io")
-
-local RegisteredInventories = {
-	}
+local RegisteredInventories = {}
 --
 -- Move from/to inventories
 --
 -- From chest to robot
-function signs_bot.robot_take(base_pos, robot_pos, param2, num, slot) 
-	-- find parameter from the chest
-	local target_pos = lib.next_pos(robot_pos, param2) 
-	local node = lib.get_node_lvm(target_pos) 
-	local def = RegisteredInventories[node.name]
-	local src_inv = minetest.get_inventory({type="node", pos=target_pos}) 
-	if not src_inv then
-		return
-	end
-
-	-- find parameter from robot
-	local dst_inv = minetest.get_inventory({type="node", pos=base_pos}) 
-	if not dst_inv then
-		return
-	end
-	local dst_stack = dst_inv:get_stack("main", slot)
-	local dst_max_item_count = dst_stack:get_count()
-	local dst_item_name = dst_stack:get_name()
-	if not dst_item_name then
-		return
-	end
-
-	-- check for negative num
-	local want_count = math.abs(num)
-	local item_leave_one = 0
-	if num < 0 then 
-		item_leave_one = 1 
-	end
-
-	-- check for robot has enough items, no more items needed  
-	if slot > 0 and  dst_max_item_count >= want_count then
-		return
-	end
-
+function signs_bot.robot_take(base_pos, robot_pos, param2, want_count, slot)
+	local target_pos = lib.next_pos(robot_pos, param2)
+	local node = lib.get_node_lvm(target_pos)
+	local def = RegisteredInventories[node.name]	
 	local owner = M(base_pos):get_string("owner")
-	local to_take_left = want_count
+	
+	-- Is known type of inventory node?
 	if def and (not def.allow_take or def.allow_take(target_pos, nil, owner)) then
-
-		while to_take_left > 0 do
-			-- find first slot in chest with has correct item, and get his parameter
-			local src_slot = lib.find_inv_slot(src_inv, "main", dst_item_name)
-
-			if  not src_slot or src_slot == 0 then
-				local taken = lib.get_inv_items(src_inv, def.take_listname, slot, num)
-				lib.put_inv_items(dst_inv, "main", slot, taken)
-				break
-			end
-			local src_stack = src_inv:get_stack("main", src_slot)
-			local src_max_item_count = src_stack:get_count()
-			local to_take = to_take_left
-			if src_max_item_count  >= (to_take + item_leave_one) then
-				-- the slot has enough items
-			else
-				-- the slot has fewer items as needed
-				to_take = src_max_item_count - item_leave_one					
-			end
-			local taken = lib.get_inv_items_from_slot(src_inv, def.take_listname, src_slot, to_take)
-			lib.put_inv_items(dst_inv, "main", slot, taken)
-			to_take_left = to_take_left - to_take
-		end
-
-	elseif NODE_IO then
-		local side = node_io.get_target_side(robot_pos, target_pos)
-		local fake_player = lib.fake_player(owner)
-		taken = node_io.take_item(target_pos, node, side, fake_player, nil, want_count)
-		lib.drop_items(robot_pos, taken)
-	else
-		return
+		local src_inv = minetest.get_inventory({type="node", pos=target_pos})
+		-- take specified item_name from bot slot configuration OR any item from the chest
+		local item_name = signs_bot.bot_inv_item_name(base_pos, slot) or lib.peek_inv(src_inv, def.take_listname)
+		if item_name then
+			local taken = src_inv:remove_item(def.take_listname, ItemStack(item_name.." "..want_count))
+			local leftover = signs_bot.bot_inv_put_item(base_pos, slot, taken)
+			src_inv:add_item(def.take_listname, leftover)
+		end	
 	end
-
 end
+
 
 -- From robot to chest
 function signs_bot.robot_put(base_pos, robot_pos, param2, num, slot)
-	local src_inv = minetest.get_inventory({type="node", pos=base_pos})
-	local taken = lib.get_inv_items_from_slot(src_inv, "main", slot, num)
-	if taken then
-		local target_pos = lib.next_pos(robot_pos, param2)
-		local node = lib.get_node_lvm(target_pos)
-		local def = RegisteredInventories[node.name]
-		local owner = M(base_pos):get_string("owner")
-		
-		if def and (not def.allow_put or def.allow_put(target_pos, taken, owner)) then
-			local dst_inv = minetest.get_inventory({type="node", pos=target_pos})
-			local leftover = dst_inv and dst_inv:add_item(def.put_listname, taken)
-			if leftover and leftover:get_count() > 0 then
-				lib.drop_items(robot_pos, leftover)
-			end
-		elseif NODE_IO then
-			local side = node_io.get_target_side(robot_pos, target_pos)
-			local fake_player = lib.fake_player(owner)
-			local left_over = node_io.put_item(target_pos, node, side, fake_player, taken)
-			if left_over:get_count() > 0 then
-				lib.drop_items(robot_pos, left_over)
-			end
+	local target_pos = lib.next_pos(robot_pos, param2)
+	local node = lib.get_node_lvm(target_pos)
+	local def = RegisteredInventories[node.name]
+	local owner = M(base_pos):get_string("owner")
+	local taken = signs_bot.bot_inv_take_item(base_pos, slot, num)
+	
+	-- Is known type of inventory node?
+	if taken and def and (not def.allow_put or def.allow_put(target_pos, taken, owner)) then
+		local dst_inv = minetest.get_inventory({type="node", pos=target_pos})
+		local leftover = dst_inv and dst_inv:add_item(def.put_listname, taken)
+		if leftover and leftover:get_count() > 0 then
+			signs_bot.bot_inv_put_item(base_pos, slot, leftover)
 		end
+	elseif taken then
+		signs_bot.bot_inv_put_item(base_pos, slot, taken)
 	end
 end
 
 -- From robot to furnace
 function signs_bot.robot_put_fuel(base_pos, robot_pos, param2, num, slot)
-	local src_inv = minetest.get_inventory({type="node", pos=base_pos})
-	local taken = lib.get_inv_items_from_slot(src_inv, "main", slot, num)
-	if taken then
-		local target_pos = lib.next_pos(robot_pos, param2)
-		local node = lib.get_node_lvm(target_pos)
-		local def = RegisteredInventories[node.name]
-		local owner = M(base_pos):get_string("owner")
-		
-		if def and (not def.allow_fuel or def.allow_fuel(target_pos, taken, owner)) then
-			local dst_inv = minetest.get_inventory({type="node", pos=target_pos})
-			if not lib.put_inv_items(dst_inv, def.fuel_listname, 1, taken) then
-				lib.drop_items(robot_pos, taken)
-			end
-		elseif NODE_IO then
-			local side = node_io.get_target_side(robot_pos, target_pos)
-			local fake_player = lib.fake_player(owner)
-			local left_over = node_io.put_item(target_pos, node, side, fake_player, taken)
-			if left_over:get_count() > 0 then
-				lib.drop_items(robot_pos, left_over)
-			end
-		end
-	end
-end
-
-function signs_bot.robot_take_cond(base_pos, robot_pos, param2, want_count, slot)
 	local target_pos = lib.next_pos(robot_pos, param2)
 	local node = lib.get_node_lvm(target_pos)
-	local def = RegisteredInventories[node.name]	
+	local def = RegisteredInventories[node.name]
 	local owner = M(base_pos):get_string("owner")
-	local taken
-	if def and (not def.allow_take or def.allow_take(target_pos, nil, owner)) then
-		local src_inv = minetest.get_inventory({type="node", pos=target_pos})
-		taken = lib.get_inv_items_cond(src_inv, def.take_listname, 1, want_count)
-	else
-		return
-	end
-	if taken then
-		local dst_inv = minetest.get_inventory({type="node", pos=base_pos})
-		if not lib.put_inv_items(dst_inv, "main", slot, taken) then
-			lib.drop_items(robot_pos, taken)
-		end
-	end
-end
-
--- From robot to chest
-function signs_bot.robot_put_cond(base_pos, robot_pos, param2, num, slot)
-	local src_inv = minetest.get_inventory({type="node", pos=base_pos})
-	local taken = lib.get_inv_items_from_slot(src_inv, "main", slot, num)
-	if taken then
-		local target_pos = lib.next_pos(robot_pos, param2)
-		local node = lib.get_node_lvm(target_pos)
-		local def = RegisteredInventories[node.name]
-		local owner = M(base_pos):get_string("owner")
-		
-		if def and (not def.allow_put or def.allow_put(target_pos, taken, owner)) then
-			local dst_inv = minetest.get_inventory({type="node", pos=target_pos})
-			if not lib.put_inv_items_cond(dst_inv, def.put_listname, 1, taken) then
-				 lib.put_inv_items(src_inv, "main", slot, taken)
-			end
-		else
-			lib.put_inv_items(src_inv, "main", slot, taken)
+	local taken = signs_bot.bot_inv_take_item(base_pos, slot, num)
+	
+	-- Is known type of inventory node?
+	if taken and def and (not def.allow_fuel or def.allow_fuel(target_pos, taken, owner)) then
+		local dst_inv = minetest.get_inventory({type="node", pos=target_pos})
+		local leftover = dst_inv and dst_inv:add_item(def.fuel_listname, taken)
+		if leftover and leftover:get_count() > 0 then
+			signs_bot.bot_inv_put_item(base_pos, slot, leftover)
 		end
 	end
 end
@@ -201,47 +108,22 @@ signs_bot.register_botcommand("take_item", {
 	mod = "item",
 	params = "<num> <slot>",	
 	description = I("Take <num> items from a chest like node\nand put it into the item inventory.\n"..
-		"<slot> is the inventory slot (1..8)"),
+		"<slot> is the inventory slot (1..8) or 0 for any one"),
 	check = function(num, slot)
-		num = tonumber(num or 1)
-		if not num or num == 0 or num < -99 or num > 99 then 
+		num = tonumber(num) or 1
+		if num < 1 or num > 99 then 
 			return false 
 		end
-		slot = tonumber(slot or 1)
-		if not slot or slot < 1 or slot > 8 then 
+		slot = tonumber(slot) or 0
+		if slot < 0 or slot > 8 then 
 			return false 
 		end
 		return true
 	end,
 	cmnd = function(base_pos, mem, num, slot)
-		num = tonumber(num or 1)
-		slot = tonumber(slot or 1)
+		num = tonumber(num) or 1
+		slot = tonumber(slot) or 0
 		signs_bot.robot_take(base_pos, mem.robot_pos, mem.robot_param2, num, slot)
-		return lib.DONE
-	end,
-})
-	
-signs_bot.register_botcommand("cond_take_item", {
-	mod = "item",
-	params = "<num> <slot>",	
-	description = I("Take <num> items from a chest like node\nand put it into the item inventory.\n"..
-		"Take care that at least one more\nitem of this type is available.\n"..
-		"<slot> is the inventory slot (1..8)"),
-	check = function(num, slot)
-		num = tonumber(num or 1)
-		if not num or num < 1 or num > 99 then 
-			return false 
-		end
-		slot = tonumber(slot or 1)
-		if not slot or slot < 1 or slot > 8 then 
-			return false 
-		end
-		return true
-	end,
-	cmnd = function(base_pos, mem, num, slot)
-		num = tonumber(num or 1)
-		slot = tonumber(slot or 1)
-		signs_bot.robot_take_cond(base_pos, mem.robot_pos, mem.robot_param2, num, slot)
 		return lib.DONE
 	end,
 })
@@ -250,22 +132,58 @@ signs_bot.register_botcommand("add_item", {
 	mod = "item",
 	params = "<num> <slot>",	
 	description = I("Add <num> items to a chest like node\ntaken from the item inventory.\n"..
-		"<slot> is the inventory slot (1..8)"),
+		"<slot> is the inventory slot (1..8) or 0 for any one"),
 	check = function(num, slot)
-		num = tonumber(num or 1)
-		if not num or num == 0 or num < -99 or num > 99 then 
+		num = tonumber(num) or 1
+		if num < 1 or num > 99 then 
 			return false 
 		end
-		slot = tonumber(slot or 1)
-		if not slot or slot < 1 or slot > 8 then 
+		slot = tonumber(slot) or 0
+		if slot < 0 or slot > 8 then 
 			return false 
 		end
 		return true
 	end,
 	cmnd = function(base_pos, mem, num, slot)
-		num = tonumber(num or 1)
-		slot = tonumber(slot or 1)
+		num = tonumber(num) or 1
+		slot = tonumber(slot) or 0
 		signs_bot.robot_put(base_pos, mem.robot_pos, mem.robot_param2, num, slot)
+		return lib.DONE
+	end,
+})
+	
+signs_bot.register_botcommand("add_fuel", {
+	mod = "item",
+	params = "<num> <slot>",	
+	description = I("Add <num> fuel to a furnace like node\ntaken from the item inventory.\n"..
+		"<slot> is the inventory slot (1..8) or 0 for any one"),
+	check = function(num, slot)
+		num = tonumber(num) or 1
+		if num < 1 or num > 99 then 
+			return false 
+		end
+		slot = tonumber(slot) or 0
+		if slot < 0 or slot > 8 then 
+			return false 
+		end
+		return true
+	end,
+	cmnd = function(base_pos, mem, num, slot)
+		num = tonumber(num) or 1
+		slot = tonumber(slot) or 0
+		signs_bot.robot_put_fuel(base_pos, mem.robot_pos, mem.robot_param2, num, slot)
+		return lib.DONE
+	end,
+})
+
+signs_bot.register_botcommand("cond_take_item", {
+	mod = "item",
+	params = "<num> <slot>",	
+	description = I("deprecated, use bot inventory configuration instead"),
+	check = function(num, slot)
+		return false 
+	end,
+	cmnd = function(base_pos, mem, num, slot)
 		return lib.DONE
 	end,
 })
@@ -273,70 +191,34 @@ signs_bot.register_botcommand("add_item", {
 signs_bot.register_botcommand("cond_add_item", {
 	mod = "item",
 	params = "<num> <slot>",	
-	description = I("Add <num> items to a chest like node\ntaken from the item inventory,\n"..
-		"but only if at least one item\nof this type is already available.\n"..
-		"<slot> is the inventory slot (1..8)"),
+	description = I("deprecated, use bot inventory configuration instead"),
 	check = function(num, slot)
-		num = tonumber(num or 1)
-		if not num or num < 1 or num > 99 then 
-			return false 
-		end
-		slot = tonumber(slot or 1)
-		if not slot or slot < 1 or slot > 8 then 
-			return false 
-		end
-		return true
+		return false 
 	end,
 	cmnd = function(base_pos, mem, num, slot)
-		num = tonumber(num or 1)
-		slot = tonumber(slot or 1)
-		signs_bot.robot_put_cond(base_pos, mem.robot_pos, mem.robot_param2, num, slot)
 		return lib.DONE
 	end,
 })
 
-signs_bot.register_botcommand("add_fuel", {
-	mod = "item",
-	params = "<num> <slot>",	
-	description = I("Add <num> fuel to a furnace like node\ntaken from the item inventory.\n"..
-		"<slot> is the inventory slot (1..8)"),
-	check = function(num, slot)
-		num = tonumber(num or 1)
-		if not num or num < 1 or num > 99 then 
-			return false 
-		end
-		slot = tonumber(slot or 1)
-		if not slot or slot < 1 or slot > 8 then 
-			return false 
-		end
-		return true
-	end,
-	cmnd = function(base_pos, mem, num, slot)
-		num = tonumber(num or 1)
-		slot = tonumber(slot or 1)
-		signs_bot.robot_put_fuel(base_pos, mem.robot_pos, mem.robot_param2, num, slot)
-		return lib.DONE
-	end,
-})
 signs_bot.register_botcommand("pickup_items", {
 	mod = "item",
 	params = "<slot>",	
 	description = I("Pick up all objects\n"..
 		"in a 3x3 field.\n"..
-		"<slot> is the inventory slot (1..8)"),
+		"<slot> is the inventory slot (1..8) or 0 for any one"),
 	check = function(slot)
-		slot = tonumber(slot)
-		return slot and slot > 0 and slot < 9
+		slot = tonumber(slot) or 0
+		return slot >= 0 and slot < 9
 	end,
 	cmnd = function(base_pos, mem, slot)
-		slot = tonumber(slot)
+		slot = tonumber(slot) or 0
 		local pos = lib.dest_pos(mem.robot_pos, mem.robot_param2, {0,0})
 		for _, object in pairs(minetest.get_objects_inside_radius(pos, 2)) do
 			local lua_entity = object:get_luaentity()
 			if not object:is_player() and lua_entity and lua_entity.name == "__builtin:item" then
 				local item = ItemStack(lua_entity.itemstring)
-				local inv = minetest.get_inventory({type="node", pos=base_pos})
-				if lib.put_inv_items(inv, "main", slot, item) then
+				local leftover = signs_bot.bot_inv_put_item(base_pos, slot, item)
+				if leftover:get_count() > 0 then
 					object:remove()
 				end
 			end
@@ -349,21 +231,23 @@ signs_bot.register_botcommand("drop_items", {
 	mod = "item",
 	params = "<num> <slot>",	
 	description = I("Drop items in front of the bot.\n"..
-		"<slot> is the inventory slot (1..8)"),
+		"<slot> is the inventory slot (1..8) or 0 for any one"),
 	check = function(num, slot)
-		num = tonumber(num or 1)
-		if not num or num < 1 or num > 99 then 
+		num = tonumber(num) or 1
+		if num < 1 or num > 99 then 
 			return false 
 		end
-		slot = tonumber(slot)
-		return slot and slot > 0 and slot < 9
+		slot = tonumber(slot) or 0
+		if slot < 0 or slot > 8 then 
+			return false 
+		end
+		return true
 	end,
 	cmnd = function(base_pos, mem, num, slot)
-		num = tonumber(num or 1)
-		slot = tonumber(slot)
+		num = tonumber(num) or 1
+		slot = tonumber(slot) or 0
 		local pos = lib.dest_pos(mem.robot_pos, mem.robot_param2, {0})
-		local inv = minetest.get_inventory({type="node", pos=base_pos})
-		local items = lib.get_inv_items(inv, "main", slot, num)
+		local items = signs_bot.bot_inv_take_item(base_pos, slot, num)
 		minetest.add_item(pos, items)
 		return lib.DONE
 	end,
@@ -415,3 +299,15 @@ function signs_bot.register_inventory(node_names, def)
 		}
 	end
 end
+© 2019 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Help
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
