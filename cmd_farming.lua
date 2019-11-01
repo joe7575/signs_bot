@@ -22,18 +22,8 @@ local I,_ = dofile(MP.."/intllib.lua")
 
 local lib = signs_bot.lib
 
-local function inv_get_item(pos, slot)
-	local inv = minetest.get_inventory({type="node", pos=pos})
-	return inv and lib.get_inv_items(inv, "main", slot, 1)
-end
-
-local function inv_put_item(pos, mem, name)
-	local inv = minetest.get_inventory({type="node", pos=pos})
-	local leftover = inv and inv:add_item("main", ItemStack(name))
-	if leftover and leftover:get_count() > 0 then
-		lib.drop_items(mem.robot_pos, leftover)
-	end
-end
+local bot_inv_put_item = signs_bot.bot_inv_put_item
+local bot_inv_take_item = signs_bot.bot_inv_take_item
 
 local function soil_availabe(pos)
 	local node = minetest.get_node_or_nil(pos)
@@ -50,7 +40,7 @@ local function planting(base_pos, mem, slot)
 	local pos = mem.pos_tbl and mem.pos_tbl[mem.steps]
 	mem.steps = (mem.steps or 1) + 1
 	if pos and lib.not_protected(base_pos, pos) and soil_availabe(pos) then
-		local stack = inv_get_item(base_pos, slot)
+		local stack = bot_inv_take_item(base_pos, slot, 1)
 		if stack and stack ~= "" then
 			local plant = stack:get_name()
 			if plant then
@@ -64,7 +54,7 @@ local function planting(base_pos, mem, slot)
 					end
 					minetest.sound_play("default_place_node", {pos = pos, gain = 1.0})
 				else
-					inv_put_item(base_pos, mem, plant)
+					bot_inv_put_item(base_pos, 0,  ItemStack(plant))
 				end
 			end
 		end
@@ -104,12 +94,12 @@ local function harvesting(base_pos, mem)
 		local item = signs_bot.FarmingCrop[node.name]
 		if item and item.inv_crop and item.inv_seed then
 			minetest.remove_node(pos)
-			inv_put_item(base_pos, mem, item.inv_crop)
-			inv_put_item(base_pos, mem, item.inv_seed)
+			bot_inv_put_item(base_pos, 0,  ItemStack(item.inv_crop))
+			bot_inv_put_item(base_pos, 0,  ItemStack(item.inv_seed))
 			if math.random(2) == 1 then
-				inv_put_item(base_pos, mem, item.inv_crop)
+				bot_inv_put_item(base_pos, 0,  ItemStack(item.inv_crop))
 			else
-				inv_put_item(base_pos, mem, item.inv_seed)
+				bot_inv_put_item(base_pos, 0,  ItemStack(item.inv_seed))
 			end
 		end
 	end
@@ -138,7 +128,7 @@ signs_bot.register_botcommand("harvest", {
 local function plant_sapling(base_pos, mem, slot)
 	local pos = lib.dest_pos(mem.robot_pos, mem.robot_param2, {0})
 	if lib.not_protected(base_pos, pos) and soil_availabe(pos) then
-		local stack = inv_get_item(base_pos, slot)
+		local stack = bot_inv_take_item(base_pos, slot, 1)
 		local item = stack and signs_bot.TreeSaplings[stack:get_name()]
 		if item and item.sapling then
 			minetest.set_node(pos, {name = item.sapling, paramtype2 = "wallmounted", param2 = 1})

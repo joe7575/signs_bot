@@ -22,6 +22,12 @@ local MP = minetest.get_modpath("signs_bot")
 local I,_ = dofile(MP.."/intllib.lua")
 
 local lib = signs_bot.lib
+local bot_inv_take_item = signs_bot.bot_inv_take_item
+
+local function bot_inv_put_item(pos, slot, items)
+	local leftover = signs_bot.bot_inv_put_item(pos, slot, items)
+	return leftover:get_count() == 0
+end
 
 local tValidLevels = {["-1"] = -1, ["0"] = 0, ["+1"] = 1}
 
@@ -33,19 +39,17 @@ local tRotations = {
 	[3] = {12,20,16},
 }
 
-local function get_own_inv(pos)
-	return minetest.get_inventory({type="node", pos=pos}), "main"
-end
-	
 --
 -- Place/dig items
 --
 local function place_item(base_pos, robot_pos, param2, slot, route, level)
 	local pos1, p2 = lib.dest_pos(robot_pos, param2, route)
 	pos1.y = pos1.y + level
-	if lib.not_protected(base_pos, pos1) and lib.is_air_like(pos1) then
-		local src_inv, src_list = get_own_inv(base_pos)
-		local taken = lib.get_inv_items(src_inv, src_list, slot, 1)
+	if not lib.not_protected(base_pos, pos1) then
+		return lib.ERROR, I("Error: Position protected")
+	end
+	if lib.is_air_like(pos1) then
+		local taken = signs_bot.bot_inv_take_item(base_pos, slot, 1)
 		if taken then
 			local name = taken:get_name()
 			if name == "default:torch" then  
@@ -63,6 +67,7 @@ local function place_item(base_pos, robot_pos, param2, slot, route, level)
 			end
 		end
 	end
+	return lib.DONE
 end
 
 signs_bot.register_botcommand("place_front", {
@@ -72,17 +77,16 @@ signs_bot.register_botcommand("place_front", {
 		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
-		slot = tonumber(slot or 1)
-		if not slot or slot < 1 or slot > 8 then 
+		slot = tonumber(slot or 0)
+		if not slot or slot < 0 or slot > 8 then 
 			return false 
 		end
 		return tValidLevels[lvl] ~= nil
 	end,
 	cmnd = function(base_pos, mem, slot, lvl)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot or 0)
 		local level = tValidLevels[lvl]
-		place_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0}, level)
-		return lib.DONE
+		return place_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0}, level)
 	end,
 })
 	
@@ -93,17 +97,16 @@ signs_bot.register_botcommand("place_left", {
 		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
-		slot = tonumber(slot or 1)
-		if not slot or slot < 1 or slot > 8 then 
+		slot = tonumber(slot or 0)
+		if not slot or slot < 0 or slot > 8 then 
 			return false 
 		end
 		return tValidLevels[lvl] ~= nil
 	end,
 	cmnd = function(base_pos, mem, slot, lvl)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot or 0)
 		local level = tValidLevels[lvl]
-		place_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0,3}, level)
-		return lib.DONE
+		return place_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0,3}, level)
 	end,
 })
 	
@@ -114,35 +117,35 @@ signs_bot.register_botcommand("place_right", {
 		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
-		slot = tonumber(slot or 1)
-		if not slot or slot < 1 or slot > 8 then 
+		slot = tonumber(slot or 0)
+		if not slot or slot < 0 or slot > 8 then 
 			return false 
 		end
 		return tValidLevels[lvl] ~= nil
 	end,
 	cmnd = function(base_pos, mem, slot, lvl)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot or 0)
 		local level = tValidLevels[lvl]
-		place_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0,1}, level)
-		return lib.DONE
+		return place_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0,1}, level)
 	end,
 })
 
 local function place_item_below(base_pos, robot_pos, param2, slot)
 	local pos1 = {x=robot_pos.x,y=robot_pos.y-1,z=robot_pos.z}
-	if lib.not_protected(base_pos, pos1) then
-		local node = lib.get_node_lvm(pos1)
-		if node.name == "signs_bot:robot_foot" then
-			local src_inv, src_list = get_own_inv(base_pos)
-			local taken = lib.get_inv_items(src_inv, src_list, slot, 1)
-			if taken then
-				local name = taken:get_name()
-				local def = minetest.registered_nodes[name]
-				if not def then return end
-				minetest.set_node(pos1, {name=name, param2=param2})
-			end
+	if not lib.not_protected(base_pos, pos1) then
+		return lib.ERROR, I("Error: Position protected")
+	end
+	local node = lib.get_node_lvm(pos1)
+	if node.name == "signs_bot:robot_foot" then
+		local taken = bot_inv_take_item(base_pos, slot, 1)
+		if taken then
+			local name = taken:get_name()
+			local def = minetest.registered_nodes[name]
+			if not def then return end
+			minetest.set_node(pos1, {name=name, param2=param2})
 		end
 	end
+	return lib.DONE
 end
 
 signs_bot.register_botcommand("place_below", {
@@ -152,21 +155,22 @@ signs_bot.register_botcommand("place_below", {
 		"Hint: use 'move_up' first.\n"..
 		"<slot> is the inventory slot (1..8)"),
 	check = function(slot)
-		slot = tonumber(slot or 1)
-		return slot and slot > 0 and slot < 9
+		slot = tonumber(slot or 0)
+		return slot and slot >= 0 and slot < 9
 	end,
 	cmnd = function(base_pos, mem, slot)
-		slot = tonumber(slot or 1)
-		place_item_below(base_pos, mem.robot_pos, mem.robot_param2, slot)
-		return lib.DONE
+		slot = tonumber(slot or 0)
+		return place_item_below(base_pos, mem.robot_pos, mem.robot_param2, slot)
 	end,
 })
 
 local function place_item_above(base_pos, robot_pos, param2, slot)
 	local pos1 = {x=robot_pos.x,y=robot_pos.y+1,z=robot_pos.z}
-	if lib.not_protected(base_pos, pos1) and lib.is_air_like(pos1) then
-		local src_inv, src_list = get_own_inv(base_pos)
-		local taken = lib.get_inv_items(src_inv, src_list, slot, 1)
+	if not lib.not_protected(base_pos, pos1) then
+		return lib.ERROR, I("Error: Position protected")
+	end
+	if lib.is_air_like(pos1) then
+		local taken = bot_inv_take_item(base_pos, slot, 1)
 		if taken then
 			local name = taken:get_name()
 			local def = minetest.registered_nodes[name]
@@ -174,6 +178,7 @@ local function place_item_above(base_pos, robot_pos, param2, slot)
 			minetest.set_node(pos1, {name=name, param2=param2})
 		end
 	end
+	return lib.DONE
 end
 
 signs_bot.register_botcommand("place_above", {
@@ -182,13 +187,12 @@ signs_bot.register_botcommand("place_above", {
 	description = I("Place a block above the robot.\n"..
 		"<slot> is the inventory slot (1..8)"),
 	check = function(slot)
-		slot = tonumber(slot or 1)
-		return slot and slot > 0 and slot < 9
+		slot = tonumber(slot or 0)
+		return slot and slot >= 0 and slot < 9
 	end,
 	cmnd = function(base_pos, mem, slot)
-		slot = tonumber(slot or 1)
-		place_item_above(base_pos, mem.robot_pos, mem.robot_param2, slot)
-		return lib.DONE
+		slot = tonumber(slot or 0)
+		return place_item_above(base_pos, mem.robot_pos, mem.robot_param2, slot)
 	end,
 })
 
@@ -197,12 +201,17 @@ local function dig_item(base_pos, robot_pos, param2, slot, route, level)
 	pos1.y = pos1.y + level
 	local node = lib.get_node_lvm(pos1)
 	local dug_name = lib.is_simple_node(node)
-	if lib.not_protected(base_pos, pos1) and dug_name then
-		local dst_inv, dst_list = get_own_inv(base_pos)
-		if lib.put_inv_items(dst_inv, dst_list, slot, ItemStack(dug_name)) then
+	if not lib.not_protected(base_pos, pos1) then
+		return lib.ERROR, I("Error: Position protected")
+	end
+	if dug_name then
+		if bot_inv_put_item(base_pos, slot, ItemStack(dug_name)) then
 			minetest.remove_node(pos1)
+		else
+			return lib.ERROR, I("Error: No free inventory space")
 		end
 	end
+	return lib.DONE
 end
 
 signs_bot.register_botcommand("dig_front", {
@@ -212,17 +221,16 @@ signs_bot.register_botcommand("dig_front", {
 		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
-		slot = tonumber(slot or 1)
-		if not slot or slot < 1 or slot > 8 then 
+		slot = tonumber(slot or 0)
+		if not slot or slot < 0 or slot > 8 then 
 			return false 
 		end
 		return tValidLevels[lvl] ~= nil
 	end,
 	cmnd = function(base_pos, mem, slot, lvl)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot or 0)
 		local level = tValidLevels[lvl]
-		dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0}, level)
-		return lib.DONE
+		return dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0}, level)
 	end,
 	expensive = true,
 })
@@ -234,17 +242,16 @@ signs_bot.register_botcommand("dig_left", {
 		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
-		slot = tonumber(slot or 1)
-		if not slot or slot < 1 or slot > 8 then 
+		slot = tonumber(slot or 0)
+		if not slot or slot < 0 or slot > 8 then 
 			return false 
 		end
 		return tValidLevels[lvl] ~= nil
 	end,
 	cmnd = function(base_pos, mem, slot, lvl)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot or 0)
 		local level = tValidLevels[lvl]
-		dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0,3}, level)
-		return lib.DONE
+		return dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0,3}, level)
 	end,
 	expensive = true,
 })
@@ -256,17 +263,16 @@ signs_bot.register_botcommand("dig_right", {
 		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
-		slot = tonumber(slot or 1)
-		if not slot or slot < 1 or slot > 8 then 
+		slot = tonumber(slot or 0)
+		if not slot or slot < 0 or slot > 8 then 
 			return false 
 		end
 		return tValidLevels[lvl] ~= nil
 	end,
 	cmnd = function(base_pos, mem, slot, lvl)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot or 0)
 		local level = tValidLevels[lvl]
-		dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0,1}, level)
-		return lib.DONE
+		return dig_item(base_pos, mem.robot_pos, mem.robot_param2, slot, {0,1}, level)
 	end,
 	expensive = true,
 })
@@ -275,12 +281,17 @@ local function dig_item_below(base_pos, robot_pos, param2, slot)
 	local pos1 = {x=robot_pos.x,y=robot_pos.y-1,z=robot_pos.z}
 	local node = lib.get_node_lvm(pos1)
 	local dug_name = lib.is_simple_node(node)
-	if lib.not_protected(base_pos, pos1) and dug_name then
-		local dst_inv, dst_list = get_own_inv(base_pos)
-		if lib.put_inv_items(dst_inv, dst_list, slot, ItemStack(dug_name)) then
+	if not lib.not_protected(base_pos, pos1) then
+		return lib.ERROR, I("Error: Position protected")
+	end
+	if dug_name then
+		if bot_inv_put_item(base_pos, slot, ItemStack(dug_name)) then
 			minetest.set_node(pos1, {name="signs_bot:robot_foot"})
+		else
+			return lib.ERROR, I("Error: No free inventory space")
 		end
 	end
+	return lib.DONE
 end
 
 signs_bot.register_botcommand("dig_below", {
@@ -289,13 +300,12 @@ signs_bot.register_botcommand("dig_below", {
 	description = I("Dig the block under the robot.\n"..
 		"<slot> is the inventory slot (1..8)"),
 	check = function(slot)
-		slot = tonumber(slot or 1)
-		return slot and slot > 0 and slot < 9
+		slot = tonumber(slot or 0)
+		return slot and slot >= 0 and slot < 9
 	end,
 	cmnd = function(base_pos, mem, slot)
-		slot = tonumber(slot or 1)
-		dig_item_below(base_pos, mem.robot_pos, mem.robot_param2, slot)
-		return lib.DONE
+		slot = tonumber(slot or 0)
+		return dig_item_below(base_pos, mem.robot_pos, mem.robot_param2, slot)
 	end,
 	expensive = true,
 })
@@ -304,12 +314,17 @@ local function dig_item_above(base_pos, robot_pos, param2, slot)
 	local pos1 = {x=robot_pos.x,y=robot_pos.y+1,z=robot_pos.z}
 	local node = lib.get_node_lvm(pos1)
 	local dug_name = lib.is_simple_node(node)
-	if lib.not_protected(base_pos, pos1) and dug_name then
-		local dst_inv, dst_list = get_own_inv(base_pos)
-		if lib.put_inv_items(dst_inv, dst_list, slot, ItemStack(dug_name)) then
+	if not lib.not_protected(base_pos, pos1) then
+		return lib.ERROR, I("Error: Position protected")
+	end
+	if dug_name then
+		if bot_inv_put_item(base_pos, slot, ItemStack(dug_name)) then
 			minetest.remove_node(pos1)
+		else
+			return lib.ERROR, I("Error: No free inventory space")
 		end
 	end
+	return lib.DONE
 end
 
 signs_bot.register_botcommand("dig_above", {
@@ -318,13 +333,12 @@ signs_bot.register_botcommand("dig_above", {
 	description = I("Dig the block above the robot.\n"..
 		"<slot> is the inventory slot (1..8)"),
 	check = function(slot)
-		slot = tonumber(slot or 1)
-		return slot and slot > 0 and slot < 9
+		slot = tonumber(slot or 0)
+		return slot and slot >= 0 and slot < 9
 	end,
 	cmnd = function(base_pos, mem, slot)
-		slot = tonumber(slot or 1)
-		dig_item_above(base_pos, mem.robot_pos, mem.robot_param2, slot, 1)
-		return lib.DONE
+		slot = tonumber(slot or 0)
+		return dig_item_above(base_pos, mem.robot_pos, mem.robot_param2, slot, 1)
 	end,
 	expensive = true,
 })
@@ -333,12 +347,16 @@ local function rotate_item(base_pos, robot_pos, param2, route, level, steps)
 	local pos1 = lib.dest_pos(robot_pos, param2, route)
 	pos1.y = pos1.y + level
 	local node = lib.get_node_lvm(pos1)
-	if lib.not_protected(base_pos, pos1) and lib.is_simple_node(node) then
+	if not lib.not_protected(base_pos, pos1) then
+		return lib.ERROR, I("Error: Position protected")
+	end
+	if lib.is_simple_node(node) then
 		local p2 = tRotations[node.param2] and tRotations[node.param2][steps]
 		if p2 then
 			minetest.swap_node(pos1, {name=node.name, param2=p2})
 		end
 	end
+	return lib.DONE
 end
 
 signs_bot.register_botcommand("rotate_item", {
@@ -357,8 +375,7 @@ signs_bot.register_botcommand("rotate_item", {
 	cmnd = function(base_pos, mem, lvl, steps)
 		local level = tValidLevels[lvl]
 		steps = tonumber(steps or 1)
-		rotate_item(base_pos, mem.robot_pos, mem.robot_param2, {0}, level, steps)
-		return lib.DONE
+		return rotate_item(base_pos, mem.robot_pos, mem.robot_param2, {0}, level, steps)
 	end,
 })
 	

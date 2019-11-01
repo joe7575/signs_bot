@@ -59,20 +59,6 @@ function signs_bot.lib.dest_pos(pos, param2, route)
 	return pos, p2
 end
 
-function signs_bot.lib.find_inv_slot(src_inv, src_list, item_name)
-	if not item_name then
-		return
-	end
-	for idx = 1, src_inv:get_size(src_list) do
-		local stack = src_inv:get_stack(src_list, idx)
-		if stack:get_count() > 1 then
-			if stack:get_name() == item_name then
-				return idx
-			end
-		end
-	end		
-end
-
 function signs_bot.lib.get_node_lvm(pos)
 	local node = minetest.get_node_or_nil(pos)
 	if node then
@@ -109,13 +95,7 @@ function signs_bot.lib.check_pos(posA, nodeA, nodeB, param2)
 	local ndefA = minetest.registered_nodes[nodeA.name]
 	local ndefB = minetest.registered_nodes[nodeB.name]
 	if ndefA and not ndefA.walkable and ndefB and ndefB.walkable then
-		local objects = minetest.get_objects_inside_radius(posA, 0.7)
-		if #objects ~= 0 then
-			poke_objects(posA, param2, objects)
-			return false
-		else
-			return true
-		end
+		return true
 	end
 	return false
 end
@@ -177,89 +157,25 @@ function signs_bot.lib.not_protected(base_pos, pos)
 	return true
 end
 
+
 --
--- Try to get/put a number of items from/to any kind of inventory.
--- If slot is provided, start searching at that position, otherwise
--- start at slot 1.
-function signs_bot.lib.get_inv_items(src_inv, src_list, slot, num)
-	for idx = (slot or 1),src_inv:get_size(src_list) do
-		local stack = src_inv:get_stack(src_list, idx)
+-- Access functions for chest like nodes
+-- (bot inventory releated function are in basis.lua)
+
+-- Search for items in the inventory and return the item_name or nil.
+function signs_bot.lib.peek_inv(inv, listname)
+	if inv:is_empty(listname) then return nil end
+	
+	local inv_size =  inv:get_size(listname)
+
+	for idx in signs_bot.random(inv_size) do
+		local stack = inv:get_stack(listname, idx)
 		if stack:get_count() > 0 then
-			local taken = stack:take_item(num or 1)
-			src_inv:set_stack(src_list, idx, stack)
-			return taken
+			return stack:get_name()
 		end
 	end
-end	
-
--- use only the given slot and return num (or count) items from this slot
-function signs_bot.lib.get_inv_items_from_slot(src_inv, src_list, slot, num)
-	local to_take = math.abs(num)
-	local stack = src_inv:get_stack(src_list, slot)
-	local item_count = stack:get_count()
-	local item_leave_one = 0
-	if num < 0 then 
-		item_leave_one = 1 
-	end
-	if item_count == 0 then 
-		-- there is no item in slot, so we leave 
-		return 
-	elseif item_count >= (to_take + item_leave_one) then
-		-- the slot has enough items
-	else
-		-- the slot has fewer items as needed
-		to_take = item_count - item_leave_one
-	end
-	local taken = stack:take_item(to_take)
-	src_inv:set_stack(src_list, slot, stack)
-	return taken
 end
 
-function signs_bot.lib.get_inv_items_cond(src_inv, src_list, slot, num)
-	for idx = (slot or 1),src_inv:get_size(src_list) do
-		local stack = src_inv:get_stack(src_list, idx)
-		if stack:get_count() > 0 then
-			local taken = stack:take_item(num or 1)
-			src_inv:set_stack(src_list, idx, stack)
-			-- Check if at least one more item is available
-			local rest = ItemStack(taken:get_name())
-			if not src_inv:contains_item(src_list, rest) then
-				src_inv:add_item(src_list, rest)
-				if taken:get_count() > 1 then
-					taken:set_count(taken:get_count() - 1)
-					return taken
-				end
-			else
-				return taken
-			end
-		end
-	end
-end	
-
-function signs_bot.lib.put_inv_items(dst_inv, dst_list, slot, items)
-	for idx = (slot or 1),dst_inv:get_size(dst_list) do
-		local stack = dst_inv:get_stack(dst_list, idx)
-		if stack:item_fits(items) then
-			stack:add_item(items)
-			dst_inv:set_stack(dst_list, idx, stack)
-			return true
-		end
-	end
-	return false
-end
-
-function signs_bot.lib.put_inv_items_cond(dst_inv, dst_list, slot, items)
-	for idx = (slot or 1),dst_inv:get_size(dst_list) do
-		local stack = dst_inv:get_stack(dst_list, idx)
-		local minimum = ItemStack(items:get_name())
-		if dst_inv:contains_item(dst_list, minimum) and stack:item_fits(items) then
-			stack:add_item(items)
-			dst_inv:set_stack(dst_list, idx, stack)
-			return true
-		end
-	end
-	return false
-end
 
 -- In the case an inventory is full
 function signs_bot.lib.drop_items(robot_pos, items)

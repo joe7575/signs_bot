@@ -26,18 +26,94 @@ local lib = signs_bot.lib
 local CYCLE_TIME = 1
 signs_bot.MAX_CAPA = 600
 
+local function in_range(val, min, max)
+	if val < min then return min end
+	if val > max then return max end
+	return val
+end
+
+-- determine item name from the given Bot inventory slot
+function signs_bot.bot_inv_item_name(pos, slot)
+	if slot == 0 then return nil end -- invalid num
+	local inv = M(pos):get_inventory()
+	local name = inv:get_stack("filter", slot):get_name()
+	if name ~= "" then return name end
+end
+	
+-- put items into the bot inventory and return leftover
+function signs_bot.bot_inv_put_item(pos, slot, items)
+	if not items then return end
+	local inv = M(pos):get_inventory()
+	if slot and slot > 0 then
+		local name = inv:get_stack("filter", slot):get_name()
+		if name == "" or name == items:get_name() then
+			local stack = inv:get_stack("main", slot)
+			items = stack:add_item(items)
+			inv:set_stack("main", slot, stack)
+		end
+	else
+		for idx = 1,8 do
+			local name = inv:get_stack("filter", idx):get_name()
+			if name == "" or name == items:get_name() then
+				local stack = inv:get_stack("main", idx)
+				items = stack:add_item(items)
+				inv:set_stack("main", idx, stack)
+				if items:get_count() == 0 then return items end
+			end
+		end
+	end
+	return items
+end
+
+-- take items from the bot inventory
+function signs_bot.bot_inv_take_item(pos, slot, num)
+	local inv = M(pos):get_inventory()
+	if slot and slot > 0 then
+		local stack = inv:get_stack("main", slot)
+		if stack:get_count() > 0 then
+			local taken = inv:remove_item("main", ItemStack(stack:get_name().." "..num)) 
+			return taken
+		end
+	else
+		for idx = 1,8 do
+			local stack = inv:get_stack("main", idx)
+			if stack:get_count() > 0 then
+				local taken = inv:remove_item("main", ItemStack(stack:get_name().." "..num)) 
+				return taken
+			end
+		end
+	end
+end
+
+local bot_inv_item_name = signs_bot.bot_inv_item_name
+
+local function preassigned_slots(pos)
+	local inv = M(pos):get_inventory()
+	local tbl = {}
+	for idx = 1,8 do
+		local item_name = inv:get_stack("filter", idx):get_name()
+		if item_name ~= "" then
+			local x = ((idx - 1) % 4) + 5
+			local y = idx < 5 and 1 or 2
+			tbl[#tbl+1] = "item_image["..x..","..y..";1,1;"..item_name.."]"
+		end
+	end
+	return table.concat(tbl, "")
+end
+
 local function formspec(pos, mem)
 	mem.running = mem.running or false
 	local cmnd = mem.running and "stop;"..I("Off") or "start;"..I("On") 
-	local bot = not mem.running and "image[0.6,1;1,1;signs_bot_bot_inv.png]" or ""
+	local bot = not mem.running and "image[0.6,0;1,1;signs_bot_bot_inv.png]" or ""
 	local current_capa = mem.capa or (signs_bot.MAX_CAPA * 0.9)
 	return "size[9,7.6]"..
 	default.gui_bg..
 	default.gui_bg_img..
 	default.gui_slots..
 	"label[2.1,0;"..I("Signs").."]label[5.3,0;"..I("Other items").."]"..
-	"image[0.6,1;1,1;signs_bot_form_mask.png]"..
+	"image[0.6,0;1,1;signs_bot_form_mask.png]"..
 	bot..
+	preassigned_slots(pos)..
 	signs_bot.formspec_battery_capa(signs_bot.MAX_CAPA, current_capa)..
 	"label[2.1,0.5;1]label[3.1,0.5;2]label[4.1,0.5;3]"..
 	"list[context;sign;1.8,1;3,2;]"..
@@ -45,10 +121,47 @@ local function formspec(pos, mem)
 	"label[5.3,0.5;1]label[6.3,0.5;2]label[7.3,0.5;3]label[8.3,0.5;4]"..
 	"list[context;main;5,1;4,2;]"..
 	"label[5.3,3;5]label[6.3,3;6]label[7.3,3;7]label[8.3,3;8]"..
+	"button[0.2,1;1.5,1;config;"..I("Config").."]"..
 	"button[0.2,2;1.5,1;"..cmnd.."]"..
 	"list[current_player;main;0.5,3.8;8,4;]"..
 	"listring[context;main]"..
 	"listring[current_player;main]"
+end
+
+local function formspec_cfg(pos, mem)
+	return "size[9,7.6]"..
+	default.gui_bg..
+	default.gui_bg_img..
+	default.gui_slots..
+	"label[5.3,0;"..I("Preassign slots items").."]"..
+	"label[5.3,0.5;1]label[6.3,0.5;2]label[7.3,0.5;3]label[8.3,0.5;4]"..
+	"list[context;filter;5,1;4,2;]"..
+	"label[5.3,3;5]label[6.3,3;6]label[7.3,3;7]label[8.3,3;8]"..
+	"button[0.2,1;1.5,1;back;"..I("Back").."]"..
+	"list[current_player;main;0.5,3.8;8,4;]"
+end
+
+local function get_capa(itemstack)
+	local meta = itemstack:get_meta()
+	if meta then
+		return in_range(meta:get_int("capa") * (signs_bot.MAX_CAPA/100), 0, 3000)
+	end
+	return 0
+end
+
+local function set_capa(pos, oldnode, digger, capa)
+	local node = ItemStack(oldnode.name)
+	local meta = node:get_meta()
+	capa = techage.power.percent(signs_bot.MAX_CAPA, capa)
+	capa = (math.floor((capa or 0) / 5)) * 5
+	meta:set_int("capa", capa)
+	local text = I("Robot Box ").." ("..capa.." %)"
+	meta:set_string("description", text)
+	local inv = minetest.get_inventory({type="player", name=digger:get_player_name()})
+	local left_over = inv:add_item("main", node)
+	if left_over:get_count() > 0 then
+		minetest.add_item(pos, node)
+	end
 end
 
 function signs_bot.infotext(pos, state)
@@ -155,6 +268,10 @@ local function on_receive_fields(pos, formname, fields, player)
 	
 	if fields.update then
 		meta:set_string("formspec", formspec(pos, mem))
+	elseif fields.config then
+		meta:set_string("formspec", formspec_cfg(pos, mem))
+	elseif fields.back then
+		meta:set_string("formspec", formspec(pos, mem))
 	elseif fields.start then
 		start_robot(pos)
 	elseif fields.stop then
@@ -177,6 +294,18 @@ local function allow_metadata_inventory_put(pos, listname, index, stack, player)
 	end
 	local name = stack:get_name()
 	if listname == "sign" and minetest.get_item_group(name, "sign_bot_sign") ~= 1 then
+		return 0
+	end
+	if listname == "main" and bot_inv_item_name(pos, index) and 
+				name ~= bot_inv_item_name(pos, index) then
+		return 0
+	end
+	if listname == "filter" then
+		local inv = M(pos):get_inventory()
+		local list = inv:get_list(listname)
+		if list[index]:get_count() == 0 or stack:get_name() ~= list[index]:get_name() then
+			return 1
+		end
 		return 0
 	end
 	return stack:get_count()
@@ -204,8 +333,26 @@ local function allow_metadata_inventory_move(pos, from_list, from_index, to_list
 	if from_list ~= to_list then
 		return 0
 	end
+	local inv = M(pos):get_inventory()
+	local name = inv:get_stack(from_list, from_index):get_name()
+	if to_list == "main" and bot_inv_item_name(pos, to_index) and 
+				name ~= bot_inv_item_name(pos, to_index) then
+		return 0
+	end
+	if to_list == "filter" then
+		local list = inv:get_list(to_list)
+		if list[to_index]:get_count() == 0 or name ~= list[to_index]:get_name() then
+			return 1
+		end
+		return 0
+	end
 	return count
 end	
+
+local drop = "signs_bot:box"
+if minetest.global_exists("techage") then
+	drop = ""
+end
 
 minetest.register_node("signs_bot:box", {
 	description = I("Signs Bot Box"),
@@ -225,9 +372,10 @@ minetest.register_node("signs_bot:box", {
 		local inv = meta:get_inventory()
 		inv:set_size('main', 8)
 		inv:set_size('sign', 6)
+		inv:set_size('filter', 8)
 	end,
 	
-	after_place_node = function(pos, placer)
+	after_place_node = function(pos, placer, itemstack)
 		local mem = tubelib2.init_mem(pos)
 		mem.running = false
 		mem.error = false
@@ -242,6 +390,10 @@ minetest.register_node("signs_bot:box", {
 		meta:set_string("signs_bot_cmnd", "turn_off")
 		meta:set_int("err_code", 0)
 		signs_bot.infotext(pos, I("stopped"))
+		if minetest.global_exists("techage") then
+			techage.power.after_place_node(pos)
+			mem.capa = get_capa(itemstack)
+		end
 	end,
 
 	signs_bot_get_signal = signs_bot_get_signal,
@@ -268,9 +420,25 @@ minetest.register_node("signs_bot:box", {
 		minetest.node_dig(pos, node, puncher, pointed_thing)
 	end,
 	
-	on_timer = node_timer,
+	after_dig_node = function(pos, oldnode, oldmetadata, digger)
+		if minetest.global_exists("techage") then
+			techage.power.after_dig_node(pos, oldnode)
+			local mem = tubelib2.get_mem(pos)
+			set_capa(pos, oldnode, digger, mem.capa)
+		end
+		tubelib2.del_mem(pos)
+	end,
+
+	after_tube_update = function(node, pos, out_dir, peer_pos, peer_in_dir) 
+		if minetest.global_exists("techage") then
+			techage.power.after_tube_update2(node, pos, out_dir, peer_pos, peer_in_dir)
+		end
+	end,
 	
+	on_timer = node_timer,
 	on_rotate = screwdriver.disallow,
+	
+	drop = drop,
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {cracky = 1},

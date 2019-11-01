@@ -39,7 +39,7 @@ if minetest.global_exists("techage") then
 	
 	function signs_bot.formspec_battery_capa(max_capa, current_capa)
 		local percent = percent_value(max_capa, current_capa)
-		return "image[0.1,1;0.5,1;signs_bot_form_level_bg.png^[lowpart:"..
+		return "image[0.1,0;0.5,1;signs_bot_form_level_bg.png^[lowpart:"..
 				percent..":signs_bot_form_level_fg.png]"
 	end
 
@@ -109,7 +109,7 @@ if minetest.global_exists("techage") then
 		return true
 	end
 
-	techage.power.register_node({"signs_bot:box"}, {
+	techage.power.enrich_node({"signs_bot:box"}, {
 		power_network  = Cable,
 		conn_sides = {"L", "U", "D", "F", "B"},
 		on_power = on_power,
