@@ -84,10 +84,16 @@ if minetest.global_exists("techage") then
 
 	local function on_power(pos, mem)
 		mem.power_available = true
+		if not mem.running then
+			signs_bot.infotext(pos, S("charging"))
+		end
 	end
 
 	local function on_nopower(pos, mem)
 		mem.power_available = false
+		if not mem.running then
+			signs_bot.infotext(pos, S("no power"))
+		end
 	end
 
     -- Bot in the box
@@ -101,6 +107,9 @@ if minetest.global_exists("techage") then
 				power.consumer_stop(pos, mem)
 				minetest.get_node_timer(pos):stop()
 				mem.charging = false
+				if not mem.running then
+					signs_bot.infotext(pos, S("fully charged"))
+				end
 				return false
 			end
 		else

@@ -36,7 +36,7 @@ local function update_infotext(pos, dest_pos, cmnd)
 	else
 		text = I("Bot Timer").." (-- min): "..I("Connected with")
 	end
-	meta:set_string("infotext", text.." "..S(dest_pos).." / "..cmnd.."    ")
+	meta:set_string("infotext", text.." "..S(dest_pos).." / "..(cmnd or "none").."    ")
 end	
 
 local function update_infotext_local(pos)

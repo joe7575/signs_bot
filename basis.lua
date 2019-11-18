@@ -65,21 +65,30 @@ function signs_bot.bot_inv_put_item(pos, slot, items)
 	return items
 end
 
+local function take_items(inv, slot, num)
+	local stack = inv:get_stack("main", slot)
+	if stack:get_count() >= num then
+		local taken = stack:take_item(num)
+		inv:set_stack("main", slot, stack)
+		return taken
+	else
+		inv:set_stack("main", slot, nil)
+		local rest = num - stack:get_count()
+		local taken = inv:remove_item("main", ItemStack(stack:get_name().." "..rest)) 
+		stack:set_count(stack:get_count() + taken:get_count())
+		return stack
+	end
+end
+
 -- take items from the bot inventory
 function signs_bot.bot_inv_take_item(pos, slot, num)
 	local inv = M(pos):get_inventory()
 	if slot and slot > 0 then
-		local stack = inv:get_stack("main", slot)
-		if stack:get_count() > 0 then
-			local taken = inv:remove_item("main", ItemStack(stack:get_name().." "..num)) 
-			return taken
-		end
+		return take_items(inv, slot, num)
 	else
 		for idx = 1,8 do
-			local stack = inv:get_stack("main", idx)
-			if stack:get_count() > 0 then
-				local taken = inv:remove_item("main", ItemStack(stack:get_name().." "..num)) 
-				return taken
+			if not inv:get_stack("main", idx):is_empty() then
+				return take_items(inv, idx, num)
 			end
 		end
 	end
@@ -211,7 +220,11 @@ function signs_bot.stop_robot(base_pos, mem)
 			minetest.get_node_timer(base_pos):stop()
 			mem.charging = false
 		end
-		signs_bot.infotext(base_pos, I("stopped"))
+		if mem.power_available then
+			signs_bot.infotext(base_pos, I("charging"))
+		else
+			signs_bot.infotext(base_pos, I("stopped"))
+		end
 		meta:set_string("formspec", formspec(base_pos, mem))
 		signs_bot.remove_robot(mem)
 	else
