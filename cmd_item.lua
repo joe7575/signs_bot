@@ -200,7 +200,7 @@ signs_bot.register_botcommand("pickup_items", {
 			if not object:is_player() and lua_entity and lua_entity.name == "__builtin:item" then
 				local item = ItemStack(lua_entity.itemstring)
 				local leftover = signs_bot.bot_inv_put_item(base_pos, slot, item)
-				if leftover:get_count() > 0 then
+				if leftover:get_count() == 0 then
 					object:remove()
 				end
 			end
