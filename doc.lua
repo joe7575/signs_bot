@@ -93,6 +93,39 @@ local tool_doc = table.concat({
 }, "\n")
 
 
+local inventory_doc = table.concat({
+	I("The following applies to all commands that are used to place items in the bot inventory, like:"),
+	"",
+	I("- take_item <num> <slot>"),
+	I("- pickup_items <slot>"),
+	I("- trash_sign <slot>"),
+	I("- harvest <slot>"),
+	I("- dig_front <slot> <lvl>"),
+	I("- dig_left <slot> <lvl>"),
+	I("- dig_right <slot> <lvl>"),
+	I("- dig_below <slot> <lvl>"),
+	I("- dig_above <slot> <lvl>"),
+	"",
+	I("If no slot or slot 0 was specified with the command (case A), all 8 slots of the bot inventory "),
+	I("are checked one after the other. If a slot was specified (case B), only this slot is checked."),
+	I("In both cases the following applies: If the slot is preconfigured and fits the item, "),
+	I("or if the slot is not configured and empty, or is only partially filled with the item type "),
+	I("(which should be added), then the items are added."),
+	I("If not all items can be added, the remaining slots will be tried out in case A."),
+	I("Anything that could not be added to your own inventory goes back."),
+	"",
+	I("The following applies to all commands that are used to take items from the bot inventory, like:"),
+	"",
+	I("- add_item <num> <slot>"),
+	"",
+	I("It doesn't matter whether a slot is configured or not. The bot takes the first stack that "),
+	I("it can find from its own inventory and tries to use it."),
+	I("If a slot is specified, it only takes this, if no slot has been specified, it checks all of "),
+	I("them one after the other, starting from slot 1 until it finds something."),
+	I("If the number found is smaller than requested, he tries to take the rest out of any slot."),
+}, "\n")
+
+
 doc.add_category("signs_bot",
 {
 	name = I("Signs Bot"),
@@ -127,3 +160,7 @@ doc.add_entry("signs_bot", "tool", {
 	data = {text = tool_doc, image = "signs_bot_doc_image.png"},
 })
 
+doc.add_entry("signs_bot", "tool", {
+	name = I("Bot inventory behavior"),
+	data = {text = inventory_doc, image = "signs_bot_doc_image.png"},
+})

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-10 22:32+0200\n"
+"POT-Creation-Date: 2020-01-02 16:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,6 +51,10 @@ msgstr ""
 
 #: basis.lua
 msgid "running"
+msgstr ""
+
+#: basis.lua
+msgid "charging"
 msgstr ""
 
 #: basis.lua
@@ -401,6 +405,10 @@ msgid "Use the pattern sign to mark the pattern."
 msgstr ""
 
 #: cmd_place.lua
+msgid "Error: Position protected"
+msgstr ""
+
+#: cmd_place.lua
 msgid ""
 "Place a block in front of the robot\n"
 "<slot> is the inventory slot (1..8)\n"
@@ -432,6 +440,10 @@ msgstr ""
 msgid ""
 "Place a block above the robot.\n"
 "<slot> is the inventory slot (1..8)"
+msgstr ""
+
+#: cmd_place.lua
+msgid "Error: No free inventory space"
 msgstr ""
 
 #: cmd_place.lua
@@ -851,6 +863,123 @@ msgid "instead of starting it."
 msgstr ""
 
 #: doc.lua
+msgid ""
+"The following applies to all commands that are used to place items in the "
+"bot inventory, like:"
+msgstr ""
+
+#: doc.lua
+msgid "- take_item <num> <slot>"
+msgstr ""
+
+#: doc.lua
+msgid "- pickup_items <slot>"
+msgstr ""
+
+#: doc.lua
+msgid "- trash_sign <slot>"
+msgstr ""
+
+#: doc.lua
+msgid "- harvest <slot>"
+msgstr ""
+
+#: doc.lua
+msgid "- dig_front <slot> <lvl>"
+msgstr ""
+
+#: doc.lua
+msgid "- dig_left <slot> <lvl>"
+msgstr ""
+
+#: doc.lua
+msgid "- dig_right <slot> <lvl>"
+msgstr ""
+
+#: doc.lua
+msgid "- dig_below <slot> <lvl>"
+msgstr ""
+
+#: doc.lua
+msgid "- dig_above <slot> <lvl>"
+msgstr ""
+
+#: doc.lua
+msgid ""
+"If no slot or slot 0 was specified with the command (case A), all 8 slots of "
+"the bot inventory "
+msgstr ""
+
+#: doc.lua
+msgid ""
+"are checked one after the other. If a slot was specified (case B), only this "
+"slot is checked."
+msgstr ""
+
+#: doc.lua
+msgid ""
+"In both cases the following applies: If the slot is preconfigured and fits "
+"the item, "
+msgstr ""
+
+#: doc.lua
+msgid ""
+"or if the slot is not configured and empty, or is only partially filled with "
+"the item type "
+msgstr ""
+
+#: doc.lua
+msgid "(which should be added), then the items are added."
+msgstr ""
+
+#: doc.lua
+msgid ""
+"If not all items can be added, the remaining slots will be tried out in case "
+"A."
+msgstr ""
+
+#: doc.lua
+msgid "Anything that could not be added to your own inventory goes back."
+msgstr ""
+
+#: doc.lua
+msgid ""
+"The following applies to all commands that are used to take items from the "
+"bot inventory, like:"
+msgstr ""
+
+#: doc.lua
+msgid "- add_item <num> <slot>"
+msgstr ""
+
+#: doc.lua
+msgid ""
+"It doesn't matter whether a slot is configured or not. The bot takes the "
+"first stack that "
+msgstr ""
+
+#: doc.lua
+msgid "it can find from its own inventory and tries to use it."
+msgstr ""
+
+#: doc.lua
+msgid ""
+"If a slot is specified, it only takes this, if no slot has been specified, "
+"it checks all of "
+msgstr ""
+
+#: doc.lua
+msgid ""
+"them one after the other, starting from slot 1 until it finds something."
+msgstr ""
+
+#: doc.lua
+msgid ""
+"If the number found is smaller than requested, he tries to take the rest out "
+"of any slot."
+msgstr ""
+
+#: doc.lua
 msgid "Signs Bot"
 msgstr ""
 
@@ -872,6 +1001,10 @@ msgstr ""
 
 #: doc.lua
 msgid "Connecting sensors and actuator"
+msgstr ""
+
+#: doc.lua
+msgid "Bot inventory behavior"
 msgstr ""
 
 #: duplicator.lua
