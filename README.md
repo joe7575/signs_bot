@@ -120,4 +120,5 @@ optional: farming redo, node_io, doc, techage, minecart
 - 2019-07-08  v0.11  * Delayer added
 - 2019-08-09  v0.12  * bug fixes
 - 2019-08-14  v0.13  * Signs Bot Chest recipe added, Minecart signs added
+- 2020-01-02  v1.00  * bot inventory filter added, documentation enhanced
 
