@@ -51,11 +51,13 @@ end
 -- Write actuator_pos data to sensor_pos
 local function pairing(actuator_pos, sensor_pos)
 	local signal = signs_bot.get_signal(actuator_pos)
-	signs_bot.store_signal(sensor_pos, actuator_pos, signal)
-	local node = lib.get_node_lvm(sensor_pos)
-	local ndef = minetest.registered_nodes[node.name]
-	if ndef and ndef.update_infotext then
-		ndef.update_infotext(sensor_pos, actuator_pos, signal)
+	if signal then
+		signs_bot.store_signal(sensor_pos, actuator_pos, signal)
+		local node = lib.get_node_lvm(sensor_pos)
+		local ndef = minetest.registered_nodes[node.name]
+		if ndef and ndef.update_infotext then
+			ndef.update_infotext(sensor_pos, actuator_pos, signal)
+		end
 	end
 end
 

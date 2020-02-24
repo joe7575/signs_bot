@@ -2,7 +2,13 @@
 local MP = minetest.get_modpath("signs_bot")
 local S, NS = dofile(MP.."/intllib.lua")
 
-if minetest.global_exists("techage") then
+local CYCLE_TIME = 4
+
+if minetest.get_modpath("techage") then
+	
+	local Cable = techage.ElectricCable
+	local power = techage.power
+	
 	signs_bot.register_inventory({"techage:chest_ta2", "techage:chest_ta3", "techage:chest_ta4"}, {
 		allow_inventory_put = function(pos, stack, player_name)
 			return not minetest.is_protected(pos, player_name)
@@ -77,34 +83,17 @@ if minetest.global_exists("techage") then
 		end,
 	})
 	
-	local Cable = techage.ElectricCable
-	local power = techage.power
-
-	local PWR_NEEDED = 8
-
-	local function on_power(pos, mem)
-		mem.power_available = true
-		if not mem.running then
-			signs_bot.infotext(pos, S("charging"))
-		end
-	end
-
-	local function on_nopower(pos, mem)
-		mem.power_available = false
-		if not mem.running then
-			signs_bot.infotext(pos, S("no power"))
-		end
-	end
 
     -- Bot in the box
 	function signs_bot.while_charging(pos, mem)
 		mem.capa = mem.capa or 0
-		if mem.power_available then
+		mem.cycle = (mem.cyle or 0) + 1
+		if mem.power_available and mem.cycle % CYCLE_TIME== 0 then
 			if mem.capa < signs_bot.MAX_CAPA then
-				power.consumer_alive(pos, mem)
-				mem.capa = mem.capa + 4
+				local taken = power.consumer_alive(pos, Cable, CYCLE_TIME)
+				mem.capa = mem.capa + taken
 			else
-				power.consumer_stop(pos, mem)
+				power.consumer_stop(pos, Cable)
 				minetest.get_node_timer(pos):stop()
 				mem.charging = false
 				if not mem.running then
@@ -113,17 +102,62 @@ if minetest.global_exists("techage") then
 				return false
 			end
 		else
-			power.consumer_start(pos, mem, 2, PWR_NEEDED)
+			power.consumer_start(pos, Cable, CYCLE_TIME)
 		end
 		return true
 	end
+	
+	Cable:add_secondary_node_names({"signs_bot:box"})
 
-	techage.power.enrich_node({"signs_bot:box"}, {
-		power_network  = Cable,
-		conn_sides = {"L", "U", "D", "F", "B"},
-		on_power = on_power,
-		on_nopower = on_nopower,
-	})
+	techage.register_node({"signs_bot:box"}, {
+		on_pull_item = function(pos, in_dir, num)
+			local meta = minetest.get_meta(pos)
+			local inv = meta:get_inventory()
+			return techage.get_items(inv, "main", num)
+		end,
+		on_push_item = function(pos, in_dir, stack)
+			local meta = minetest.get_meta(pos)
+			local inv = meta:get_inventory()
+			return techage.put_items(inv, "main", stack)
+		end,
+		on_unpull_item = function(pos, in_dir, stack)
+			local meta = minetest.get_meta(pos)
+			local inv = meta:get_inventory()
+			return techage.put_items(inv, "main", stack)
+		end,
+		
+		on_recv_message = function(pos, topic, payload)
+			local mem = tubelib2.get_mem(pos)
+			if topic == "state" then
+				if mem.error then
+					return "fault"
+				elseif mem.running then
+					if mem.curr_cmnd == "stop" then
+						return "standby"
+					elseif mem.blocked then
+						return "blocked"
+					else
+						return "running"
+					end
+				elseif mem.capa then
+					if mem.capa <= 0 then
+						return "nopower"
+					elseif mem.capa >= signs_bot.MAX_CAPA then
+						return "stopped"
+					else
+						return "loading"
+					end
+				else
+					return "stopped"
+				end
+			elseif topic == "fuel" then
+				return signs_bot.percent_value(signs_bot.MAX_CAPA, mem.capa)
+			else
+				return "unsupported"
+			end
+		end,
+	})	
+	
 else
 	function signs_bot.formspec_battery_capa(max_capa, current_capa)
 		return ""

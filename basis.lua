@@ -23,8 +23,9 @@ local I,_ = dofile(MP.."/intllib.lua")
 
 local lib = signs_bot.lib
 
+signs_bot.MAX_CAPA = 150
+
 local CYCLE_TIME = 1
-signs_bot.MAX_CAPA = 600
 
 local function in_range(val, min, max)
 	if val < min then return min end
@@ -367,6 +368,18 @@ if minetest.global_exists("techage") then
 	drop = ""
 end
 
+local function on_power(pos)
+	local mem = tubelib2.get_mem(pos)
+	mem.power_available = true
+	signs_bot.infotext(pos, S("charging"))
+end
+
+local function on_nopower(pos)
+	local mem = tubelib2.get_mem(pos)
+	mem.power_available = false
+	signs_bot.infotext(pos, S("no power"))
+end
+
 minetest.register_node("signs_bot:box", {
 	description = I("Signs Bot Box"),
 	stack_max = 1,
@@ -404,7 +417,7 @@ minetest.register_node("signs_bot:box", {
 		meta:set_int("err_code", 0)
 		signs_bot.infotext(pos, I("stopped"))
 		if minetest.global_exists("techage") then
-			techage.power.after_place_node(pos)
+			techage.ElectricCable:after_place_node(pos)
 			mem.capa = get_capa(itemstack)
 		end
 	end,
@@ -435,22 +448,39 @@ minetest.register_node("signs_bot:box", {
 	
 	after_dig_node = function(pos, oldnode, oldmetadata, digger)
 		if minetest.global_exists("techage") then
-			techage.power.after_dig_node(pos, oldnode)
+			techage.ElectricCable:after_dig_node(pos)
 			local mem = tubelib2.get_mem(pos)
 			set_capa(pos, oldnode, digger, mem.capa)
 		end
 		tubelib2.del_mem(pos)
 	end,
 
-	after_tube_update = function(node, pos, out_dir, peer_pos, peer_in_dir) 
-		if minetest.global_exists("techage") then
-			techage.power.after_tube_update2(node, pos, out_dir, peer_pos, peer_in_dir)
-		end
-	end,
-	
 	on_timer = node_timer,
 	on_rotate = screwdriver.disallow,
 	
+	-- techage power definition
+	tubelib2_on_update2 = function(pos, outdir, tlib2, node) 
+		if minetest.global_exists("techage") then
+			techage.power.update_network(pos, outdir, tlib2)
+		end
+	end,
+	networks = {
+		ele1 = {
+			sides = {L=1, U=1, D=1, F=1, B=1},
+			on_power = function(pos)
+				local mem = tubelib2.get_mem(pos)
+				mem.power_available = true
+				signs_bot.infotext(pos, S("charging"))
+			end,
+			on_nopower = function(pos)
+				local mem = tubelib2.get_mem(pos)
+				mem.power_available = false
+				signs_bot.infotext(pos, S("no power"))
+			end,
+		}
+	},
+	-- techage power definition
+
 	drop = drop,
 	paramtype2 = "facedir",
 	is_ground_content = false,
@@ -479,57 +509,6 @@ else
 	})
 end
 
-if minetest.global_exists("techage") then
-	techage.register_node({"signs_bot:box"}, {
-		on_pull_item = function(pos, in_dir, num)
-			local meta = minetest.get_meta(pos)
-			local inv = meta:get_inventory()
-			return techage.get_items(inv, "main", num)
-		end,
-		on_push_item = function(pos, in_dir, stack)
-			local meta = minetest.get_meta(pos)
-			local inv = meta:get_inventory()
-			return techage.put_items(inv, "main", stack)
-		end,
-		on_unpull_item = function(pos, in_dir, stack)
-			local meta = minetest.get_meta(pos)
-			local inv = meta:get_inventory()
-			return techage.put_items(inv, "main", stack)
-		end,
-		
-		on_recv_message = function(pos, topic, payload)
-			local mem = tubelib2.get_mem(pos)
-			if topic == "state" then
-				if mem.error then
-					return "fault"
-				elseif mem.running then
-					if mem.curr_cmnd == "stop" then
-						return "standby"
-					elseif mem.blocked then
-						return "blocked"
-					else
-						return "running"
-					end
-				elseif mem.capa then
-					if mem.capa <= 0 then
-						return "nopower"
-					elseif mem.capa >= signs_bot.MAX_CAPA then
-						return "stopped"
-					else
-						return "loading"
-					end
-				else
-					return "stopped"
-				end
-			elseif topic == "fuel" then
-				return signs_bot.percent_value(signs_bot.MAX_CAPA, mem.capa)
-			else
-				return "unsupported"
-			end
-		end,
-	})	
-	
-end
 
 if minetest.get_modpath("doc") then
 	doc.add_entry("signs_bot", "box", {
