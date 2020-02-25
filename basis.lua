@@ -23,7 +23,8 @@ local I,_ = dofile(MP.."/intllib.lua")
 
 local lib = signs_bot.lib
 
-signs_bot.MAX_CAPA = 150
+signs_bot.MAX_CAPA = 600
+local PWR_NEEDED = 8
 
 local CYCLE_TIME = 1
 
@@ -215,7 +216,7 @@ function signs_bot.stop_robot(base_pos, mem)
 	if mem.signal_request ~= true then
 		mem.running = false
 		if minetest.global_exists("techage") then
-			minetest.get_node_timer(base_pos):start(2)
+			minetest.get_node_timer(base_pos):start(4)
 			mem.charging = true
 		else
 			minetest.get_node_timer(base_pos):stop()
@@ -467,16 +468,18 @@ minetest.register_node("signs_bot:box", {
 	networks = {
 		ele1 = {
 			sides = {L=1, U=1, D=1, F=1, B=1},
+			ntype = "con1",
 			on_power = function(pos)
 				local mem = tubelib2.get_mem(pos)
 				mem.power_available = true
-				signs_bot.infotext(pos, S("charging"))
+				signs_bot.infotext(pos, I("charging"))
 			end,
 			on_nopower = function(pos)
 				local mem = tubelib2.get_mem(pos)
 				mem.power_available = false
-				signs_bot.infotext(pos, S("no power"))
+				signs_bot.infotext(pos, I("no power"))
 			end,
+			nominal = PWR_NEEDED,
 		}
 	},
 	-- techage power definition

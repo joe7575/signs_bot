@@ -87,8 +87,7 @@ if minetest.get_modpath("techage") then
     -- Bot in the box
 	function signs_bot.while_charging(pos, mem)
 		mem.capa = mem.capa or 0
-		mem.cycle = (mem.cyle or 0) + 1
-		if mem.power_available and mem.cycle % CYCLE_TIME== 0 then
+		if mem.power_available then
 			if mem.capa < signs_bot.MAX_CAPA then
 				local taken = power.consumer_alive(pos, Cable, CYCLE_TIME)
 				mem.capa = mem.capa + taken
