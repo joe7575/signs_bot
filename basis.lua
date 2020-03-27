@@ -218,6 +218,7 @@ function signs_bot.stop_robot(base_pos, mem)
 		if minetest.global_exists("techage") then
 			minetest.get_node_timer(base_pos):start(4)
 			mem.charging = true
+			mem.power_available = false
 		else
 			minetest.get_node_timer(base_pos):stop()
 			mem.charging = false

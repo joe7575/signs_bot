@@ -3,13 +3,12 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#: doc.lua
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-02 15:59+0100\n"
-"PO-Revision-Date: 2019-10-10 22:40+0200\n"
+"POT-Creation-Date: 2020-03-27 18:17+0100\n"
+"PO-Revision-Date: 2020-03-27 18:19+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -41,7 +40,7 @@ msgstr "Konfig."
 
 #: basis.lua
 msgid "Preassign slots items"
-msgstr "Vorbelegte Inventar Gegenstände"
+msgstr "Vorbelegungen"
 
 #: basis.lua
 msgid "Back"
@@ -57,7 +56,7 @@ msgstr "läuft"
 
 #: basis.lua
 msgid "charging"
-msgstr ""
+msgstr "aufladen"
 
 #: basis.lua
 msgid "stopped"
@@ -66,6 +65,10 @@ msgstr "gestoppt"
 #: basis.lua
 msgid "Signs Bot Box"
 msgstr "Signs Bot Box"
+
+#: basis.lua
+msgid "no power"
+msgstr "kein Strom"
 
 #: basis.lua
 msgid "The Box is the housing of the bot."
@@ -490,9 +493,8 @@ msgid "Use the pattern sign to mark the pattern."
 msgstr "Benutze das Vorlage-Zeichen und die Vorlage zu markieren."
 
 #: cmd_place.lua
-#, fuzzy
 msgid "Error: Position protected"
-msgstr "Fehler: Die Position ist geschützt"
+msgstr "Fehler: Position geschützt"
 
 #: cmd_place.lua
 msgid ""
@@ -547,9 +549,8 @@ msgstr ""
 "eigenen Inventar (1--8)."
 
 #: cmd_place.lua
-#, fuzzy
 msgid "Error: No free inventory space"
-msgstr "Fehler: Zeichen Inventar ist leer"
+msgstr "Fehler: Kein freier Inventarplatz"
 
 #: cmd_place.lua
 msgid ""
@@ -1087,118 +1088,138 @@ msgid ""
 "The following applies to all commands that are used to place items in the "
 "bot inventory, like:"
 msgstr ""
+"Das folgende gilt für alle Kommandos, um Items in das Roboter Inventar zu "
+"legen, wie:"
 
 #: doc.lua
 msgid "- take_item <num> <slot>"
-msgstr ""
+msgstr "- take_item <num> <slot>"
 
 #: doc.lua
 msgid "- pickup_items <slot>"
-msgstr ""
+msgstr "- pickup_items <slot>"
 
 #: doc.lua
-#, fuzzy
 msgid "- trash_sign <slot>"
-msgstr "Vorbelegte Inventar Gegenstände"
+msgstr "- trash_sign <slot>"
 
 #: doc.lua
 msgid "- harvest <slot>"
-msgstr ""
+msgstr "- harvest <slot>"
 
 #: doc.lua
 msgid "- dig_front <slot> <lvl>"
-msgstr ""
+msgstr "- dig_front <slot> <lvl>"
 
 #: doc.lua
 msgid "- dig_left <slot> <lvl>"
-msgstr ""
+msgstr "- dig_left <slot> <lvl>"
 
 #: doc.lua
 msgid "- dig_right <slot> <lvl>"
-msgstr ""
+msgstr "- dig_right <slot> <lvl>"
 
 #: doc.lua
 msgid "- dig_below <slot> <lvl>"
-msgstr ""
+msgstr "- dig_below <slot> <lvl>"
 
 #: doc.lua
 msgid "- dig_above <slot> <lvl>"
-msgstr ""
+msgstr "- dig_above <slot> <lvl>"
 
 #: doc.lua
 msgid ""
 "If no slot or slot 0 was specified with the command (case A), all 8 slots of "
 "the bot inventory "
 msgstr ""
+"Wurde beim Kommando kein Slot oder Slot 0 angegeben (Fall A), werden "
+"nacheinander alle"
 
 #: doc.lua
 msgid ""
 "are checked one after the other. If a slot was specified (case B), only this "
 "slot is checked."
 msgstr ""
+"8 Slots des Bot Inventars geprüft, Wurde ein Slot angegeben (Fall B), wird "
+"nur dieser geprüft."
 
 #: doc.lua
 msgid ""
 "In both cases the following applies: If the slot is preconfigured and fits "
 "the item, "
 msgstr ""
+"In beiden Fällen gilt: Ist der Slot vorkonfiguriert und passt das Item dazu, "
+"oder ist der Slot"
 
 #: doc.lua
 msgid ""
 "or if the slot is not configured and empty, or is only partially filled with "
 "the item type "
 msgstr ""
+"nicht konfiguriert und leer, oder mit dem Item-Typ (das hinzu gefügt werden "
+"soll) nur"
 
 #: doc.lua
 msgid "(which should be added), then the items are added."
-msgstr ""
+msgstr "teilweise gefüllt, dann werden die Items hinzugefügt."
 
 #: doc.lua
 msgid ""
 "If not all items can be added, the remaining slots will be tried out in case "
 "A."
 msgstr ""
+"Können nicht alle Items hinzugefügt werden, werden im Falle A die restlichen "
+"Slots weiter durchprobiert."
 
 #: doc.lua
 msgid "Anything that could not be added to your own inventory goes back."
-msgstr ""
+msgstr "Was nicht dem eigenen Inventar hinzugefügt werden konnte, geht zurück."
 
 #: doc.lua
 msgid ""
 "The following applies to all commands that are used to take items from the "
 "bot inventory, like:"
 msgstr ""
+"Das folgende gilt für alle Kommandos, um Items aus dem Roboter Inventar zu "
+"nehmen, wie:"
 
 #: doc.lua
 msgid "- add_item <num> <slot>"
-msgstr ""
+msgstr "- add_item <num> <slot>"
 
 #: doc.lua
 msgid ""
 "It doesn't matter whether a slot is configured or not. The bot takes the "
 "first stack that "
 msgstr ""
+"Hier ist es egal, ob ein Slot konfiguriert ist, oder nicht. Der Bot nimmt "
+"den ersten Stack, den "
 
 #: doc.lua
 msgid "it can find from its own inventory and tries to use it."
 msgstr ""
+"er finden kann, aus dem eigenen Inventar und versucht diesen zu nutzen."
 
 #: doc.lua
 msgid ""
 "If a slot is specified, it only takes this, if no slot has been specified, "
 "it checks all of "
 msgstr ""
+"Ist ein Slot angegeben, nimmt er nur diesen, wurde kein Slot angegeben, "
+"prüft er alle "
 
 #: doc.lua
 msgid ""
 "them one after the other, starting from slot 1 until it finds something."
 msgstr ""
+"nacheinander, von Slot 1 beginnend, bis er etwas findet. Ist die gefundene "
+"Anzahl kleiner als "
 
 #: doc.lua
 msgid ""
 "If the number found is smaller than requested, he tries to take the rest out "
 "of any slot."
-msgstr ""
+msgstr "gefordert, versucht er den Rest aus irgend einem Slot zu nehmen."
 
 #: doc.lua
 msgid "Signs Bot"
@@ -1226,7 +1247,7 @@ msgstr "Verbinde Sensor mit Aktor"
 
 #: doc.lua
 msgid "Bot inventory behavior"
-msgstr ""
+msgstr "Verhalten beim Roboter Inventar"
 
 #: duplicator.lua
 msgid "Input:"

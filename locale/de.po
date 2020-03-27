@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-02 16:00+0100\n"
-"PO-Revision-Date: 2020-02-21 22:08+0100\n"
+"POT-Creation-Date: 2020-03-27 18:20+0100\n"
+"PO-Revision-Date: 2020-03-27 18:24+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -44,7 +44,7 @@ msgstr "Vorbelegungen"
 
 #: basis.lua
 msgid "Back"
-msgstr "zurück"
+msgstr "Zurück"
 
 #: basis.lua
 msgid "Robot Box "
@@ -65,6 +65,10 @@ msgstr "gestoppt"
 #: basis.lua
 msgid "Signs Bot Box"
 msgstr "Signs Bot Box"
+
+#: basis.lua
+msgid "no power"
+msgstr "kein Strom"
 
 #: basis.lua
 msgid "The Box is the housing of the bot."
@@ -284,7 +288,7 @@ msgstr "Zeichen 'Farming'"
 msgid "Used to harvest and seed a 3x3 field."
 msgstr "Benötigt um ein 3x3 Feld zu ernten und wieder zu sähen."
 
-#: cmd_farming.lua
+#: cmd_farming.lua cmd_flowers.lua
 msgid "Place the sign in front of the field."
 msgstr "Platziere das Zeichen vor das Feld."
 
@@ -294,9 +298,31 @@ msgstr ""
 "Das Saatgut, dass gesät werden soll, muss sich an der 1. Position im "
 "Inventar befinden."
 
-#: cmd_farming.lua
+#: cmd_farming.lua cmd_flowers.lua
 msgid "When finished, the bot turns."
 msgstr "Der Roboter dreht um, wenn er fertig ist."
+
+#: cmd_flowers.lua
+msgid ""
+"Cutting flowers\n"
+"in front of the robot\n"
+"on a 3x3 field."
+msgstr ""
+"Schneide Blumen\n"
+"in einem 3x3 großem Feld\n"
+"vor dem Roboter."
+
+#: cmd_flowers.lua
+msgid "Sign \"flowers\""
+msgstr "Zeichen \"Blumen\""
+
+#: cmd_flowers.lua
+msgid "Sign 'flowers'"
+msgstr "Zeichen 'Blumen'"
+
+#: cmd_flowers.lua
+msgid "Used to cut flowers on a 3x3 field."
+msgstr "Benötigt um ein 3x3 Blumenfeld zu ernten."
 
 #: cmd_item.lua
 msgid ""
@@ -1129,7 +1155,7 @@ msgid ""
 "the bot inventory "
 msgstr ""
 "Wurde beim Kommando kein Slot oder Slot 0 angegeben (Fall A), werden "
-"nacheinander alle"
+"nacheinander alle "
 
 #: doc.lua
 msgid ""
@@ -1145,7 +1171,7 @@ msgid ""
 "the item, "
 msgstr ""
 "In beiden Fällen gilt: Ist der Slot vorkonfiguriert und passt das Item dazu, "
-"oder ist der Slot"
+"oder ist der Slot "
 
 #: doc.lua
 msgid ""
@@ -1153,7 +1179,7 @@ msgid ""
 "the item type "
 msgstr ""
 "nicht konfiguriert und leer, oder mit dem Item-Typ (das hinzu gefügt werden "
-"soll) nur"
+"soll) nur "
 
 #: doc.lua
 msgid "(which should be added), then the items are added."
@@ -1287,7 +1313,7 @@ msgstr "Zeichen Kopierer"
 
 #: duplicator.lua
 msgid "Sign \"user\""
-msgstr "\"Benutzer\" Zeichen"
+msgstr "Zeichen \"Benutzer\""
 
 #: duplicator.lua
 msgid "Sign \"blank\""

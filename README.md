@@ -90,6 +90,7 @@ For all Inventory commands applies: If the inventory stack specified by <slot> i
     pickup_items <slot>       - pickup items (in a 3x3 field)
     drop_items <num> <slot>   - drop items
     harvest                   - harvest a 3x3 field (farming)
+    cutting                   - cut a 3x3 flower field
     sow_seed <slot>           - a 3x3 field sowing / planting
     plant_sapling <slot>      - plant a sapling in front of the robot
     pattern                   - save the blocks behind the shield (up to 5x3x3) as template
@@ -97,7 +98,7 @@ For all Inventory commands applies: If the inventory stack specified by <slot> i
     punch_cart                - Punch a rail cart to start it
 
 ### License
-Copyright (C) 2019 Joachim Stolberg  
+Copyright (C) 2019-2020 Joachim Stolberg  
 Code: Licensed under the GNU GPL version 3 or later. See LICENSE.txt  
 
 
@@ -121,4 +122,5 @@ optional: farming redo, node_io, doc, techage, minecart
 - 2019-08-09  v0.12  * bug fixes
 - 2019-08-14  v0.13  * Signs Bot Chest recipe added, Minecart signs added
 - 2020-01-02  v1.00  * bot inventory filter added, documentation enhanced
+- 2020-03-27  v1.01  * flower command and sign added
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-02 16:00+0100\n"
+"POT-Creation-Date: 2020-03-27 18:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,6 +63,10 @@ msgstr ""
 
 #: basis.lua
 msgid "Signs Bot Box"
+msgstr ""
+
+#: basis.lua
+msgid "no power"
 msgstr ""
 
 #: basis.lua
@@ -256,7 +260,7 @@ msgstr ""
 msgid "Used to harvest and seed a 3x3 field."
 msgstr ""
 
-#: cmd_farming.lua
+#: cmd_farming.lua cmd_flowers.lua
 msgid "Place the sign in front of the field."
 msgstr ""
 
@@ -264,8 +268,27 @@ msgstr ""
 msgid "The seed to be placed has to be in the first inventory slot of the bot."
 msgstr ""
 
-#: cmd_farming.lua
+#: cmd_farming.lua cmd_flowers.lua
 msgid "When finished, the bot turns."
+msgstr ""
+
+#: cmd_flowers.lua
+msgid ""
+"Cutting flowers\n"
+"in front of the robot\n"
+"on a 3x3 field."
+msgstr ""
+
+#: cmd_flowers.lua
+msgid "Sign \"flowers\""
+msgstr ""
+
+#: cmd_flowers.lua
+msgid "Sign 'flowers'"
+msgstr ""
+
+#: cmd_flowers.lua
+msgid "Used to cut flowers on a 3x3 field."
 msgstr ""
 
 #: cmd_item.lua
