@@ -125,7 +125,7 @@ if minetest.get_modpath("techage") then
 			return techage.put_items(inv, "main", stack)
 		end,
 		
-		on_recv_message = function(pos, topic, payload)
+		on_recv_message = function(pos, src, topic, payload)
 			local mem = tubelib2.get_mem(pos)
 			if topic == "state" then
 				if mem.error then
@@ -149,7 +149,7 @@ if minetest.get_modpath("techage") then
 				else
 					return "stopped"
 				end
-			elseif topic == "fuel" then
+			elseif topic == "load" then
 				return signs_bot.percent_value(signs_bot.MAX_CAPA, mem.capa)
 			else
 				return "unsupported"
