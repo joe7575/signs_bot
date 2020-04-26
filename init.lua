@@ -14,6 +14,14 @@
 
 signs_bot = {}
 
+-- Version for compatibility checks, see readme.md/history
+signs_bot.version = 1.01
+
+if minetest.global_exists("techage") and techage.version < 0.06 then
+	minetest.log("error", "[signs_bot] Signs Bot requires techage version 0.06 or newer!")
+	return
+end
+
 signs_bot.S = minetest.get_translator("signs_bot")
 local MP = minetest.get_modpath("signs_bot")
 dofile(MP.."/doc.lua")
