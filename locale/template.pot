@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-30 14:59+0200\n"
+"POT-Creation-Date: 2020-05-30 15:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1323,4 +1323,36 @@ msgstr ""
 
 #: logic_and.lua
 msgid "Signal is sent, if all input signals are received."
+msgstr ""
+
+#: interpreter.lua
+msgid "Maximum programm size exceeded"
+msgstr ""
+
+#: interpreter.lua
+msgid "Parameter error"
+msgstr ""
+
+#: interpreter.lua
+msgid "Command error"
+msgstr ""
+
+#: interpreter.lua
+msgid "'repeat' missing"
+msgstr ""
+
+#: interpreter.lua
+msgid "'end' missing"
+msgstr ""
+
+#: interpreter.lua
+msgid "'return' missing"
+msgstr ""
+
+#: interpreter.lua
+msgid "'call' missing"
+msgstr ""
+
+#: interpreter.lua
+msgid "Checked and approved"
 msgstr ""

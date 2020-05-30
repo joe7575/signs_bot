@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-29 22:04+0200\n"
-"PO-Revision-Date: 2020-05-30 09:27+0200\n"
+"POT-Creation-Date: 2020-05-30 14:59+0200\n"
+"PO-Revision-Date: 2020-05-30 15:01+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -762,6 +762,26 @@ msgstr "Kommandos:"
 #: commands.lua
 msgid "unknown command"
 msgstr "unbekanntes Kommando"
+
+#: commands.lua
+msgid "start of a 'repeat..end' block"
+msgstr "Anfang eines 'repeat..end' Blocks"
+
+#: commands.lua
+msgid "end command of a 'repeat..end' block"
+msgstr "Ende Kommando eines 'repeat..end' Blocks"
+
+#: commands.lua
+msgid "call a subroutine (with 'return' statement)"
+msgstr "Aufruf einer Unterfunktion (mit 'return' Anweisung)"
+
+#: commands.lua
+msgid "return from a subroutine"
+msgstr "Rückkehr von einer Unterfunktion"
+
+#: commands.lua
+msgid "jump to a label"
+msgstr "Sprung zu einer Marke"
 
 #: commands.lua
 #, fuzzy
