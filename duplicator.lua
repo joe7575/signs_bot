@@ -194,7 +194,7 @@ minetest.register_node("signs_bot:sign_user", {
 			nmeta:set_string("sign_name", imeta:get_string("description"))
 		end
 		nmeta:set_string("infotext", nmeta:get_string("sign_name"))
-		local text = signs_bot.get_comment_text(nmeta:get_string("sign_name"), imeta:get_string("cmnd"))
+		local text = nmeta:get_string("sign_name").."\n"..imeta:get_string("cmnd")
 		nmeta:set_string("formspec", formspec_user(text))
 	end,
 	

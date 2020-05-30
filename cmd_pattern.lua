@@ -115,25 +115,27 @@ end
 			
 signs_bot.register_botcommand("pattern", {
 	mod = "copy",
-	params = "",	
+	params = "",
+	num_param = 0,
 	description = I("Store pattern to be cloned."),
 	cmnd = function(base_pos, mem)
 		mem.pttrn_pos = lib.next_pos(mem.robot_pos, mem.robot_param2)
 		mem.pttrn_param2 = mem.robot_param2
-		return lib.DONE
+		return signs_bot.DONE
 	end,
 })
 
 signs_bot.register_botcommand("copy", {
 	mod = "copy",
-	params = "<size> <lvl>",	
+	params = "<size> <lvl>",
+	num_param = 2,
 	description = I("Copy the nodes from\n"..
 		"the stored pattern position\n"..
 		"<size> is: 3x1, 3x2, 3x3,\n"..
 		"5x1, 5x2, 5x3 (wide x deep)\n"..
 		"<lvl> pattern level offset (0..4)"),
 	check = function(size, lvl)
-		lvl = tonumber(lvl or 0)
+		lvl = tonumber(lvl) or 0
 		if not lvl or lvl < 0 or lvl > 4 then
 			return false
 		end
@@ -143,7 +145,7 @@ signs_bot.register_botcommand("copy", {
 		if not mem.pttrn_pos then return true end
 		if not mem.steps then
 			local x,z = size:match('(%d)x(%d)')
-			lvl = tonumber(lvl or 0)
+			lvl = tonumber(lvl) or 0
 			mem.x_size = tonumber(x)
 			mem.z_size = tonumber(z)
 			mem.src_pos_tbl = signs_bot.lib.gen_position_table(mem.pttrn_pos, mem.pttrn_param2, x, z, lvl)
@@ -154,9 +156,9 @@ signs_bot.register_botcommand("copy", {
 		pattern_copy(base_pos, mem)
 		if mem.steps > #mem.src_pos_tbl then
 			mem.steps = nil
-			return lib.DONE
+			return signs_bot.DONE
 		end
-		return lib.BUSY
+		return signs_bot.BUSY
 	end,
 })
 

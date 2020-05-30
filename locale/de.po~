@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-27 18:17+0100\n"
-"PO-Revision-Date: 2020-03-27 18:19+0100\n"
+"POT-Creation-Date: 2020-05-29 22:04+0200\n"
+"PO-Revision-Date: 2020-05-30 09:27+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -44,7 +44,7 @@ msgstr "Vorbelegungen"
 
 #: basis.lua
 msgid "Back"
-msgstr "zurück"
+msgstr "Zurück"
 
 #: basis.lua
 msgid "Robot Box "
@@ -64,7 +64,7 @@ msgstr "gestoppt"
 
 #: basis.lua
 msgid "Signs Bot Box"
-msgstr "Signs Bot Box"
+msgstr "Roboter Box"
 
 #: basis.lua
 msgid "no power"
@@ -288,7 +288,7 @@ msgstr "Zeichen 'Farming'"
 msgid "Used to harvest and seed a 3x3 field."
 msgstr "Benötigt um ein 3x3 Feld zu ernten und wieder zu sähen."
 
-#: cmd_farming.lua
+#: cmd_farming.lua cmd_flowers.lua
 msgid "Place the sign in front of the field."
 msgstr "Platziere das Zeichen vor das Feld."
 
@@ -298,9 +298,31 @@ msgstr ""
 "Das Saatgut, dass gesät werden soll, muss sich an der 1. Position im "
 "Inventar befinden."
 
-#: cmd_farming.lua
+#: cmd_farming.lua cmd_flowers.lua
 msgid "When finished, the bot turns."
 msgstr "Der Roboter dreht um, wenn er fertig ist."
+
+#: cmd_flowers.lua
+msgid ""
+"Cutting flowers\n"
+"in front of the robot\n"
+"on a 3x3 field."
+msgstr ""
+"Schneide Blumen\n"
+"in einem 3x3 großem Feld\n"
+"vor dem Roboter."
+
+#: cmd_flowers.lua
+msgid "Sign \"flowers\""
+msgstr "Zeichen \"Blumen\""
+
+#: cmd_flowers.lua
+msgid "Sign 'flowers'"
+msgstr "Zeichen 'Blumen'"
+
+#: cmd_flowers.lua
+msgid "Used to cut flowers on a 3x3 field."
+msgstr "Benötigt um ein 3x3 Blumenfeld zu ernten."
 
 #: cmd_item.lua
 msgid ""
@@ -742,20 +764,9 @@ msgid "unknown command"
 msgstr "unbekanntes Kommando"
 
 #: commands.lua
-msgid "Parameter error in line "
-msgstr "Parameter Fehler in Zeile "
-
-#: commands.lua
-msgid "Command error in line "
-msgstr "Kommandozeilen Fehler in Zeile "
-
-#: commands.lua
-msgid "Checked and approved"
-msgstr "Geprüft und genehmigt"
-
-#: commands.lua
+#, fuzzy
 msgid ""
-"Move the robot 1..99 steps forward\n"
+"Move the robot 1..999 steps forward\n"
 "without paying attention to any signs.\n"
 "Up and down movements also become\n"
 "counted as steps."
@@ -766,11 +777,14 @@ msgstr ""
 "als Schritte gezählt."
 
 #: commands.lua
+#, fuzzy
 msgid ""
 "Walk until a sign or obstacle is\n"
 "reached. Then continue with the next command.\n"
 "When a sign has been reached, \n"
-"it is executed as sub-process."
+"the current program is ended\n"
+"and the bot executes the\n"
+"new program from the sign"
 msgstr ""
 "Gehe bis ein Zeichen oder Hindernis\n"
 "erreicht wurde. Führe dann das nächste\n"
@@ -1133,7 +1147,7 @@ msgid ""
 "the bot inventory "
 msgstr ""
 "Wurde beim Kommando kein Slot oder Slot 0 angegeben (Fall A), werden "
-"nacheinander alle"
+"nacheinander alle "
 
 #: doc.lua
 msgid ""
@@ -1149,7 +1163,7 @@ msgid ""
 "the item, "
 msgstr ""
 "In beiden Fällen gilt: Ist der Slot vorkonfiguriert und passt das Item dazu, "
-"oder ist der Slot"
+"oder ist der Slot "
 
 #: doc.lua
 msgid ""
@@ -1157,7 +1171,7 @@ msgid ""
 "the item type "
 msgstr ""
 "nicht konfiguriert und leer, oder mit dem Item-Typ (das hinzu gefügt werden "
-"soll) nur"
+"soll) nur "
 
 #: doc.lua
 msgid "(which should be added), then the items are added."
@@ -1291,7 +1305,7 @@ msgstr "Zeichen Kopierer"
 
 #: duplicator.lua
 msgid "Sign \"user\""
-msgstr "\"Benutzer\" Zeichen"
+msgstr "Zeichen \"Benutzer\""
 
 #: duplicator.lua
 msgid "Sign \"blank\""
@@ -1564,6 +1578,15 @@ msgstr "Signal UND"
 #: logic_and.lua
 msgid "Signal is sent, if all input signals are received."
 msgstr "Signal wird gesendet, wenn all Eingangssignale empfangen wurden."
+
+#~ msgid "Parameter error in line "
+#~ msgstr "Parameter Fehler in Zeile "
+
+#~ msgid "Command error in line "
+#~ msgstr "Kommandozeilen Fehler in Zeile "
+
+#~ msgid "Checked and approved"
+#~ msgstr "Geprüft und genehmigt"
 
 #~ msgid ""
 #~ "Take <num> items from a chest like node\n"

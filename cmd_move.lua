@@ -133,14 +133,15 @@ end
 
 signs_bot.register_botcommand("backward", {
 	mod = "move",
-	params = "",	
+	params = "",
+	num_param = 0,
 	description = I("Move the robot one step back"),
 	cmnd = function(base_pos, mem)
 		local new_pos = backward_robot(mem)
 		if new_pos then  -- not blocked?
 			mem.robot_pos = new_pos
 		end
-		return lib.DONE
+		return signs_bot.DONE
 	end,
 })
 
@@ -157,32 +158,35 @@ end
 
 signs_bot.register_botcommand("turn_left", {
 	mod = "move",
-	params = "",	
+	params = "",
+	num_param = 0,
 	description = I("Turn the robot to the left"),
 	cmnd = function(base_pos, mem)
 		mem.robot_param2 = turn_robot(mem.robot_pos, mem.robot_param2, "L")
-		return lib.DONE
+		return signs_bot.DONE
 	end,
 })
 
 signs_bot.register_botcommand("turn_right", {
 	mod = "move",
-	params = "",	
+	params = "",
+	num_param = 0,
 	description = I("Turn the robot to the right"),
 	cmnd = function(base_pos, mem)
 		mem.robot_param2 = turn_robot(mem.robot_pos, mem.robot_param2, "R")
-		return lib.DONE
+		return signs_bot.DONE
 	end,
 })
 
 signs_bot.register_botcommand("turn_around", {
 	mod = "move",
-	params = "",	
+	params = "",
+	num_param = 0,
 	description = I("Turn the robot around"),
 	cmnd = function(base_pos, mem)
 		mem.robot_param2 = turn_robot(mem.robot_pos, mem.robot_param2, "R")
 		mem.robot_param2 = turn_robot(mem.robot_pos, mem.robot_param2, "R")
-		return lib.DONE
+		return signs_bot.DONE
 	end,
 })
 
@@ -211,14 +215,15 @@ end
 
 signs_bot.register_botcommand("move_up", {
 	mod = "move",
-	params = "",	
+	params = "",
+	num_param = 0,
 	description = I("Move the robot upwards"),
 	cmnd = function(base_pos, mem)
 		local new_pos = robot_up(mem.robot_pos, mem.robot_param2)
 		if new_pos then  -- not blocked?
 			mem.robot_pos = new_pos
 		end
-		return lib.DONE
+		return signs_bot.DONE
 	end,
 })
 
@@ -244,23 +249,25 @@ end
 
 signs_bot.register_botcommand("move_down", {
 	mod = "move",
-	params = "",	
+	params = "",
+	num_param = 0,
 	description = I("Move the robot down"),
 	cmnd = function(base_pos, mem)
 		local new_pos = robot_down(mem.robot_pos, mem.robot_param2)
 		if new_pos then  -- not blocked?
 			mem.robot_pos = new_pos
 		end
-		return lib.DONE
+		return signs_bot.DONE
 	end,
 })
 
 signs_bot.register_botcommand("pause", {
 	mod = "move",
-	params = "<sec>",	
+	params = "<sec>",
+	num_param = 1,
 	description = I("Stop the robot for <sec> seconds\n(1..9999)"),
 	check = function(sec)
-		sec = tonumber(sec or 1)
+		sec = tonumber(sec) or 1
 		return sec and sec > 0 and sec < 10000
 	end,
 	cmnd = function(base_pos, mem, sec)
@@ -270,29 +277,31 @@ signs_bot.register_botcommand("pause", {
 		mem.steps = mem.steps - 1
 		if mem.steps == 0 then
 			mem.steps = nil
-			return lib.DONE
+			return signs_bot.DONE
 		end
-		return lib.BUSY
+		return signs_bot.BUSY
 	end,
 })
 
 signs_bot.register_botcommand("stop", {
 	mod = "move",
-	params = "",	
+	params = "",
+	num_param = 0,
 	description = I("Stop the robot."),
 	cmnd = function(base_pos, mem, slot)
-		return lib.DONE
+		return signs_bot.DONE
 	end,
 })
 
 signs_bot.register_botcommand("turn_off", {
 	mod = "move",
-	params = "",	
+	params = "",
+	num_param = 0,
 	description = I("Turn the robot off\n"..
 		"and put it back in the box."),
 	cmnd = function(base_pos, mem)
 		signs_bot.stop_robot(base_pos, mem)
-		return lib.TURN_OFF
+		return signs_bot.TURN_OFF
 	end,
 })
 

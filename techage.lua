@@ -52,6 +52,7 @@ if minetest.get_modpath("techage") then
 	signs_bot.register_botcommand("ignite", {
 		mod = "techage",
 		params = "",	
+		num_param = 0,
 		description = S("Ignite the techage charcoal lighter"),
 		cmnd = function(base_pos, mem)
 			local pos = signs_bot.lib.dest_pos(mem.robot_pos, mem.robot_param2, {0})
@@ -67,17 +68,18 @@ if minetest.get_modpath("techage") then
 	signs_bot.register_botcommand("low_batt", {
 		mod = "techage",
 		params = "<percent>",	
+		num_param = 1,
 		description = S("Turn the bot off if the\nbattery power is below the\ngiven value (1..99)"),
 		check = function(val)
-			val = tonumber(val or 5)
+			val = tonumber(val) or 5
 			return val and val > 0 and val < 100
 		end,
 		cmnd = function(base_pos, mem, val)
-			val = tonumber(val or 5)
+			val = tonumber(val) or 5
 			local pwr = percent_value(signs_bot.MAX_CAPA, mem.capa)
 			if pwr < val then
 				signs_bot.stop_robot(base_pos, mem)
-				return signs_bot.lib.TURN_OFF
+				return signs_bot.TURN_OFF
 			end
 			return true
 		end,

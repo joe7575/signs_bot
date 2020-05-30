@@ -96,10 +96,9 @@ local function append_line(pos, meta, line)
 end	
 	
 local function check_and_store(pos, meta, fields)	
-	local text = lib.trim_text(fields.cmnd)
 	meta:set_string("sign_name", fields.name)
-	meta:set_string("signs_bot_cmnd", text)
-	check_syntax(pos, meta, text)
+	meta:set_string("signs_bot_cmnd", fields.cmnd)
+	check_syntax(pos, meta, fields.cmnd)
 	meta:set_string("formspec", formspec1(meta))
 	meta:set_string("infotext", meta:get_string("sign_name"))
 end
@@ -212,26 +211,27 @@ local function place_sign(base_pos, robot_pos, param2, slot)
 			local sign = get_inv_sign(base_pos, slot)
 			if sign then
 				lib.place_sign(pos1, sign, param2)
-				return lib.DONE
+				return signs_bot.DONE
 			else
-				return lib.ERROR, I("Error: Signs inventory empty")
+				return signs_bot.ERROR, I("Error: Signs inventory empty")
 			end
 		end
 	end
-	return lib.ERROR, I("Error: Position protected or occupied")
+	return signs_bot.ERROR, I("Error: Position protected or occupied")
 end
 
 signs_bot.register_botcommand("place_sign", {
 	mod = "sign",
-	params = "<slot>",	
+	params = "<slot>",
+	num_param = 1,
 	description = I("Place a sign in front of the robot\ntaken from the signs inventory\n"..
 		"<slot> is the inventory slot (1..6)"),
 	check = function(slot)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot) or 1
 		return slot and slot > 0 and slot < 7
 	end,
 	cmnd = function(base_pos, mem, slot)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot) or 1
 		return place_sign(base_pos, mem.robot_pos, mem.robot_param2, slot)
 	end,
 })
@@ -243,26 +243,27 @@ local function place_sign_behind(base_pos, robot_pos, param2, slot)
 			local sign = get_inv_sign(base_pos, slot)
 			if sign then
 				lib.place_sign(pos1, sign, param2)
-				return lib.DONE
+				return signs_bot.DONE
 			else
-				return lib.ERROR, I("Error: Signs inventory empty")
+				return signs_bot.ERROR, I("Error: Signs inventory empty")
 			end
 		end
 	end
-	return lib.ERROR, I("Error: Position protected or occupied")
+	return signs_bot.ERROR, I("Error: Position protected or occupied")
 end
 
 signs_bot.register_botcommand("place_sign_behind", {
 	mod = "sign",
-	params = "<slot>",	
+	params = "<slot>",
+	num_param = 1,
 	description = I("Place a sign behind the robot\ntaken from the signs inventory\n"..
 		"<slot> is the inventory slot (1..6)"),
 	check = function(slot)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot) or 1
 		return slot and slot > 0 and slot < 7
 	end,
 	cmnd = function(base_pos, mem, slot)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot) or 1
 		return place_sign_behind(base_pos, mem.robot_pos, mem.robot_param2, slot)
 	end,
 })
@@ -274,7 +275,7 @@ local function dig_sign(base_pos, robot_pos, param2, slot)
 	local err_code = meta:get_int("err_code")
 	local name = meta:get_string("sign_name")
 	if cmnd == "" then
-		return lib.ERROR, I("Error: No sign available")
+		return signs_bot.ERROR, I("Error: No sign available")
 	end
 	if lib.not_protected(base_pos, pos1) then
 		local node = lib.get_node_lvm(pos1)
@@ -286,25 +287,26 @@ local function dig_sign(base_pos, robot_pos, param2, slot)
 		minetest.remove_node(pos1)
 		if not put_inv_sign(base_pos, slot, sign) then	
 			signs_bot.lib.drop_items(robot_pos, sign)
-			return lib.ERROR, I("Error: Signs inventory slot is occupied")
+			return signs_bot.ERROR, I("Error: Signs inventory slot is occupied")
 		end
-		return lib.DONE
+		return signs_bot.DONE
 	end
-	return lib.ERROR, I("Error: Position is protected")
+	return signs_bot.ERROR, I("Error: Position is protected")
 end
 
 signs_bot.register_botcommand("dig_sign", {
 	mod = "sign",
-	params = "<slot>",	
+	params = "<slot>",
+	num_param = 1,
 	description = I("Dig the sign in front of the robot\n"..
 		"and add it to the signs inventory.\n"..
 		"<slot> is the inventory slot (1..6)"),
 	check = function(slot)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot) or 1
 		return slot and slot > 0 and slot < 7
 	end,
 	cmnd = function(base_pos, mem, slot)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot) or 1
 		return dig_sign(base_pos, mem.robot_pos, mem.robot_param2, slot)
 	end,
 })
@@ -313,30 +315,31 @@ local function trash_sign(base_pos, robot_pos, param2, slot)
 	local pos1 = lib.dest_pos(robot_pos, param2, {0})
 	local cmnd = M(pos1):get_string("signs_bot_cmnd")
 	if cmnd == "" then
-		return lib.ERROR, I("Error: No sign available")
+		return signs_bot.ERROR, I("Error: No sign available")
 	end
 	if lib.not_protected(base_pos, pos1) then
 		local node = lib.get_node_lvm(pos1)
 		local sign = ItemStack("signs_bot:sign_cmnd")
 		minetest.remove_node(pos1)
 		signs_bot.bot_inv_put_item(base_pos, slot, sign)
-		return lib.DONE
+		return signs_bot.DONE
 	end
-	return lib.ERROR, I("Error: Position is protected")
+	return signs_bot.ERROR, I("Error: Position is protected")
 end
 
 signs_bot.register_botcommand("trash_sign", {
 	mod = "sign",
 	params = "<slot>",	
+	num_param = 1,
 	description = I("Dig the sign in front of the robot\n"..
 		"and add the cleared sign to\nthe item iventory.\n"..
 		"<slot> is the inventory slot (1..8)"),
 	check = function(slot)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot) or 1
 		return slot and slot > 0 and slot < 9
 	end,
 	cmnd = function(base_pos, mem, slot)
-		slot = tonumber(slot or 1)
+		slot = tonumber(slot) or 1
 		return trash_sign(base_pos, mem.robot_pos, mem.robot_param2, slot)
 	end,
 })

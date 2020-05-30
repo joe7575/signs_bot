@@ -68,7 +68,8 @@ end
 
 signs_bot.register_botcommand("cutting", {
 	mod = "farming",
-	params = "",	
+	params = "",
+	num_param = 0,
 	description = I("Cutting flowers\nin front of the robot\non a 3x3 field."),
 	cmnd = function(base_pos, mem)
 		if not mem.steps then
@@ -79,9 +80,9 @@ signs_bot.register_botcommand("cutting", {
 		harvesting(base_pos, mem)
 		if mem.steps > #mem.pos_tbl then
 			mem.steps = nil
-			return lib.DONE
+			return signs_bot.DONE
 		end
-		return lib.BUSY
+		return signs_bot.BUSY
 	end,
 })
 

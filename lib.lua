@@ -28,12 +28,6 @@ local Face2Dir = {[0]=
 	{x=0,  y=1,  z=0}
 }
 
--- Possible command results
-signs_bot.lib.BUSY = 1
-signs_bot.lib.DONE = 2
-signs_bot.lib.ERROR = 3
-signs_bot.lib.TURN_OFF = 4
-
 -- allowed for digging
 local NotSoSimpleNodes = {}
 

@@ -185,16 +185,16 @@ end
 local function reset_robot(pos, mem)
 	mem.robot_param2 = (minetest.get_node(pos).param2 + 1) % 4
 	mem.robot_pos = lib.next_pos(pos, mem.robot_param2, 1)
-	mem.steps = nil
 	local pos_below = {x=mem.robot_pos.x, y=mem.robot_pos.y-1, z=mem.robot_pos.z}
 	signs_bot.place_robot(mem.robot_pos, pos_below, mem.robot_param2)	
 end
 
 local function start_robot(base_pos)
 	local mem = tubelib2.get_mem(base_pos)
+	mem.steps = nil
+	mem.script = "cond_move"
 	local meta = M(base_pos)
-	mem.lCmnd1 = {}
-	mem.lCmnd2 = {}
+	signs_bot.reset(base_pos, mem)
 	mem.running = true
 	mem.charging = false
 	mem.error = false

@@ -53,7 +53,7 @@ The copy function can be used to clone node cubes up to 5x3x3 nodes. There is th
 In-game help:
 The mod has an in-game help to all blocks and signs. Therefore, it is highly recommended that you have installed the mods 'doc' and 'unified_inventory'.
 
-Commands:
+### Commands:
 The commands are also all described as help in the "Sign command" node.
 All blocks or signs that are set are taken from the bot inventory.
 Any blocks or signs removed will be added back to the Bot Inventory.
@@ -97,6 +97,48 @@ For all Inventory commands applies: If the inventory stack specified by <slot> i
     copy <size>               - make a copy of "pattern". Size is e.g. 3x3 (see ingame help)
     punch_cart                - Punch a rail cart to start it
 
+#### Flow control commands
+
+    jump <label>    -- jump command, <label> is a word from the characters a-z or A-Z
+    <label>:        -- jump label / start of a function
+    return          -- return from a function
+    repeat <num>    -- start of a loop block, <num> is a number 1..999
+    end             -- end of a loop block
+    call <label>    -- call of a function (with return via the command 'return')
+    
+Example with a function at the beginning:
+
+    jump main       -- jump to the label 'main'
+    
+    foo:            -- starting point of the function with the name 'foo'
+      cmnd ...
+      cmnd ...
+    return          -- end of 'foo'. Jump back
+    
+    main:           -- main program
+      cmnd ...
+      repeat 10     -- repeat all commands up to 'end' 10 times
+        cmnd ...
+        call foo    -- call the subfunction 'foo'
+        cmnd ...
+      end           -- end of the 'repeat' loop
+    exit            -- end of the program
+
+Or alternatively with the function at the end:
+
+    cmnd ...
+    repeat 10       -- repeat all commands up to 'end' 10 times
+      cmnd ...
+      call foo      -- call the subfunction 'foo'
+      cmnd ...
+    end             -- end of the 'repeat' loop
+    exit            -- end of the program
+    
+    foo:            -- starting point of the function with the name 'foo'
+      cmnd ...
+      cmnd ...
+    return          -- end of 'foo'. Jump back
+
 ### License
 Copyright (C) 2019-2020 Joachim Stolberg  
 Code: Licensed under the GNU GPL version 3 or later. See LICENSE.txt  
@@ -123,4 +165,5 @@ optional: farming redo, node_io, doc, techage, minecart
 - 2019-08-14  v0.13  * Signs Bot Chest recipe added, Minecart signs added
 - 2020-01-02  v1.00  * bot inventory filter added, documentation enhanced
 - 2020-03-27  v1.01  * flower command and sign added
+- 2020-03-30  v1.02  * Program flow control commands added
 

@@ -89,6 +89,7 @@ end
 signs_bot.register_botcommand("take_item", {
 	mod = "item",
 	params = "<num> <slot>",	
+	num_param = 2,
 	description = I("Take <num> items from a chest like node\nand put it into the item inventory.\n"..
 		"<slot> is the inventory slot (1..8) or 0 for any one"),
 	check = function(num, slot)
@@ -106,13 +107,14 @@ signs_bot.register_botcommand("take_item", {
 		num = tonumber(num) or 1
 		slot = tonumber(slot) or 0
 		signs_bot.robot_take(base_pos, mem.robot_pos, mem.robot_param2, num, slot)
-		return lib.DONE
+		return signs_bot.DONE
 	end,
 })
 	
 signs_bot.register_botcommand("add_item", {
 	mod = "item",
 	params = "<num> <slot>",	
+	num_param = 2,
 	description = I("Add <num> items to a chest like node\ntaken from the item inventory.\n"..
 		"<slot> is the inventory slot (1..8) or 0 for any one"),
 	check = function(num, slot)
@@ -130,13 +132,14 @@ signs_bot.register_botcommand("add_item", {
 		num = tonumber(num) or 1
 		slot = tonumber(slot) or 0
 		signs_bot.robot_put(base_pos, mem.robot_pos, mem.robot_param2, num, slot)
-		return lib.DONE
+		return signs_bot.DONE
 	end,
 })
 	
 signs_bot.register_botcommand("add_fuel", {
 	mod = "item",
-	params = "<num> <slot>",	
+	params = "<num> <slot>",
+	num_param = 2,
 	description = I("Add <num> fuel to a furnace like node\ntaken from the item inventory.\n"..
 		"<slot> is the inventory slot (1..8) or 0 for any one"),
 	check = function(num, slot)
@@ -154,37 +157,40 @@ signs_bot.register_botcommand("add_fuel", {
 		num = tonumber(num) or 1
 		slot = tonumber(slot) or 0
 		signs_bot.robot_put_fuel(base_pos, mem.robot_pos, mem.robot_param2, num, slot)
-		return lib.DONE
+		return signs_bot.DONE
 	end,
 })
 
 signs_bot.register_botcommand("cond_take_item", {
 	mod = "item",
-	params = "<num> <slot>",	
+	params = "<num> <slot>",
+	num_param = 2,
 	description = I("deprecated, use bot inventory configuration instead"),
 	check = function(num, slot)
 		return false 
 	end,
 	cmnd = function(base_pos, mem, num, slot)
-		return lib.DONE
+		return signs_bot.DONE
 	end,
 })
 	
 signs_bot.register_botcommand("cond_add_item", {
 	mod = "item",
-	params = "<num> <slot>",	
+	params = "<num> <slot>",
+	num_param = 2,
 	description = I("deprecated, use bot inventory configuration instead"),
 	check = function(num, slot)
 		return false 
 	end,
 	cmnd = function(base_pos, mem, num, slot)
-		return lib.DONE
+		return signs_bot.DONE
 	end,
 })
 
 signs_bot.register_botcommand("pickup_items", {
 	mod = "item",
-	params = "<slot>",	
+	params = "<slot>",
+	num_param = 1,
 	description = I("Pick up all objects\n"..
 		"in a 3x3 field.\n"..
 		"<slot> is the inventory slot (1..8) or 0 for any one"),
@@ -205,13 +211,14 @@ signs_bot.register_botcommand("pickup_items", {
 				end
 			end
 		end
-		return lib.DONE
+		return signs_bot.DONE
 	end,
 })
 	
 signs_bot.register_botcommand("drop_items", {
 	mod = "item",
-	params = "<num> <slot>",	
+	params = "<num> <slot>",
+	num_param = 2,
 	description = I("Drop items in front of the bot.\n"..
 		"<slot> is the inventory slot (1..8) or 0 for any one"),
 	check = function(num, slot)
@@ -231,13 +238,14 @@ signs_bot.register_botcommand("drop_items", {
 		local pos = lib.dest_pos(mem.robot_pos, mem.robot_param2, {0})
 		local items = signs_bot.bot_inv_take_item(base_pos, slot, num)
 		minetest.add_item(pos, items)
-		return lib.DONE
+		return signs_bot.DONE
 	end,
 })
 
 signs_bot.register_botcommand("punch_cart", {
 	mod = "item",
-	params = "",	
+	params = "",
+	num_param = 0,
 	description = I("Punch a rail cart to start it"),
 	cmnd = function(base_pos, mem)
 		local pos = lib.dest_pos(mem.robot_pos, mem.robot_param2, {0})
@@ -250,7 +258,7 @@ signs_bot.register_botcommand("punch_cart", {
 				break -- start only one cart
 			end
 		end
-		return lib.DONE
+		return signs_bot.DONE
 	end,
 })
 

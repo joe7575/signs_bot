@@ -63,7 +63,8 @@ end
 
 signs_bot.register_botcommand("sow_seed", {
 	mod = "farming",
-	params = "<slot>",	
+	params = "<slot>",
+	num_param = 1,
 	description = I("Sow farming seeds\nin front of the robot"),
 	check = function(slot)
 		slot = tonumber(slot)
@@ -79,9 +80,9 @@ signs_bot.register_botcommand("sow_seed", {
 		planting(base_pos, mem, slot)
 		if mem.steps > #mem.pos_tbl then
 			mem.steps = nil
-			return lib.DONE
+			return signs_bot.DONE
 		end
-		return lib.BUSY
+		return signs_bot.BUSY
 	end,
 })
 
@@ -107,7 +108,8 @@ end
 
 signs_bot.register_botcommand("harvest", {
 	mod = "farming",
-	params = "",	
+	params = "",
+	num_param = 0,
 	description = I("Harvest farming products\nin front of the robot\non a 3x3 field."),
 	cmnd = function(base_pos, mem)
 		if not mem.steps then
@@ -118,9 +120,9 @@ signs_bot.register_botcommand("harvest", {
 		harvesting(base_pos, mem)
 		if mem.steps > #mem.pos_tbl then
 			mem.steps = nil
-			return lib.DONE
+			return signs_bot.DONE
 		end
-		return lib.BUSY
+		return signs_bot.BUSY
 	end,
 })
 
@@ -144,7 +146,8 @@ end
 
 signs_bot.register_botcommand("plant_sapling", {
 	mod = "farming",
-	params = "<slot>",	
+	params = "<slot>",
+	num_param = 1,
 	description = I("Plant a sapling\nin front of the robot"),
 	check = function(slot)
 		slot = tonumber(slot)
@@ -153,7 +156,7 @@ signs_bot.register_botcommand("plant_sapling", {
 	cmnd = function(base_pos, mem, slot)
 		slot = tonumber(slot)
 		plant_sapling(base_pos, mem, slot)
-		return lib.DONE
+		return signs_bot.DONE
 	end,
 })
 

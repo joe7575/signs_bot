@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-27 18:20+0100\n"
-"PO-Revision-Date: 2020-03-27 18:24+0100\n"
+"POT-Creation-Date: 2020-05-30 14:59+0200\n"
+"PO-Revision-Date: 2020-05-30 15:01+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -64,7 +64,7 @@ msgstr "gestoppt"
 
 #: basis.lua
 msgid "Signs Bot Box"
-msgstr "Signs Bot Box"
+msgstr "Roboter Box"
 
 #: basis.lua
 msgid "no power"
@@ -764,20 +764,29 @@ msgid "unknown command"
 msgstr "unbekanntes Kommando"
 
 #: commands.lua
-msgid "Parameter error in line "
-msgstr "Parameter Fehler in Zeile "
+msgid "start of a 'repeat..end' block"
+msgstr "Anfang eines 'repeat..end' Blocks"
 
 #: commands.lua
-msgid "Command error in line "
-msgstr "Kommandozeilen Fehler in Zeile "
+msgid "end command of a 'repeat..end' block"
+msgstr "Ende Kommando eines 'repeat..end' Blocks"
 
 #: commands.lua
-msgid "Checked and approved"
-msgstr "Geprüft und genehmigt"
+msgid "call a subroutine (with 'return' statement)"
+msgstr "Aufruf einer Unterfunktion (mit 'return' Anweisung)"
 
 #: commands.lua
+msgid "return from a subroutine"
+msgstr "Rückkehr von einer Unterfunktion"
+
+#: commands.lua
+msgid "jump to a label"
+msgstr "Sprung zu einer Marke"
+
+#: commands.lua
+#, fuzzy
 msgid ""
-"Move the robot 1..99 steps forward\n"
+"Move the robot 1..999 steps forward\n"
 "without paying attention to any signs.\n"
 "Up and down movements also become\n"
 "counted as steps."
@@ -788,11 +797,14 @@ msgstr ""
 "als Schritte gezählt."
 
 #: commands.lua
+#, fuzzy
 msgid ""
 "Walk until a sign or obstacle is\n"
 "reached. Then continue with the next command.\n"
 "When a sign has been reached, \n"
-"it is executed as sub-process."
+"the current program is ended\n"
+"and the bot executes the\n"
+"new program from the sign"
 msgstr ""
 "Gehe bis ein Zeichen oder Hindernis\n"
 "erreicht wurde. Führe dann das nächste\n"
@@ -1586,6 +1598,15 @@ msgstr "Signal UND"
 #: logic_and.lua
 msgid "Signal is sent, if all input signals are received."
 msgstr "Signal wird gesendet, wenn all Eingangssignale empfangen wurden."
+
+#~ msgid "Parameter error in line "
+#~ msgstr "Parameter Fehler in Zeile "
+
+#~ msgid "Command error in line "
+#~ msgstr "Kommandozeilen Fehler in Zeile "
+
+#~ msgid "Checked and approved"
+#~ msgstr "Geprüft und genehmigt"
 
 #~ msgid ""
 #~ "Take <num> items from a chest like node\n"

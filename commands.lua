@@ -20,14 +20,34 @@ local M = minetest.get_meta
 -- Load support for intllib.
 local MP = minetest.get_modpath("signs_bot")
 local I,_ = dofile(MP.."/intllib.lua")
+local ci = dofile(MP.."/interpreter.lua")
 
 local lib = signs_bot.lib
+
+-- Possible command results
+signs_bot.BUSY = ci.BUSY
+signs_bot.DONE = ci.DONE
+signs_bot.NEW = ci.NEW
+signs_bot.ERROR = ci.ERROR
+signs_bot.TURN_OFF = ci.TURN_OFF
 
 local tCommands = {}
 local SortedKeys = {}
 local SortedMods = {}
 local tMods = {}
 local ExpensiveCmnds = {}
+
+function signs_bot.steps(mem, first, last)
+	if not mem.steps then
+		mem.steps = first - 1
+	end
+	mem.steps = mem.steps + 1
+	if mem.steps >= last then
+		mem.steps = nil
+		return ci.DONE, last
+	end
+	return ci.BUSY, mem.steps
+end
 
 --
 -- Command register API function
@@ -45,6 +65,9 @@ function signs_bot.register_botcommand(name, def)
 	end
 	local idx = #SortedKeys[def.mod] + 1
 	SortedKeys[def.mod][idx] = name
+	if def.num_param and def.cmnd then
+		ci.register_command(name, def.num_param, def.cmnd, def.check)
+	end
 end
 
 function signs_bot.get_commands()
@@ -71,51 +94,12 @@ function signs_bot.get_help_text(cmnd)
 end	
 	
 function signs_bot.check_commands(pos, text)
-	for idx,line in ipairs(string.split(text, "\n", true)) do
-		local b = line:byte(1)
-		if b and b ~= 45 and b ~= 32 then -- no blank or comment line?
-			local cmnd, param1, param2, param3 = unpack(string.split(line, " "))
-			if tCommands[cmnd] then
-				if tCommands[cmnd].check and not tCommands[cmnd].check(param1, param2) then
-					return false, I("Parameter error in line ")..idx..":\n"..
-					cmnd.." "..tCommands[cmnd].params, idx
-				end
-			else
-				return false, I("Command error in line ")..idx..":\n"..line, idx
-			end
-		end
-	end
-	return true, I("Checked and approved"), 0
-end
-
-function signs_bot.get_comment_text(title, text)
-	local tbl = {title, " "}
-	for idx,line in ipairs(string.split(text, "\n", true)) do
-		local b = line:byte(1)
-		if b and b == 45 then -- comment line?
-			local _,comment = unpack(string.split(line, " ", false, 1))
-			tbl[#tbl+1] = comment
-		end
-	end
-	return table.concat(tbl, "\n")
+	return ci.check_script(text)
 end
 
 --
--- Command interpreter
+-- Bot Commands
 --
-local function debug(mem, cmnd)
-	print("\nDebug: cmnd = "..cmnd)
-	if next(mem.lCmnd1) then
-		print("lCmnd1 = "..table.concat(mem.lCmnd1, ","))
-	else
-		print("lCmnd1 = {}")
-	end
-	if next(mem.lCmnd2) then
-		print("lCmnd2 = "..table.concat(mem.lCmnd2, ","))
-	else
-		print("lCmnd2 = {}")
-	end
-end
 
 local function check_sign(pos, mem)
 	local meta = M(pos)
@@ -157,26 +141,6 @@ local function scan_surrounding(mem)
 	return false
 end
 
-local function load_sign_code(meta, mem)
-	local cmnd = meta:get_string("signs_bot_cmnd")
-	-- read code
-	local tbl = {}
-	for _,s in ipairs(string.split(cmnd, "\n")) do
-		local b = s:byte(1)
-		if b ~= 45 and b ~= 32 then -- no blank or comment line?
-			tbl[#tbl+1] = s
-		end
-	end
-	-- "forground" or "background" job?
-	if next(mem.lCmnd1) then
-		mem.lCmnd2 = tbl
-		-- remove the "cond_move"
-		table.remove(mem.lCmnd1, 1)
-	else
-		mem.lCmnd1 = tbl
-	end
-end
-
 local function activate_sensor(pos, param2)
 	local pos1 = lib.next_pos(pos, param2)
 	local node = lib.get_node_lvm(pos1)
@@ -190,45 +154,10 @@ local function activate_sensor(pos, param2)
 	end
 end
 
-local function cond_move(base_pos, mem)
-	local any_sensor, sign_pos = scan_surrounding(mem)
-	if not sign_pos then
-		local new_pos = signs_bot.move_robot(mem)
-		if new_pos then  -- not blocked?
-			mem.robot_pos = new_pos
-			if any_sensor then
-				activate_sensor(mem.robot_pos, (mem.robot_param2 + 1) % 4)
-				activate_sensor(mem.robot_pos, (mem.robot_param2 + 3) % 4)
-			end
-		else
-			return lib.DONE
-		end
-		return lib.BUSY
-	else
-		load_sign_code(M(sign_pos), mem)
-		return lib.BUSY  -- don't remove the currently added first cmnd
-	end
-end	
-
-local function uncond_move(base_pos, mem)
-	local any_sensor = scan_surrounding(mem)
-	local new_pos = signs_bot.move_robot(mem)
-	if new_pos then  -- not blocked?
-		mem.robot_pos = new_pos
-		if any_sensor then
-			activate_sensor(mem.robot_pos, (mem.robot_param2 + 1) % 4)
-			activate_sensor(mem.robot_pos, (mem.robot_param2 + 3) % 4)
-		end
-		mem.steps = mem.steps - 1
-		mem.blocked = false  -- for state requests
-	else
-		mem.blocked = true
-	end
-end	
-
 local function bot_error(base_pos, mem, err)
 	minetest.sound_play('signs_bot_error', {pos = base_pos})
 	minetest.sound_play('signs_bot_error', {pos = mem.robot_pos})
+	print(err)
 	signs_bot.infotext(base_pos, err)
 	mem.error = true
 	return false
@@ -247,71 +176,105 @@ local function power_consumption(mem, cmnd)
 end
 
 function signs_bot.run_next_command(base_pos, mem)
-	mem.lCmnd1 = mem.lCmnd1 or {} -- forground job
-	mem.lCmnd2 = mem.lCmnd2 or {} -- background job
-	local sts,res,err
-	local line = mem.lCmnd2[1] or mem.lCmnd1[1] or "cond_move"
-	local cmnd, param1, param2 = unpack(string.split(line, " "))
-	if not tCommands[cmnd] then
-		return bot_error(base_pos, mem, "Error: Invalid command")
-	end
-	--debug(mem, cmnd)
-	mem.curr_cmnd = cmnd -- for status message
-	sts,res,err = true, tCommands[cmnd].cmnd(base_pos, mem, param1, param2)
-	--sts,res,err = pcall(tCommands[cmnd].cmnd, base_pos, mem, param1, param2)
-	if not power_consumption(mem, cmnd) then 
+	local res, err = ci.run_script(base_pos, mem)
+	if res == ci.ERROR then
+		return bot_error(base_pos, mem, err)
+	elseif res == ci.EXIT then
 		signs_bot.stop_robot(base_pos, mem)
-		res = lib.TURN_OFF
+		return false
 	end
-	if not sts then
-		return bot_error(base_pos, mem, err)
+	if not power_consumption(mem) then 
+		signs_bot.stop_robot(base_pos, mem)
+		mem.bot_state = "nopower"
+		return bot_error(base_pos, mem, "No power")
 	end
-	if res == lib.ERROR and err then
-		return bot_error(base_pos, mem, err)
-	elseif res ~= lib.BUSY then
-		local _ = table.remove(mem.lCmnd2, 1) or table.remove(mem.lCmnd1, 1)
-	end
-	return res ~= lib.TURN_OFF
+	return true
 end
 
+function signs_bot.reset(base_pos, mem)
+	ci.reset_script(base_pos, mem)
+end
 
-local DESCR1 = I([[Move the robot 1..99 steps forward
-without paying attention to any signs.
-Up and down movements also become
-counted as steps.]])
+signs_bot.register_botcommand("repeat", {
+	mod = "core",
+	params = "<num>",	
+	description = I("start of a 'repeat..end' block"),
+})	
+
+signs_bot.register_botcommand("end", {
+	mod = "core",
+	params = "",	
+	description = I("end command of a 'repeat..end' block"),
+})	
+
+signs_bot.register_botcommand("call", {
+	mod = "core",
+	params = "<label>",	
+	description = I("call a subroutine (with 'return' statement)"),
+})	
+
+signs_bot.register_botcommand("return", {
+	mod = "core",
+	params = "",	
+	description = I("return from a subroutine"),
+})	
+
+signs_bot.register_botcommand("jump", {
+	mod = "core",
+	params = "<label>",	
+	description = I("jump to a label"),
+})	
+
+local function move(mem, any_sensor)
+	local new_pos = signs_bot.move_robot(mem)
+	if new_pos then  -- not blocked?
+		mem.robot_pos = new_pos
+		if any_sensor then
+			activate_sensor(mem.robot_pos, (mem.robot_param2 + 1) % 4)
+			activate_sensor(mem.robot_pos, (mem.robot_param2 + 3) % 4)
+		end
+	end
+end
 
 signs_bot.register_botcommand("move", {
 	mod = "move",
 	params = "<steps>",	
-	description = DESCR1,
+	num_param = 1,
+	description = I([[Move the robot 1..999 steps forward
+without paying attention to any signs.
+Up and down movements also become
+counted as steps.]]),
 	check = function(steps)
-		steps = tonumber(steps or "1")
-		return steps ~= nil and steps > 0 and steps < 100
+		steps = tonumber(steps) or 1
+		return steps > 0 and steps < 1000
 	end,
 	cmnd = function(base_pos, mem, steps)
-		if not mem.steps then
-			mem.steps = tonumber(steps or 1)
-		end
-		uncond_move(base_pos, mem)
-		if mem.steps == 0 then
-			mem.steps = nil
-			return lib.DONE
-		end
-		return lib.BUSY
+		steps = tonumber(steps) or 1
+		local res, idx = signs_bot.steps(mem, 1, steps)
+		move(mem, scan_surrounding(mem))
+		return res
 	end,
 })
 
-local DESCR2 = I([[Walk until a sign or obstacle is
-reached. Then continue with the next command.
-When a sign has been reached, 
-it is executed as sub-process.]])
-
 signs_bot.register_botcommand("cond_move", {
 	mod = "move",
-	params = "",	
-	description = DESCR2,
+	params = "",
+	num_param = 0,
+	description = I([[Walk until a sign or obstacle is
+reached. Then continue with the next command.
+When a sign has been reached, 
+the current program is ended
+and the bot executes the
+new program from the sign]]),
 	cmnd = function(base_pos, mem)
-		return cond_move(base_pos, mem)
+		local any_sensor, sign_pos = scan_surrounding(mem)
+		if not sign_pos then
+			move(mem, any_sensor)
+			return ci.BUSY
+		else
+			mem.script = M(sign_pos):get_string("signs_bot_cmnd").."\ncond_move"
+			return ci.NEW
+		end
 	end,
 })
 

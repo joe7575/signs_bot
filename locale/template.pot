@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-27 18:20+0100\n"
+"POT-Creation-Date: 2020-05-30 14:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -619,20 +619,28 @@ msgid "unknown command"
 msgstr ""
 
 #: commands.lua
-msgid "Parameter error in line "
+msgid "start of a 'repeat..end' block"
 msgstr ""
 
 #: commands.lua
-msgid "Command error in line "
+msgid "end command of a 'repeat..end' block"
 msgstr ""
 
 #: commands.lua
-msgid "Checked and approved"
+msgid "call a subroutine (with 'return' statement)"
+msgstr ""
+
+#: commands.lua
+msgid "return from a subroutine"
+msgstr ""
+
+#: commands.lua
+msgid "jump to a label"
 msgstr ""
 
 #: commands.lua
 msgid ""
-"Move the robot 1..99 steps forward\n"
+"Move the robot 1..999 steps forward\n"
 "without paying attention to any signs.\n"
 "Up and down movements also become\n"
 "counted as steps."
@@ -643,7 +651,9 @@ msgid ""
 "Walk until a sign or obstacle is\n"
 "reached. Then continue with the next command.\n"
 "When a sign has been reached, \n"
-"it is executed as sub-process."
+"the current program is ended\n"
+"and the bot executes the\n"
+"new program from the sign"
 msgstr ""
 
 #: crop_sensor.lua
