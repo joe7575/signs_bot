@@ -41,8 +41,10 @@ end
 
 local function get_line_tokens(script)
 	local idx = 0
-	local lines = string.split(script or ""
-		, "\n", true)
+	script = script or ""
+	script = script:gsub("\r\n", "\n")
+	script = script:gsub("\r", "\n")
+	local lines = string.split(script, "\n", true)
     return function()
 		while idx < #lines do
 			idx = idx + 1
@@ -237,6 +239,10 @@ function api.check_script(script)
 			param1 = tonumber(param1) or param1
 			param2 = tonumber(param2) or param2
 			param3 = tonumber(param3) or param3
+			local num_param = (param1 and 1 or 0) + (param2 and 1 or 0) + (param3 and 1 or 0)
+			if tCmdDef[cmnd].num_param ~= num_param then
+				return false, I("Wrong number of parameters"), idx
+			end
 			if tCmdDef[cmnd].num_param > 0 and not tCmdDef[cmnd].check(param1, param2, param3) then
 				return false, I("Parameter error"), idx
 			end
