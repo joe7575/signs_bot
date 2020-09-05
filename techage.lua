@@ -62,7 +62,7 @@ if minetest.get_modpath("techage") then
 			and minetest.registered_nodes[node.name].on_ignite then
 				minetest.registered_nodes[node.name].on_ignite(pos)
 			end
-			return true
+			return signs_bot.DONE
 		end,
 	})
 
