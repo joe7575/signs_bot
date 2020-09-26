@@ -154,6 +154,14 @@ if minetest.get_modpath("techage") then
 				end
 			elseif topic == "load" then
 				return signs_bot.percent_value(signs_bot.MAX_CAPA, mem.capa)
+			elseif topic == "on" then
+				if not mem.running then
+					signs_bot.start_robot(pos)
+				end
+			elseif topic == "off" then
+				if mem.running then
+					signs_bot.stop_robot(pos, mem)
+				end
 			else
 				return "unsupported"
 			end
