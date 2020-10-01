@@ -95,7 +95,7 @@ local function harvesting(base_pos, mem)
 		if signs_bot.FarmingCrop[node.name] then
 			minetest.remove_node(pos)
 			-- Do not cache the result of get_node_drops; it is a probabilistic function!
-			local drops = minetest.get_node_drops(node)
+			local drops = minetest.get_node_drops(node.name)
 			for _,itemstring in ipairs(drops) do
 				bot_inv_put_item(base_pos, 0,  ItemStack(itemstring))
 			end
