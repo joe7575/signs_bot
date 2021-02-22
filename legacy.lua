@@ -63,3 +63,21 @@ signs_bot.register_inventory({"default:furnace", "default:furnace_active"}, {
 	},
 })
 
+signs_bot.register_inventory({"mobs:beehive"}, {
+	put = {
+		listname = "beehive",
+	},
+	take = {
+		listname = "beehive",
+	},
+})
+
+signs_bot.register_inventory({"xdecor:hive"}, {
+	put = {
+		listname = "honey",
+	},
+	take = {
+		listname = "honey",
+	},
+})
+

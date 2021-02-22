@@ -48,13 +48,19 @@ minetest.after(1, function()
 	end
 end)
 
+local function is_tree(name)
+	if minetest.get_item_group(name, "tree") == 1 then
+		return name
+	end
+end
+
 local function harvesting(base_pos, mem)
 	local pos = mem.pos_tbl and mem.pos_tbl[mem.steps]
 	mem.steps = (mem.steps or 1) + 1
 	
 	if pos and lib.not_protected(base_pos, pos) then
 		local node = minetest.get_node_or_nil(pos)
-		local drop = Flowers[node.name]
+		local drop = Flowers[node.name] or is_tree(node.name)
 		if drop then
 			minetest.remove_node(pos)
 			bot_inv_put_item(base_pos, 0,  ItemStack(drop))
@@ -66,7 +72,7 @@ signs_bot.register_botcommand("cutting", {
 	mod = "farming",
 	params = "",
 	num_param = 0,
-	description = I("Cutting flowers\nin front of the robot\non a 3x3 field."),
+	description = I("Cutting flowers and tree blocks\nin front of the robot\non a 3x3 field."),
 	cmnd = function(base_pos, mem)
 		if not mem.steps then
 			mem.pos_tbl = signs_bot.lib.gen_position_table(mem.robot_pos, mem.robot_param2, 3, 3, 0)
