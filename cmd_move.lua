@@ -272,7 +272,7 @@ signs_bot.register_botcommand("pause", {
 	end,
 	cmnd = function(base_pos, mem, sec)
 		if not mem.steps then
-			mem.steps = tonumber(sec or 1)
+			mem.steps = tonumber(sec) or 1
 		end
 		mem.steps = mem.steps - 1
 		if mem.steps == 0 then

@@ -149,7 +149,9 @@ local function formspec_cfg(pos, mem)
 	"list[context;filter;5,1;4,2;]"..
 	"label[5.3,3;5]label[6.3,3;6]label[7.3,3;7]label[8.3,3;8]"..
 	"button[0.2,1;1.5,1;back;"..I("Back").."]"..
-	"list[current_player;main;0.5,3.8;8,4;]"
+	"list[current_player;main;0.5,3.8;8,4;]"..
+	"listring[context;filter]"..
+	"listring[current_player;main]"
 end
 
 local function get_capa(itemstack)
