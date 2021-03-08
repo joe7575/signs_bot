@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-23 17:16+0200\n"
+"POT-Creation-Date: 2021-03-08 19:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -274,7 +274,7 @@ msgstr ""
 
 #: cmd_flowers.lua
 msgid ""
-"Cutting flowers\n"
+"Cutting flowers and tree blocks\n"
 "in front of the robot\n"
 "on a 3x3 field."
 msgstr ""
@@ -682,6 +682,12 @@ msgstr ""
 msgid ""
 "After you have placed the Signs Bot Box, you can start the bot by means of "
 "the 'On' button in the box menu."
+msgstr ""
+
+#: doc.lua
+msgid ""
+"If the bot returns to its box right away, you will likely need to charge it "
+"with electrical energy (techage) first."
 msgstr ""
 
 #: doc.lua
@@ -1353,4 +1359,18 @@ msgstr ""
 
 #: interpreter.lua
 msgid "Checked and approved"
+msgstr ""
+
+#: compost.lua
+msgid ""
+"Put 4 leaves into the compost barrel\n"
+"<slot> is the bot inventory slot (1..8)\n"
+"with the leaves."
+msgstr ""
+
+#: compost.lua
+msgid ""
+"Take a compost item from the barrel.\n"
+"<slot> (1..8 or 0 for the first free slot) is the bot\n"
+"slot for the compost item."
 msgstr ""

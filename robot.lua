@@ -79,7 +79,9 @@ minetest.register_node("signs_bot:robot", {
 	sunlight_propagates = true,
 	is_ground_content = false,
 	drop = "",
-	groups = {cracky=1, not_in_creative_inventory = 1},
+	groups = {cracky=1, not_in_creative_inventory = 1,
+		plant = 1, -- prevents the transformation from wet soil to soil
+	},
 	sounds = default.node_sound_metal_defaults(),
 })
 
@@ -116,6 +118,8 @@ minetest.register_node("signs_bot:robot_foot", {
 	sunlight_propagates = true,
 	is_ground_content = false,
 	drop = "",
-	groups = {cracky=1, not_in_creative_inventory = 1},
+	groups = {cracky=1, not_in_creative_inventory = 1,
+		plant = 1, -- prevents the transformation from wet soil to soil
+	},
 	sounds = default.node_sound_metal_defaults(),
 })

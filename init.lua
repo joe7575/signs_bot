@@ -60,5 +60,6 @@ dofile(MP.."/techage.lua")
 dofile(MP.."/timer.lua")
 dofile(MP.."/delayer.lua")
 dofile(MP.."/logic_and.lua")
+dofile(MP.."/compost.lua")
 
 dofile(MP.."/tool.lua")

@@ -130,6 +130,10 @@ if minetest.get_modpath("techage") then
 	Cable:add_secondary_node_names({"signs_bot:box"})
 
 	techage.register_node({"signs_bot:box"}, {
+		on_inv_request = function(pos, in_dir, access_type)
+			local meta = minetest.get_meta(pos)
+			return meta:get_inventory(), "main"
+		end,
 		on_pull_item = function(pos, in_dir, num)
 			local meta = minetest.get_meta(pos)
 			local inv = meta:get_inventory()
@@ -186,6 +190,10 @@ if minetest.get_modpath("techage") then
 		end,
 	})	
 	techage.register_node({"signs_bot:chest"}, {
+		on_inv_request = function(pos, in_dir, access_type)
+			local meta = minetest.get_meta(pos)
+			return meta:get_inventory(), "main"
+		end,
 		on_pull_item = function(pos, in_dir, num)
 			local meta = minetest.get_meta(pos)
 			local inv = meta:get_inventory()

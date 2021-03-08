@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-23 17:16+0200\n"
-"PO-Revision-Date: 2020-06-23 17:19+0200\n"
+"POT-Creation-Date: 2021-03-08 19:24+0100\n"
+"PO-Revision-Date: 2021-03-08 19:24+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: basis.lua
@@ -304,11 +304,11 @@ msgstr "Der Roboter dreht um, wenn er fertig ist."
 
 #: cmd_flowers.lua
 msgid ""
-"Cutting flowers\n"
+"Cutting flowers and tree blocks\n"
 "in front of the robot\n"
 "on a 3x3 field."
 msgstr ""
-"Schneide Blumen\n"
+"Schneide Blumen und Baumblöcke\n"
 "in einem 3x3 großem Feld\n"
 "vor dem Roboter."
 
@@ -843,6 +843,14 @@ msgid ""
 msgstr ""
 "Nachdem du die Roboter-Kiste platziert hast, kannst du den Roboter über den "
 "\"An\" Button im Kistenmenü starten."
+
+#: doc.lua
+msgid ""
+"If the bot returns to its box right away, you will likely need to charge it "
+"with electrical energy (techage) first."
+msgstr ""
+"Wenn der Bot sofort in seine Box zurückkehrt, musst du ihn wahrscheinlich "
+"zuerst mit elektrischer Energie (Techage) aufladen."
 
 #: doc.lua
 msgid ""
@@ -1626,6 +1634,29 @@ msgstr "Es fehlt ein 'end'"
 #: interpreter.lua
 msgid "Checked and approved"
 msgstr "Geprüft und genehmigt"
+
+#: compost.lua
+#, fuzzy
+msgid ""
+"Put 4 leaves into the compost barrel\n"
+"<slot> is the bot inventory slot (1..8)\n"
+"with the leaves."
+msgstr ""
+"Lege 4 Blätter in den Kompostbehälter.\n"
+"<slot> ist die Position im\n"
+"Bot Inventar (1..8) mit den Blättern."
+
+#: compost.lua
+msgid ""
+"Take a compost item from the barrel.\n"
+"<slot> (1..8 or 0 for the first free slot) is the bot\n"
+"slot for the compost item."
+msgstr ""
+"Nimm einen Kompostblock aus dem\n"
+"Kompostbehälter. <slot> ist die Position im\n"
+"Bot Inventar für den Block.\n"
+"Werte für <slot>: 0..8, oder 0 für die erste\n"
+"freie Inventarposition."
 
 #~ msgid "'return' missing"
 #~ msgstr "Es fehlt ein 'return'"

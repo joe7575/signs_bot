@@ -25,6 +25,7 @@ end
 
 local start_doc = table.concat({
 	I("After you have placed the Signs Bot Box, you can start the bot by means of the 'On' button in the box menu."),
+	I("If the bot returns to its box right away, you will likely need to charge it with electrical energy (techage) first."),
 	I("The bot then runs straight up until it reaches an obstacle (a step with two or more blocks up or down or a sign.)"),
 	I("If the bot first reaches a sign it will execute the commands on the sign."),
 	I("If the command(s) on the sign is e.g. 'turn_around', the bot turns and goes back."),
