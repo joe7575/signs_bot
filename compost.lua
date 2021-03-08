@@ -9,7 +9,6 @@ local function additem(mem, stack)
 	local pos = signs_bot.lib.next_pos(mem.robot_pos, mem.robot_param2)
 	local node = minetest.get_node(pos)
 	local ndef = minetest.registered_nodes[node.name]
-	print(2, dump(ndef))
 	if ndef.minecart_hopper_additem then
 		return ndef.minecart_hopper_additem(pos, stack)
 	end
@@ -17,7 +16,6 @@ local function additem(mem, stack)
 	pos = {x = pos.x, y = pos.y - 1, z = pos.z}
 	node = minetest.get_node(pos)
 	ndef = minetest.registered_nodes[node.name]
-	print(3, dump(ndef))
 	if ndef.minecart_hopper_additem then
 		return ndef.minecart_hopper_additem(pos, stack)
 	end
@@ -29,7 +27,6 @@ local function takeitem(mem)
 	local pos = signs_bot.lib.next_pos(mem.robot_pos, mem.robot_param2)
 	local node = minetest.get_node(pos)
 	local ndef = minetest.registered_nodes[node.name]
-	print(4, dump(ndef))
 	if ndef.minecart_hopper_takeitem then
 		return ndef.minecart_hopper_takeitem(pos, 1)
 	end
@@ -37,7 +34,6 @@ local function takeitem(mem)
 	pos = {x = pos.x, y = pos.y - 1, z = pos.z}
 	node = minetest.get_node(pos)
 	ndef = minetest.registered_nodes[node.name]
-	print(5, dump(ndef))
 	if ndef.minecart_hopper_takeitem then
 		return ndef.minecart_hopper_takeitem(pos, 1)
 	end
@@ -58,12 +54,10 @@ if  minetest.global_exists("signs_bot") then
 			return slot > 0 and slot < 9
 		end,
 		cmnd = function(base_pos, mem, slot)
-			print(1)
 			slot = tonumber(slot) or 0
 			local taken = signs_bot.bot_inv_take_item(base_pos, slot, NUM_LEAVES)
 			local leftover = additem(mem, taken)
 			if leftover and leftover:get_count() > 0 then
-				print(4)
 				signs_bot.bot_inv_put_item(base_pos, slot, leftover)
 			end
 			return signs_bot.DONE
