@@ -75,7 +75,7 @@ if  minetest.global_exists("signs_bot") then
 			slot = tonumber(slot) or 0
 			return slot >= 0 and slot < 9
 		end,
-		cmnd = function(base_pos, mem, num, slot)
+		cmnd = function(base_pos, mem, slot)
 			slot = tonumber(slot) or 0
 			local taken = takeitem(mem)
 			local leftover = signs_bot.bot_inv_put_item(base_pos, slot, taken)
