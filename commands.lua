@@ -157,9 +157,8 @@ end
 local function bot_error(base_pos, mem, err)
 	minetest.sound_play('signs_bot_error', {pos = base_pos})
 	minetest.sound_play('signs_bot_error', {pos = mem.robot_pos})
-	print(err)
 	signs_bot.infotext(base_pos, err)
-	mem.error = true
+	mem.error = err
 	return false
 end
 

@@ -63,7 +63,10 @@ local function harvesting(base_pos, mem)
 		local drop = Flowers[node.name] or is_tree(node.name)
 		if drop then
 			minetest.remove_node(pos)
-			bot_inv_put_item(base_pos, 0,  ItemStack(drop))
+			local leftover = bot_inv_put_item(base_pos, 0,  ItemStack(drop))
+			if leftover and leftover:get_count() > 0 then
+				signs_bot.lib.drop_items(mem.robot_pos, leftover)
+			end
 		end
 	end
 end

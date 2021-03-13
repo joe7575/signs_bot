@@ -112,12 +112,25 @@ local function preassigned_slots(pos)
 	return table.concat(tbl, "")
 end
 
+local function status(mem)
+	if mem.error then
+		return mem.error
+	end
+	if mem.running then
+		return I("running")
+	end
+	if mem.charging then
+		return I("charging")
+	end
+	return I("stopped")
+end	
+
 local function formspec(pos, mem)
 	mem.running = mem.running or false
 	local cmnd = mem.running and "stop;"..I("Off") or "start;"..I("On") 
 	local bot = not mem.running and "image[0.6,0;1,1;signs_bot_bot_inv.png]" or ""
 	local current_capa = mem.capa or (signs_bot.MAX_CAPA * 0.9)
-	return "size[9,7.6]"..
+	return "size[9,8.2]"..
 	default.gui_bg..
 	default.gui_bg_img..
 	default.gui_slots..
@@ -134,13 +147,14 @@ local function formspec(pos, mem)
 	"label[5.3,3;5]label[6.3,3;6]label[7.3,3;7]label[8.3,3;8]"..
 	"button[0.2,1;1.5,1;config;"..I("Config").."]"..
 	"button[0.2,2;1.5,1;"..cmnd.."]"..
-	"list[current_player;main;0.5,3.8;8,4;]"..
+	"label[1,3.6;"..status(mem).."]"..
+	"list[current_player;main;0.5,4.4;8,4;]"..
 	"listring[context;main]"..
 	"listring[current_player;main]"
 end
 
 local function formspec_cfg(pos, mem)
-	return "size[9,7.6]"..
+	return "size[9,8.2]"..
 	default.gui_bg..
 	default.gui_bg_img..
 	default.gui_slots..
@@ -149,7 +163,7 @@ local function formspec_cfg(pos, mem)
 	"list[context;filter;5,1;4,2;]"..
 	"label[5.3,3;5]label[6.3,3;6]label[7.3,3;7]label[8.3,3;8]"..
 	"button[0.2,1;1.5,1;back;"..I("Back").."]"..
-	"list[current_player;main;0.5,3.8;8,4;]"..
+	"list[current_player;main;0.5,4.4;8,4;]"..
 	"listring[context;filter]"..
 	"listring[current_player;main]"
 end

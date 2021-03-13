@@ -97,7 +97,10 @@ local function harvesting(base_pos, mem)
 			-- Do not cache the result of get_node_drops; it is a probabilistic function!
 			local drops = minetest.get_node_drops(node.name)
 			for _,itemstring in ipairs(drops) do
-				bot_inv_put_item(base_pos, 0,  ItemStack(itemstring))
+				local leftover = bot_inv_put_item(base_pos, 0,  ItemStack(itemstring))
+				if leftover and leftover:get_count() > 0 then
+					signs_bot.lib.drop_items(mem.robot_pos, leftover)
+				end
 			end
 		end
 	end

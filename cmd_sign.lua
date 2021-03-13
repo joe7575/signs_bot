@@ -175,6 +175,7 @@ minetest.register_node("signs_bot:sign_cmnd", {
 	
 	after_dig_node = lib.after_dig_sign_node,
 	paramtype = "light",
+	use_texture_alpha = "clip",
 	sunlight_propagates = true,
 	is_ground_content = false,
 	drop = "",
@@ -323,7 +324,10 @@ local function trash_sign(base_pos, robot_pos, param2, slot)
 		local node = tubelib2.get_node_lvm(pos1)
 		local sign = ItemStack("signs_bot:sign_cmnd")
 		minetest.remove_node(pos1)
-		signs_bot.bot_inv_put_item(base_pos, slot, sign)
+		local leftover = signs_bot.bot_inv_put_item(base_pos, slot, sign)
+		if leftover and leftover:get_count() > 0 then
+			signs_bot.lib.drop_items(robot_pos, leftover)
+		end
 		return signs_bot.DONE
 	end
 	return signs_bot.ERROR, I("Error: Position is protected")

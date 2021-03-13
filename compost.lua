@@ -2,7 +2,7 @@
 local MP = minetest.get_modpath("signs_bot")
 local I,_ = dofile(MP.."/intllib.lua")  
 
-local NUM_LEAVES = 4
+local NUM_LEAVES = 2
 
 -- we reuse the minecart hopper API here
 local function additem(mem, stack)
@@ -46,7 +46,7 @@ if  minetest.global_exists("signs_bot") then
 		mod = "compost",
 		params = "<slot>",
 		num_param = 1,
-		description = I("Put 4 leaves into the compost barrel\n"..
+		description = I("Put 2 leaves into the compost barrel\n"..
 			"<slot> is the bot inventory slot (1..8)\n"..
 			"with the leaves."),
 		check = function(slot)

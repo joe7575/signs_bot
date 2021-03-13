@@ -30,21 +30,23 @@ local function get_current_data(pointed_thing)
 end
 
 local function get_stored_data(placer)
-	local spos = placer:get_attribute("signs_bot_spos")
-	local name = placer:get_attribute("signs_bot_name")
+	local meta = placer:get_meta()
+	local spos = meta:get_string("signs_bot_spos")
+	local name = meta:get_string("signs_bot_name")
 	if spos ~= "" then
 		return minetest.string_to_pos(spos), name
 	end
 end
 	
 local function store_data(placer, pos, name)
+	local meta = placer:get_meta()
 	if pos then
 		local spos = minetest.pos_to_string(pos)
-		placer:set_attribute("signs_bot_spos", spos)
-		placer:set_attribute("signs_bot_name", name)
+		meta:set_string("signs_bot_spos", spos)
+		meta:set_string("signs_bot_name", name)
 	else
-		placer:set_attribute("signs_bot_spos", nil)
-		placer:set_attribute("signs_bot_name", nil)
+		meta:set_string("signs_bot_spos", nil)
+		meta:set_string("signs_bot_name", nil)
 	end
 end
 

@@ -428,6 +428,7 @@ minetest.register_node("signs_bot:torch", {
 		"group:bakedclay", "group:soil"},
 	paramtype = "light",
 	paramtype2 = "facedir",
+	use_texture_alpha = "clip",
 	sunlight_propagates = true,
 	walkable = false,
 	liquids_pointable = false,

@@ -100,6 +100,11 @@ local function allow_metadata_inventory()
 	return 0
 end
 
+local function can_dig(pos)
+	local inv = minetest.get_inventory({type="node", pos=pos})
+	return inv:is_empty("sign")
+end
+
 for idx = 1,4 do
 	local not_in_inv = idx == 1 and 0 or 1
 	minetest.register_node("signs_bot:changer"..idx, {
@@ -139,9 +144,11 @@ for idx = 1,4 do
 		allow_metadata_inventory_put = allow_metadata_inventory,
 		allow_metadata_inventory_take = allow_metadata_inventory,
 		on_punch = swap_node,
+		can_dig = can_dig,
 
 		on_rotate = screwdriver.disallow,
 		paramtype = "light",
+		use_texture_alpha = "clip",
 		sunlight_propagates = true,
 		paramtype2 = "facedir",
 		is_ground_content = false,
