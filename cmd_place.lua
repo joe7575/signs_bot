@@ -3,7 +3,7 @@
 	Signs Bot
 	=========
 
-	Copyright (C) 2019 Joachim Stolberg
+	Copyright (C) 2019-2021 Joachim Stolberg
 
 	GPL v3
 	See LICENSE.txt for more information
@@ -12,14 +12,8 @@
 
 ]]--
 
--- for lazy programmers
-local S = function(pos) if pos then return minetest.pos_to_string(pos) end end
-local P = minetest.string_to_pos
-local M = minetest.get_meta
-
--- Load support for intllib.
-local MP = minetest.get_modpath("signs_bot")
-local I,_ = dofile(MP.."/intllib.lua")
+-- Load support for I18n.
+local S = signs_bot.S
 
 local lib = signs_bot.lib
 local bot_inv_take_item = signs_bot.bot_inv_take_item
@@ -46,7 +40,7 @@ local function place_item(base_pos, robot_pos, param2, slot, route, level)
 	local pos1, p2 = lib.dest_pos(robot_pos, param2, route)
 	pos1.y = pos1.y + level
 	if not lib.not_protected(base_pos, pos1) then
-		return signs_bot.ERROR, I("Error: Position protected")
+		return signs_bot.ERROR, S("Error: Position protected")
 	end
 	if lib.is_air_like(pos1) then
 		local taken = signs_bot.bot_inv_take_item(base_pos, slot, 1)
@@ -74,7 +68,7 @@ signs_bot.register_botcommand("place_front", {
 	mod = "place",
 	params = "<slot> <lvl>",
 	num_param = 2,
-	description = I("Place a block in front of the robot\n"..
+	description = S("Place a block in front of the robot\n"..
 		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
@@ -95,7 +89,7 @@ signs_bot.register_botcommand("place_left", {
 	mod = "place",
 	params = "<slot> <lvl>",
 	num_param = 2,
-	description = I("Place a block on the left side\n"..
+	description = S("Place a block on the left side\n"..
 		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
@@ -116,7 +110,7 @@ signs_bot.register_botcommand("place_right", {
 	mod = "place",
 	params = "<slot> <lvl>",
 	num_param = 2,
-	description = I("Place a block on the right side\n"..
+	description = S("Place a block on the right side\n"..
 		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
@@ -136,7 +130,7 @@ signs_bot.register_botcommand("place_right", {
 local function place_item_below(base_pos, robot_pos, param2, slot)
 	local pos1 = {x=robot_pos.x,y=robot_pos.y-1,z=robot_pos.z}
 	if not lib.not_protected(base_pos, pos1) then
-		return signs_bot.ERROR, I("Error: Position protected")
+		return signs_bot.ERROR, S("Error: Position protected")
 	end
 	local node = tubelib2.get_node_lvm(pos1)
 	if node.name == "signs_bot:robot_foot" then
@@ -155,7 +149,7 @@ signs_bot.register_botcommand("place_below", {
 	mod = "place",
 	params = "<slot>",
 	num_param = 1,
-	description = I("Place a block under the robot.\n"..
+	description = S("Place a block under the robot.\n"..
 		"Hint: use 'move_up' first.\n"..
 		"<slot> is the inventory slot (1..8)"),
 	check = function(slot)
@@ -171,7 +165,7 @@ signs_bot.register_botcommand("place_below", {
 local function place_item_above(base_pos, robot_pos, param2, slot)
 	local pos1 = {x=robot_pos.x,y=robot_pos.y+1,z=robot_pos.z}
 	if not lib.not_protected(base_pos, pos1) then
-		return signs_bot.ERROR, I("Error: Position protected")
+		return signs_bot.ERROR, S("Error: Position protected")
 	end
 	if lib.is_air_like(pos1) then
 		local taken = bot_inv_take_item(base_pos, slot, 1)
@@ -189,7 +183,7 @@ signs_bot.register_botcommand("place_above", {
 	mod = "place",
 	params = "<slot>",
 	num_param = 1,
-	description = I("Place a block above the robot.\n"..
+	description = S("Place a block above the robot.\n"..
 		"<slot> is the inventory slot (1..8)"),
 	check = function(slot)
 		slot = tonumber(slot) or 0
@@ -207,13 +201,13 @@ local function dig_item(base_pos, robot_pos, param2, slot, route, level)
 	local node = tubelib2.get_node_lvm(pos1)
 	local dug_name = lib.is_simple_node(node)
 	if not lib.not_protected(base_pos, pos1) then
-		return signs_bot.ERROR, I("Error: Position protected")
+		return signs_bot.ERROR, S("Error: Position protected")
 	end
 	if dug_name then
 		if bot_inv_put_item(base_pos, slot, ItemStack(dug_name)) then
 			minetest.remove_node(pos1)
 		else
-			return signs_bot.ERROR, I("Error: No free inventory space")
+			return signs_bot.ERROR, S("Error: No free inventory space")
 		end
 	end
 	return signs_bot.DONE
@@ -223,7 +217,7 @@ signs_bot.register_botcommand("dig_front", {
 	mod = "place",
 	params = "<slot> <lvl>",
 	num_param = 2,
-	description = I("Dig the block in front of the robot\n"..
+	description = S("Dig the block in front of the robot\n"..
 		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
@@ -245,7 +239,7 @@ signs_bot.register_botcommand("dig_left", {
 	mod = "place",
 	params = "<slot> <lvl>",
 	num_param = 2,
-	description = I("Dig the block on the left side\n"..
+	description = S("Dig the block on the left side\n"..
 		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
@@ -267,7 +261,7 @@ signs_bot.register_botcommand("dig_right", {
 	mod = "place",
 	params = "<slot> <lvl>",
 	num_param = 2,
-	description = I("Dig the block on the right side\n"..
+	description = S("Dig the block on the right side\n"..
 		"<slot> is the inventory slot (1..8)\n"..
 		"<lvl> is one of: -1   0   +1"),
 	check = function(slot, lvl)
@@ -290,13 +284,13 @@ local function dig_item_below(base_pos, robot_pos, param2, slot)
 	local node = tubelib2.get_node_lvm(pos1)
 	local dug_name = lib.is_simple_node(node)
 	if not lib.not_protected(base_pos, pos1) then
-		return signs_bot.ERROR, I("Error: Position protected")
+		return signs_bot.ERROR, S("Error: Position protected")
 	end
 	if dug_name then
 		if bot_inv_put_item(base_pos, slot, ItemStack(dug_name)) then
 			minetest.set_node(pos1, {name="signs_bot:robot_foot"})
 		else
-			return signs_bot.ERROR, I("Error: No free inventory space")
+			return signs_bot.ERROR, S("Error: No free inventory space")
 		end
 	end
 	return signs_bot.DONE
@@ -306,7 +300,7 @@ signs_bot.register_botcommand("dig_below", {
 	mod = "place",
 	params = "<slot>",
 	num_param = 1,
-	description = I("Dig the block under the robot.\n"..
+	description = S("Dig the block under the robot.\n"..
 		"<slot> is the inventory slot (1..8)"),
 	check = function(slot)
 		slot = tonumber(slot) or 0
@@ -324,13 +318,13 @@ local function dig_item_above(base_pos, robot_pos, param2, slot)
 	local node = tubelib2.get_node_lvm(pos1)
 	local dug_name = lib.is_simple_node(node)
 	if not lib.not_protected(base_pos, pos1) then
-		return signs_bot.ERROR, I("Error: Position protected")
+		return signs_bot.ERROR, S("Error: Position protected")
 	end
 	if dug_name then
 		if bot_inv_put_item(base_pos, slot, ItemStack(dug_name)) then
 			minetest.remove_node(pos1)
 		else
-			return signs_bot.ERROR, I("Error: No free inventory space")
+			return signs_bot.ERROR, S("Error: No free inventory space")
 		end
 	end
 	return signs_bot.DONE
@@ -340,7 +334,7 @@ signs_bot.register_botcommand("dig_above", {
 	mod = "place",
 	params = "<slot>",
 	num_param = 1,
-	description = I("Dig the block above the robot.\n"..
+	description = S("Dig the block above the robot.\n"..
 		"<slot> is the inventory slot (1..8)"),
 	check = function(slot)
 		slot = tonumber(slot) or 0
@@ -358,7 +352,7 @@ local function rotate_item(base_pos, robot_pos, param2, route, level, steps)
 	pos1.y = pos1.y + level
 	local node = tubelib2.get_node_lvm(pos1)
 	if not lib.not_protected(base_pos, pos1) then
-		return signs_bot.ERROR, I("Error: Position protected")
+		return signs_bot.ERROR, S("Error: Position protected")
 	end
 	if lib.is_simple_node(node) then
 		local p2 = tRotations[node.param2] and tRotations[node.param2][steps]
@@ -372,7 +366,7 @@ end
 signs_bot.register_botcommand("rotate_item", {
 	mod = "place",
 	params = "<lvl> <steps>",	
-	description = I("Rotate the block in front of the robot\n"..
+	description = S("Rotate the block in front of the robot\n"..
 		"<lvl> is one of:  -1   0   +1\n"..
 		"<steps> is one of:  1   2   3"),
 	check = function(lvl, steps)
@@ -391,7 +385,7 @@ signs_bot.register_botcommand("rotate_item", {
 	
 -- Simplified torch which can be placed w/o a fake player
 minetest.register_node("signs_bot:torch", {
-	description = "Bot torch",
+	description = S("Bot torch"),
 	inventory_image = "default_torch_on_floor.png",
 	wield_image = "default_torch_on_floor.png",
 	drawtype = "nodebox",

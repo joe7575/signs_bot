@@ -1,6 +1,19 @@
--- Load support for intllib.
-local MP = minetest.get_modpath("signs_bot")
-local S, NS = dofile(MP.."/intllib.lua")
+--[[
+
+	Signs Bot
+	=========
+
+	Copyright (C) 2019-2021 Joachim Stolberg
+
+	GPLv3
+	See LICENSE.txt for more information
+	
+	Signs Bot: Bot Flap
+
+]]--
+
+-- Load support for I18n.
+local S = signs_bot.S
 
 local CYCLE_TIME = 4
 

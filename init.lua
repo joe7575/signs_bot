@@ -3,7 +3,7 @@
 	Signs Bot
 	=========
 
-	Copyright (C) 2019 Joachim Stolberg
+	Copyright (C) 2019-2021 Joachim Stolberg
 
 	GPL v3
 	See LICENSE.txt for more information
@@ -15,7 +15,7 @@
 signs_bot = {}
 
 -- Version for compatibility checks, see readme.md/history
-signs_bot.version = 1.05
+signs_bot.version = 1.06
 
 if minetest.global_exists("techage") and techage.version < 0.25 then
 	error("[signs_bot] Signs Bot requires techage version 0.25 or newer!")
@@ -25,8 +25,11 @@ if tubelib2.version < 1.9 then
 	error("[signs_bot] Signs Bot requires tubelib2 version 1.9 or newer!")
 end
 
+-- Load support for I18n.
 signs_bot.S = minetest.get_translator("signs_bot")
+
 local MP = minetest.get_modpath("signs_bot")
+
 dofile(MP.."/doc.lua")
 dofile(MP.."/random.lua")
 dofile(MP.."/lib.lua")

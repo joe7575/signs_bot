@@ -11,14 +11,8 @@
 	Bot flower cutting command
 ]]--
 
--- for lazy programmers
-local S = function(pos) if pos then return minetest.pos_to_string(pos) end end
-local P = minetest.string_to_pos
-local M = minetest.get_meta
-
--- Load support for intllib.
-local MP = minetest.get_modpath("signs_bot")
-local I,_ = dofile(MP.."/intllib.lua")
+-- Load support for I18n.
+local S = signs_bot.S
 
 local lib = signs_bot.lib
 
@@ -75,7 +69,7 @@ signs_bot.register_botcommand("cutting", {
 	mod = "farming",
 	params = "",
 	num_param = 0,
-	description = I("Cutting flowers and tree blocks\nin front of the robot\non a 3x3 field."),
+	description = S("Cutting flowers and tree blocks\nin front of the robot\non a 3x3 field."),
 	cmnd = function(base_pos, mem)
 		if not mem.steps then
 			mem.pos_tbl = signs_bot.lib.gen_position_table(mem.robot_pos, mem.robot_param2, 3, 3, 0)
@@ -100,7 +94,7 @@ turn_around]]
 
 signs_bot.register_sign({
 	name = "flowers", 
-	description = I('Sign "flowers"'), 
+	description = S('Sign "flowers"'), 
 	commands = CMD, 
 	image = "signs_bot_sign_flowers.png",
 })
@@ -116,13 +110,13 @@ minetest.register_craft({
 
 if minetest.get_modpath("doc") then
 	doc.add_entry("signs_bot", "flowers", {
-		name = I("Sign 'flowers'"),
+		name = S("Sign 'flowers'"),
 		data = {
 			item = "signs_bot:flowers",
 			text = table.concat({
-				I("Used to cut flowers on a 3x3 field."),
-				I("Place the sign in front of the field."), 
-				I("When finished, the bot turns."),
+				S("Used to cut flowers on a 3x3 field."),
+				S("Place the sign in front of the field."), 
+				S("When finished, the bot turns."),
 			}, "\n")		
 		},
 	})

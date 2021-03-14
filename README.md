@@ -169,4 +169,5 @@ optional: farming redo, node_io, doc, techage, minecart
 - 2020-06-21  v1.03  * Interpreter bugfixes, node and crop sensors changed
 - 2020-10-01  v1.04  * Many improvements and bugfixes (Thanks to Thomas-S)
 - 2021-01-30  v1.05  * Many improvements and bugfixes
+- 2021-03-14  v1.06  * Switch translation from intllib to minetest.translator
 

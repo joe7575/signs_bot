@@ -1,6 +1,19 @@
--- Load support for intllib.
-local MP = minetest.get_modpath("signs_bot")
-local I,_ = dofile(MP.."/intllib.lua")  
+--[[
+
+	Signs Bot
+	=========
+
+	Copyright (C) 2019-2021 Joachim Stolberg
+
+	GPL v3
+	See LICENSE.txt for more information
+	
+	Signs Bot: Commands for the compost mod
+
+]]--
+
+-- Load support for I18n.
+local S = signs_bot.S
 
 local NUM_LEAVES = 2
 
@@ -46,7 +59,7 @@ if  minetest.global_exists("signs_bot") then
 		mod = "compost",
 		params = "<slot>",
 		num_param = 1,
-		description = I("Put 2 leaves into the compost barrel\n"..
+		description = S("Put 2 leaves into the compost barrel\n"..
 			"<slot> is the bot inventory slot (1..8)\n"..
 			"with the leaves."),
 		check = function(slot)
@@ -68,7 +81,7 @@ if  minetest.global_exists("signs_bot") then
 		mod = "compost",
 		params = "<slot>",
 		num_param = 1,
-		description = I("Take a compost item from the barrel.\n"..
+		description = S("Take a compost item from the barrel.\n"..
 			"<slot> (1..8 or 0 for the first free slot) is the bot\n"..
 			"slot for the compost item."),
 		check = function(num, slot)

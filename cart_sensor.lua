@@ -3,7 +3,7 @@
 	Signs Bot
 	=========
 
-	Copyright (C) 2019 Joachim Stolberg
+	Copyright (C) 2019-2021 Joachim Stolberg
 
 	GPL v3
 	See LICENSE.txt for more information
@@ -13,20 +13,19 @@
 ]]--
 
 -- for lazy programmers
-local S = function(pos) if pos then return minetest.pos_to_string(pos) end end
-local P = minetest.string_to_pos
+local P2S = function(pos) if pos then return minetest.pos_to_string(pos) end end
+local S2P = minetest.string_to_pos
 local M = minetest.get_meta
 
--- Load support for intllib.
-local MP = minetest.get_modpath("signs_bot")
-local I,_ = dofile(MP.."/intllib.lua")
+-- Load support for I18n.
+local S = signs_bot.S
 
 local lib = signs_bot.lib
 
 local CYCLE_TIME = 2
 
 local function update_infotext(pos, dest_pos, dest_idx)
-	M(pos):set_string("infotext", I("Cart Sensor: Connected with ")..S(dest_pos).." / "..dest_idx)
+	M(pos):set_string("infotext", S("Cart Sensor: Connected with").." "..P2S(dest_pos).." / "..dest_idx)
 end	
 
 local function swap_node(pos, name)
@@ -62,7 +61,7 @@ local function node_timer(pos)
 end
 
 minetest.register_node("signs_bot:cart_sensor", {
-	description = I("Cart Sensor"),
+	description = S("Cart Sensor"),
 	inventory_image = "signs_bot_sensor_cart_inv.png",
 	drawtype = "nodebox",
 	node_box = {
@@ -83,7 +82,7 @@ minetest.register_node("signs_bot:cart_sensor", {
 	
 	after_place_node = function(pos, placer)
 		local meta = M(pos)
-		meta:set_string("infotext", "Cart Sensor: Not connected")
+		meta:set_string("infotext", S("Cart Sensor: Not connected"))
 		minetest.get_node_timer(pos):start(CYCLE_TIME)
 		local node = minetest.get_node(pos)
 		meta:set_int("param2", (node.param2 + 2) % 4)
@@ -102,7 +101,7 @@ minetest.register_node("signs_bot:cart_sensor", {
 })
 
 minetest.register_node("signs_bot:cart_sensor_on", {
-	description = I("Cart Sensor"),
+	description = S("Cart Sensor"),
 	drawtype = "nodebox",
 	node_box = {
 		type = "fixed",
@@ -158,13 +157,13 @@ minetest.register_lbm({
 
 if minetest.get_modpath("doc") then
 	doc.add_entry("signs_bot", "cart_sensor", {
-		name = I("Cart Sensor"),
+		name = S("Cart Sensor"),
 		data = {
 			item = "signs_bot:cart_sensor",
 			text = table.concat({
-				I("The Cart Sensor detects and sends a signal, if a cart (Minecart) is nearby."),
-				I("the sensor range is one node/meter."), 
-				I("The sensor has an active side (red) that must point to the rail/cart."),
+				S("The Cart Sensor detects and sends a signal, if a cart (Minecart) is nearby."),
+				S("the sensor range is one node/meter."), 
+				S("The sensor has an active side (red) that must point to the rail/cart."),
 			}, "\n")		
 		},
 	})
