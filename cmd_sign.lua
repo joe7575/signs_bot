@@ -172,7 +172,7 @@ minetest.register_node("signs_bot:sign_cmnd", {
 	
 	after_dig_node = lib.after_dig_sign_node,
 	paramtype = "light",
-	use_texture_alpha = "clip",
+	use_texture_alpha = signs_bot.CLIP,
 	sunlight_propagates = true,
 	is_ground_content = false,
 	drop = "",

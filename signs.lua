@@ -53,7 +53,7 @@ local function register_sign(def)
 		end,
 		on_rotate = screwdriver.disallow,
 		paramtype = "light",
-		use_texture_alpha = "clip",
+		use_texture_alpha = signs_bot.CLIP,
 		sunlight_propagates = true,
 		is_ground_content = false,
 		groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, sign_bot_sign = 1},

@@ -145,7 +145,7 @@ for idx = 1,4 do
 
 		on_rotate = screwdriver.disallow,
 		paramtype = "light",
-		use_texture_alpha = "clip",
+		use_texture_alpha = signs_bot.CLIP,
 		sunlight_propagates = true,
 		paramtype2 = "facedir",
 		is_ground_content = false,
