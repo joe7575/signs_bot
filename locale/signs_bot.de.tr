@@ -152,7 +152,7 @@ Dig the block on the right side@n<slot> is the inventory slot (1..8)@n<lvl> is o
 Dig the block under the robot.@n<slot> is the inventory slot (1..8)=Entferne einen Block unter dem@nRoboter.@n<slot> ist die Position im@neigenen Inventar (1--8).
 Dig the block above the robot.@n<slot> is the inventory slot (1..8)=Entferne einen Block über dem@nRoboter.@n<slot> ist die Position im@neigenen Inventar (1--8).
 Rotate the block in front of the robot@n<lvl> is one of:  -1   0   +1@n<steps> is one of:  1   2   3=Rotiere den Block vor dem Roboter.@nFür <lvl> ist zulässig: -1   0   +1@nFür <steps> ist zulässig: 1   2   3
-Bot torch=
+Bot torch=Bot Fackel
 
 ### cmd_sign.lua ###
 

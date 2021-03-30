@@ -111,7 +111,7 @@ end
 
 local function status(mem)
 	if mem.error then
-		return mem.error
+		return dump(mem.error)
 	end
 	if mem.running then
 		return S("running")
