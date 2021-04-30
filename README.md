@@ -170,4 +170,5 @@ optional: farming redo, node_io, doc, techage, minecart
 - 2020-10-01  v1.04  * Many improvements and bugfixes (Thanks to Thomas-S)
 - 2021-01-30  v1.05  * Many improvements and bugfixes
 - 2021-03-14  v1.06  * Switch translation from intllib to minetest.translator
+- 2021-04-24  v1.07  * Adapted to minecart v2.0
 

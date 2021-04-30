@@ -245,16 +245,8 @@ signs_bot.register_botcommand("punch_cart", {
 	num_param = 0,
 	description = S("Punch a rail cart to start it"),
 	cmnd = function(base_pos, mem)
-		local pos = lib.dest_pos(mem.robot_pos, mem.robot_param2, {0})
-		for _, object in pairs(minetest.get_objects_inside_radius(pos, 2)) do
-			if object:get_entity_name() == "minecart:cart" then
-				object:punch(object, 1.0, {
-					full_punch_interval = 1.0,
-					damage_groups = {fleshy = 1},
-				}, minetest.facedir_to_dir(mem.robot_param2))
-				break -- start only one cart
-			end
-		end
+		local punch_dir = minetest.facedir_to_dir(mem.robot_param2)
+		minecart.punch_cart(mem.robot_pos, mem.robot_param2, 1, punch_dir)
 		return signs_bot.DONE
 	end,
 })

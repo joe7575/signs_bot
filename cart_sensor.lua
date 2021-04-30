@@ -38,18 +38,8 @@ local function swap_node(pos, name)
 	return true
 end
 	
-local function check_cart(pos)	
-	for _, object in pairs(minetest.get_objects_inside_radius(pos, 1)) do
-		if object:get_entity_name() == "minecart:cart" then
-			return true
-		end
-	end
-	return false
-end
-
 local function node_timer(pos)
-	local pos1 = lib.next_pos(pos, M(pos):get_int("param2"))
-	if check_cart(pos1) then
+	if minecart.is_cart_available(pos, M(pos):get_int("param2"), 1) then
 		if swap_node(pos, "signs_bot:cart_sensor_on") then
 			signs_bot.send_signal(pos)
 			signs_bot.lib.activate_extender_nodes(pos, true)

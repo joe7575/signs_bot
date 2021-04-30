@@ -182,7 +182,7 @@ if minetest.get_modpath("techage") then
 					elseif mem.capa >= signs_bot.MAX_CAPA then
 						return "stopped"
 					else
-						return "loading"
+						return "charging"
 					end
 				else
 					return "stopped"

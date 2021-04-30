@@ -15,7 +15,7 @@
 signs_bot = {}
 
 -- Version for compatibility checks, see readme.md/history
-signs_bot.version = 1.06
+signs_bot.version = 1.07
 
 -- Test for MT 5.4 new string mode
 signs_bot.CLIP = minetest.features.use_texture_alpha_string_modes and "clip" or true
@@ -26,6 +26,10 @@ end
 
 if tubelib2.version < 1.9 then
 	error("[signs_bot] Signs Bot requires tubelib2 version 1.9 or newer!")
+end
+
+if minetest.global_exists("minecart") and minecart.version < 2.0 then
+	error("[signs_bot] Signs Bot requires minecart version 2.0 or newer!")
 end
 
 -- Load support for I18n.
