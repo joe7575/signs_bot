@@ -127,6 +127,19 @@ local function compile(script)
 	return pass2(tokens)
 end	
 
+local function gen_string_cmnd(code, pc, num_param, script)
+	local tokens = tokenizer(script)
+	if num_param == 0 then
+		return tokens[pc]
+	elseif num_param == 1 then
+		return tokens[pc] .. " " .. tokens[pc+1]
+	elseif num_param == 2 then
+		return tokens[pc] .. " " .. tokens[pc+1] .. " " .. tokens[pc+2]
+	else
+		return tokens[pc] .. " " .. tokens[pc+1] .. " " .. tokens[pc+2] .. " " .. tokens[pc+3]
+	end
+end
+
 -------------------------------------------------------------------------------
 -- Commands
 -------------------------------------------------------------------------------
@@ -280,7 +293,7 @@ function api.run_script(base_pos, mem)
 			mem.pc = 1
 			mem.Stack = {}
 		end
-		return res, err
+		return res, err, gen_string_cmnd(code, mem.pc, num_param, mem.script)
 	end
 	return api.EXIT
 end

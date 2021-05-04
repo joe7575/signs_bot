@@ -96,6 +96,7 @@ For all Inventory commands applies: If the inventory stack specified by <slot> i
     pattern                   - save the blocks behind the shield (up to 5x3x3) as template
     copy <size>               - make a copy of "pattern". Size is e.g. 3x3 (see ingame help)
     punch_cart                - Punch a rail cart to start it
+    print <text>              - Output chat message for debug purposes
 
 #### Flow control commands
 
@@ -171,4 +172,5 @@ optional: farming redo, node_io, doc, techage, minecart
 - 2021-01-30  v1.05  * Many improvements and bugfixes
 - 2021-03-14  v1.06  * Switch translation from intllib to minetest.translator
 - 2021-04-24  v1.07  * Adapted to minecart v2.0
+- 2021-05-04  v1.08  * Add print command, improve error msg
 

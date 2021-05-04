@@ -103,12 +103,20 @@ if minetest.get_modpath("techage") then
 		mod = "techage",
 		params = "<receiver> <command>",
 		num_param = 2,
-		description = S("Sends a techage command\nto a given node.\nReceiver is addressed by\nthe techage node number."),
+		description = S([[Sends a techage command
+to a given node. 
+Receiver is addressed by
+the techage node number.
+For commands with two or more 
+words, use the '*' character 
+instead of spaces, e.g.: 
+send_cmnd 3465 pull*default:dirt*2]]),
 		check = function(address, command)
 			address = tonumber(address)
 			return address ~= nil and command ~= nil and command ~= ""
 		end,
 		cmnd = function(base_pos, mem, address, command)
+			command = command:gsub("*", " ")
 			address = tostring(tonumber(address))
 			local meta = minetest.get_meta(base_pos)
 			local number = meta:get_int("number") or 0

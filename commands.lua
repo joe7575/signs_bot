@@ -153,11 +153,16 @@ local function activate_sensor(pos, param2)
 	end
 end
 
-local function bot_error(base_pos, mem, err)
+local function bot_error(base_pos, mem, err, cmd)
 	minetest.sound_play('signs_bot_error', {pos = base_pos})
 	minetest.sound_play('signs_bot_error', {pos = mem.robot_pos})
-	signs_bot.infotext(base_pos, err)
-	mem.error = err
+	if cmd then
+		signs_bot.infotext(base_pos, err .. ":\n'" .. cmd .. "'")
+		mem.error = err .. ": '" .. cmd .. "'"
+	else
+		signs_bot.infotext(base_pos, err)
+		mem.error = err
+	end
 	return false
 end
 
@@ -174,9 +179,9 @@ local function power_consumption(mem, cmnd)
 end
 
 function signs_bot.run_next_command(base_pos, mem)
-	local res, err = ci.run_script(base_pos, mem)
+	local res, err, cmd = ci.run_script(base_pos, mem)
 	if res == ci.ERROR then
-		return bot_error(base_pos, mem, err)
+		return bot_error(base_pos, mem, err, cmd)
 	elseif res == ci.EXIT then
 		signs_bot.stop_robot(base_pos, mem)
 		return false
@@ -278,4 +283,22 @@ new program from the sign]]),
 	end,
 })
 
-	
+signs_bot.register_botcommand("print", {
+	mod = "debug",
+	params = "<text>",
+	num_param = 1,
+	description = S([[Print given text as chat message.
+For two or more words, use the '*' character 
+instead of spaces, like "Hello*world"]]),
+	check = function(text)
+		return text ~= ""
+	end,
+	cmnd = function(base_pos, mem, text)
+		text = text:gsub("*", " ")
+		local owner = M(base_pos):get_string("owner")
+		if owner ~= "" and text ~= "" then
+			minetest.chat_send_player(owner, "Bot: " .. text)
+		end
+		return signs_bot.DONE
+	end,
+})

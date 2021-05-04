@@ -201,7 +201,6 @@ function signs_bot.lib.after_dig_sign_node(pos, oldnode, oldmetadata, digger)
 		smeta:set_string("err_msg", oldmetadata.fields.err_msg or "")
 	end
 	local player_name = digger:get_player_name()
-	-- See https://github.com/minetest/minetest/blob/34e3ede8eeb05e193e64ba3d055fc67959d87d86/doc/lua_api.txt#L6222
 	if player_name == "" then
 		minetest.add_item(pos, sign)
 	else
