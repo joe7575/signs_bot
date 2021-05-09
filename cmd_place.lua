@@ -26,12 +26,22 @@ end
 local tValidLevels = {[-1] = -1, [0] = 0, [1] = 1}
 
 -- for items with paramtype2 = "facedir"
-local tRotations = {
-	[0] = {8,20,4},
-	[1] = {16,20,12},
-	[2] = {4,20,8},
-	[3] = {12,20,16},
+local tRotations = {}
+
+local Rotations = {
+	{0,8,22,4},
+	{1,17,21,13},
+	{2,6,20,10},
+	{3,15,23,19},
 }
+
+for _,v in ipairs(Rotations) do
+	local t = table.copy(v)
+	for i = 1,4 do
+		table.insert(t, 1, table.remove(t))
+		tRotations[t[1]] = {t[2], t[3], t[4]}
+	end
+end
 
 --
 -- Place/dig items
