@@ -386,6 +386,7 @@ end
 local function on_power(pos)
 	local mem = tubelib2.get_mem(pos)
 	mem.power_available = true
+	mem.charging = true
 	signs_bot.infotext(pos, S("charging"))
 end
 

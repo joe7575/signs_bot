@@ -74,7 +74,24 @@ function signs_bot.lib.check_pos(posA, nodeA, nodeB, param2)
 	return false
 end
 
-local function handle_drop(node)
+local function handle_drop(drop)
+	-- To keep it simple, return only the item with the lowest rarity
+	if drop.items then
+		local rarity = 9999
+		local name
+		for idx,item in ipairs(drop.items) do
+			if item.rarity and item.rarity < rarity then
+				rarity = item.rarity
+				name = item.items[1] -- take always the first item
+			else
+				return item.items[1] -- take always the first item
+			end
+		end
+		return name
+        end
+end
+
+function signs_bot.handle_drop_like_a_player(node)
 	local drops = minetest.get_node_drops(node)
 	if #drops >= 1 then
 		return drops[1]
@@ -104,7 +121,7 @@ function signs_bot.lib.is_simple_node(node)
 		if ndef.after_dig_node then return false end
 	end
 	if type(ndef.drop) == "table" then
-		return handle_drop(node)
+		return handle_drop(ndef.drop)
 	end
 	return ndef.drop or node.name
 end	

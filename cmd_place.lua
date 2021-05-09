@@ -366,6 +366,7 @@ end
 signs_bot.register_botcommand("rotate_item", {
 	mod = "place",
 	params = "<lvl> <steps>",	
+	num_param = 2,
 	description = S("Rotate the block in front of the robot\n"..
 		"<lvl> is one of:  -1   0   +1\n"..
 		"<steps> is one of:  1   2   3"),

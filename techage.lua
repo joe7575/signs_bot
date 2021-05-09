@@ -23,7 +23,7 @@ if minetest.get_modpath("techage") then
 	local power = techage.power
 	
 	signs_bot.register_inventory({"techage:chest_ta2", "techage:chest_ta3", "techage:chest_ta4",
-			"techage:ta3_silo", "techage:ta4_silo"}, {
+			"techage:ta3_silo", "techage:ta4_silo", "techage:ta4_sensor_chest"}, {
 		allow_inventory_put = function(pos, stack, player_name)
 			return not minetest.is_protected(pos, player_name)
 		end, 
@@ -120,7 +120,8 @@ send_cmnd 3465 pull*default:dirt*2]]),
 			address = tostring(tonumber(address))
 			local meta = minetest.get_meta(base_pos)
 			local number = meta:get_int("number") or 0
-			techage.send_multi(number, address, command)
+			local topic, payload = unpack(string.split(command, " ", false, 1))
+			techage.send_multi(number, address, topic, payload)
 			return signs_bot.DONE
 		end,
 	})

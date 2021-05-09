@@ -132,11 +132,11 @@ local function gen_string_cmnd(code, pc, num_param, script)
 	if num_param == 0 then
 		return tokens[pc]
 	elseif num_param == 1 then
-		return tokens[pc] .. " " .. tokens[pc+1]
+		return tokens[pc] .. " " .. (tokens[pc+1] or "")
 	elseif num_param == 2 then
-		return tokens[pc] .. " " .. tokens[pc+1] .. " " .. tokens[pc+2]
+		return tokens[pc] .. " " .. (tokens[pc+1] or "") .. " " .. (tokens[pc+2] or "")
 	else
-		return tokens[pc] .. " " .. tokens[pc+1] .. " " .. tokens[pc+2] .. " " .. tokens[pc+3]
+		return tokens[pc] .. " " .. (tokens[pc+1] or "") .. " " .. (tokens[pc+2] or "") .. " " .. (tokens[pc+3] or "")
 	end
 end
 

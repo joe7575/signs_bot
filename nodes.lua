@@ -69,7 +69,7 @@ if farming.mod == "redo" then
 	fp("farming:cocoa_beans", "farming:cocoa_1", "farming:cocoa_4")
 	fp("farming:garlic_clove", "farming:garlic_1", "farming:garlic_5")
 	fp("farming:onion", "farming:onion_1", "farming:onion_5")
-	fp("farming:peas", "farming:pea_1", "farming:pea_5")
+	fp("farming:pea_pod", "farming:pea_1", "farming:pea_5")
 	fp("farming:peppercorn", "farming:pepper_1", "farming:pepper_5")
 	fp("farming:pineapple_top", "farming:pineapple_1", "farming:pineapple_8")
 end

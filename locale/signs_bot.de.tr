@@ -87,18 +87,18 @@ Sign 'farming'=Zeichen 'Farming'
 Used to harvest and seed a 3x3 field.=Benötigt um ein 3x3 Feld zu ernten und wieder zu sähen.
 The seed to be placed has to be in the first inventory slot of the bot.=Das Saatgut, dass gesät werden soll, muss sich an der 1. Position im Inventar befinden.
 
-### cmd_flowers.lua ###
-
-Cutting flowers and tree blocks@nin front of the robot@non a 3x3 field.=Schneide Blumen und Baumblöcke@nin einem 3x3 großem Feld@nvor dem Roboter.
-Sign "flowers"=Zeichen "Blumen"
-Sign 'flowers'=Zeichen 'Blumen'
-Used to cut flowers on a 3x3 field.=Benötigt um ein 3x3 Blumenfeld zu ernten.
-
-### cmd_flowers.lua ###
 ### cmd_farming.lua ###
+### cmd_flowers.lua ###
 
 Place the sign in front of the field.=Platziere das Zeichen vor das Feld.
 When finished, the bot turns.=Der Roboter dreht um, wenn er fertig ist.
+
+### cmd_flowers.lua ###
+
+Cutting flowers, leaves and tree blocks@nin front of the robot@non a 3x3 field.=Schneide Blumen, Blätter und Baumblöcke@nin einem 3x3 großem Feld@nvor dem Roboter.
+Sign "flowers"=Zeichen "Blumen"
+Sign 'flowers'=Zeichen 'Blumen'
+Used to cut flowers on a 3x3 field.=Benötigt um ein 3x3 Blumenfeld zu ernten.
 
 ### cmd_item.lua ###
 
@@ -178,11 +178,6 @@ Sign 'command'=Zeichen 'Kommando'
 The 'command' sign can be programmed by the player.=Das 'Kommando' Zeichen kann vom Spieler programmiert werden.
 Place the sign in front of you and use the node menu to program your sequence of bot commands.=Platziere das Zeichen vor dir und nutze das Zeichen-Menü, um die Kommando-Sequenz zu programmieren.
 The menu has an edit field for your commands and a help page with all available commands.=Das Menü hat ein Eingabefeld für deine Kommandos und eine Hilfeseite zu allen Kommandos.
-
-### cmd_sign.lua ###
-### doc.lua ###
-
-The help page has a copy button to simplify the programming.=Die Hilfeseite hat einen Kopier-Button um die Programmierung zu erleichtern.
 
 ### commands.lua ###
 
@@ -300,6 +295,11 @@ Sensors and Actuators=Sensoren und Aktoren
 Connecting sensors and actuator=Verbinde Sensor mit Aktor
 Bot inventory behavior=Verhalten beim Roboter Inventar
 
+### doc.lua ###
+### cmd_sign.lua ###
+
+The help page has a copy button to simplify the programming.=Die Hilfeseite hat einen Kopier-Button um die Programmierung zu erleichtern.
+
 ### duplicator.lua ###
 
 Template:=Vorlage:
@@ -408,3 +408,6 @@ Connected with=Verbunden mit
 ### tool.lua ###
 
 Sensor Connection Tool=Sensor Verbindungswerkzeug
+
+
+##### not used anymore #####

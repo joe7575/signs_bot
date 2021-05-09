@@ -87,18 +87,18 @@ Sign 'farming'=
 Used to harvest and seed a 3x3 field.=
 The seed to be placed has to be in the first inventory slot of the bot.=
 
-### cmd_flowers.lua ###
-
-Cutting flowers and tree blocks@nin front of the robot@non a 3x3 field.=
-Sign "flowers"=
-Sign 'flowers'=
-Used to cut flowers on a 3x3 field.=
-
-### cmd_flowers.lua ###
 ### cmd_farming.lua ###
+### cmd_flowers.lua ###
 
 Place the sign in front of the field.=
 When finished, the bot turns.=
+
+### cmd_flowers.lua ###
+
+Cutting flowers, leaves and tree blocks@nin front of the robot@non a 3x3 field.=
+Sign "flowers"=
+Sign 'flowers'=
+Used to cut flowers on a 3x3 field.=
 
 ### cmd_item.lua ###
 
@@ -178,11 +178,6 @@ Sign 'command'=
 The 'command' sign can be programmed by the player.=
 Place the sign in front of you and use the node menu to program your sequence of bot commands.=
 The menu has an edit field for your commands and a help page with all available commands.=
-
-### cmd_sign.lua ###
-### doc.lua ###
-
-The help page has a copy button to simplify the programming.=
 
 ### commands.lua ###
 
@@ -299,6 +294,11 @@ Control the Bot=
 Sensors and Actuators=
 Connecting sensors and actuator=
 Bot inventory behavior=
+
+### doc.lua ###
+### cmd_sign.lua ###
+
+The help page has a copy button to simplify the programming.=
 
 ### duplicator.lua ###
 
