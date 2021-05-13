@@ -51,6 +51,40 @@ if minetest.get_modpath("techage") then
 			listname = "dst",
 		},
 	})
+	signs_bot.register_inventory({
+			"techage:ta2_autocrafter_pas", "techage:ta2_autocrafter_act",
+			"techage:ta3_autocrafter_pas", "techage:ta3_autocrafter_act"}, {
+		allow_inventory_put = function(pos, stack, player_name)
+			return not minetest.is_protected(pos, player_name)
+		end, 
+		allow_inventory_take = function(pos, stack, player_name)
+			return not minetest.is_protected(pos, player_name)
+		end, 
+		put = {
+			listname = "src",
+		},
+		take = {
+			listname = "dst",
+		},
+	})
+	signs_bot.register_inventory({
+			"techage:ta2_distributor_pas", "techage:ta2_distributor_act",
+			"techage:ta3_distributor_pas", "techage:ta3_distributor_act",
+			"techage:ta4_distributor_pas", "techage:ta4_distributor_act",
+			"techage:ta4_high_performance_distributor_pas", "techage:ta4_high_performance_distributor_act"}, {
+		allow_inventory_put = function(pos, stack, player_name)
+			return not minetest.is_protected(pos, player_name)
+		end, 
+		allow_inventory_take = function(pos, stack, player_name)
+			return not minetest.is_protected(pos, player_name)
+		end, 
+		put = {
+			listname = "src",
+		},
+		take = {
+			listname = "src",
+		},
+	})
 
 	local function percent_value(max_val, curr_val)
 		return math.min(math.ceil(((curr_val or 0) * 100.0) / (max_val or 1.0)), 100)
