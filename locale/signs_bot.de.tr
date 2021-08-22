@@ -5,7 +5,6 @@
 ### basis.lua ###
 
 running=läuft
-charging=aufladen
 stopped=gestoppt
 Off=Aus
 On=An
@@ -15,7 +14,6 @@ Config=Konfig.
 Preassign slots items=Vorbelegungen
 Back=Zurück
 Robot Box=Roboterbox
-no power=kein Strom
 Signs Bot Box=Roboter Box
 The Box is the housing of the bot.=Die Box ist das Gehäuse des Roboters.
 Place the box and start the bot by means of the 'On' button.=Platziere die Box und starte den Roboter über den "An" Button.
@@ -26,6 +24,11 @@ To stop and remove the bot, press the 'Off' button.=Um den Roboter zu stoppen bz
 The box inventory simulates the inventory of the bot.=Das Inventar der Box simuliert das Roboter Inventar.
 You will not be able to access the inventory, if the bot is running.=Du hast keinen Zugriff auf das Inventar, sofern der Roboter unterwegs ist.
 The bot can carry up to 8 stacks and 6 signs with it.=Der Roboter kann 8 Stapel von Blöcken und 6 Zeichen transportieren.
+
+### basis.lua ###
+### techage.lua ###
+
+charging=aufladen
 
 ### bot_flap.lua ###
 
@@ -43,6 +46,11 @@ Bot Sensor: Not connected=Bot Sensor: Nicht verbunden
 The Bot Sensor detects any bot and sends a signal, if a bot is nearby.=Der Roboter Sensor entdeckt jeden Roboter und sendet ein Signal, sofern ein Roboter in der Nähe ist.
 The sensor direction does not care.=Die Ausrichtung des Sensor spielt keine Rolle.
 
+### bot_sensor.lua ###
+### cart_sensor.lua ###
+
+the sensor range is one node/meter.=Der Sensorbereich ist einen Block/Meter groß.
+
 ### cart_sensor.lua ###
 
 Cart Sensor: Connected with=Wagen Sensor: Verbunden mit
@@ -50,11 +58,6 @@ Cart Sensor=Wagen Sensor
 Cart Sensor: Not connected=Wagen Sensor: Nicht verbunden
 The Cart Sensor detects and sends a signal, if a cart (Minecart) is nearby.=Der Wagen Sensor sendet ein Signal, sofern ein Wagen in der Nähe ist.
 The sensor has an active side (red) that must point to the rail/cart.=Der Sensor hat eine aktive Seite (rot), welche zu den Schienen zeigen muss.
-
-### cart_sensor.lua ###
-### bot_sensor.lua ###
-
-the sensor range is one node/meter.=Der Sensorbereich ist einen Block/Meter groß.
 
 ### changer.lua ###
 
@@ -87,18 +90,18 @@ Sign 'farming'=Zeichen 'Farming'
 Used to harvest and seed a 3x3 field.=Benötigt um ein 3x3 Feld zu ernten und wieder zu sähen.
 The seed to be placed has to be in the first inventory slot of the bot.=Das Saatgut, dass gesät werden soll, muss sich an der 1. Position im Inventar befinden.
 
-### cmd_farming.lua ###
-### cmd_flowers.lua ###
-
-Place the sign in front of the field.=Platziere das Zeichen vor das Feld.
-When finished, the bot turns.=Der Roboter dreht um, wenn er fertig ist.
-
 ### cmd_flowers.lua ###
 
 Cutting flowers, leaves and tree blocks@nin front of the robot@non a 3x3 field.=Schneide Blumen, Blätter und Baumblöcke@nin einem 3x3 großem Feld@nvor dem Roboter.
 Sign "flowers"=Zeichen "Blumen"
 Sign 'flowers'=Zeichen 'Blumen'
 Used to cut flowers on a 3x3 field.=Benötigt um ein 3x3 Blumenfeld zu ernten.
+
+### cmd_flowers.lua ###
+### cmd_farming.lua ###
+
+Place the sign in front of the field.=Platziere das Zeichen vor das Feld.
+When finished, the bot turns.=Der Roboter dreht um, wenn er fertig ist.
 
 ### cmd_item.lua ###
 
@@ -139,7 +142,6 @@ Use the pattern sign to mark the pattern.=Benutze das Vorlage-Zeichen und die Vo
 
 ### cmd_place.lua ###
 
-Error: Position protected=Fehler: Position geschützt
 Place a block in front of the robot@n<slot> is the inventory slot (1..8)@n<lvl> is one of: -1   0   +1=Setze einen Block vor den Roboter.@n<slot> ist die Position im@neigenen Inventar (1--8).@nFür <lvl> ist zulässig: -1   0   +1
 Place a block on the left side@n<slot> is the inventory slot (1..8)@n<lvl> is one of: -1   0   +1=Setze einen Block links vorne.@n<slot> ist die Position im@neigenen Inventar (1--8).@nFür <lvl> ist zulässig: -1   0   +1
 Place a block on the right side@n<slot> is the inventory slot (1..8)@n<lvl> is one of: -1   0   +1=Setze einen Block rechts vorne.@n<slot> ist die Position im@neigenen Inventar (1--8).@nFür <lvl> ist zulässig: -1   0   +1
@@ -178,6 +180,62 @@ Sign 'command'=Zeichen 'Kommando'
 The 'command' sign can be programmed by the player.=Das 'Kommando' Zeichen kann vom Spieler programmiert werden.
 Place the sign in front of you and use the node menu to program your sequence of bot commands.=Platziere das Zeichen vor dir und nutze das Zeichen-Menü, um die Kommando-Sequenz zu programmieren.
 The menu has an edit field for your commands and a help page with all available commands.=Das Menü hat ein Eingabefeld für deine Kommandos und eine Hilfeseite zu allen Kommandos.
+
+### cmd_soup.lua ###
+
+Take water into empty bucket when standing on a shore@n(use specified slot number or 0 for auto selection)=
+Error: No still water around=Kein stilles Wasser in der Nähe
+Error: No empty bucket in inventory=Kein leerer Eimer im Inventar
+Error: No empty bucket in inventory slot = Kein leerer Eimer in der Inventar Position
+Error: No inventory space for full bucket=Kein freier Inventarplatz für den vollen Eimer
+Pour water from bucket to empty cauldron in front of a robot@n(use specified slot number or 0 for auto selection)=
+Error: No empty cauldron in front of a robot=
+Error: No full bucket in inventory=
+Error: No full bucket in inventory slot =
+Error: No inventory space for empty bucket=
+Set fire under cauldron (requires flammable material)@n(command is ignored when fire is already burning)=
+Error: No cauldron in front of a robot=
+Error: No space for fire under cauldron=
+Error: No flammable material under cauldron=
+Put out (extinguish) fire under cauldron@n(command is ignored when there is no fire)=
+Take boiling soup into empty bowl from cauldron@nin front of a robot@n(use specified slot number or 0 for auto selection)=
+Error: No cauldron with a soup in front of a robot=
+Error: No empty bowl in inventory=
+Error: No empty bowl in inventory slot =
+Error: No inventory space for full bowl=
+Sign "take water"=
+Sign "cook soup"=
+Sign 'take water'=
+Used to take water into bucket.=
+Place the sign on a shore, in front of the still water pool.=
+Items in slots:=
+  1 - empty bucket=
+The result is one bucket with water in selected inventory slot.=
+When finished, the bot turns around.=
+Sign 'cook soup'=
+Used to cook a vegetable soup in cauldron.=
+Cauldon should be empty and located above flammable material.=
+Place the sign in front of the cauldron with one field space,=
+to prevent wooden sign from catching fire.=
+  1 - water bucket=
+  2 - vegetable #1 (i.e. tomato)=
+  3 - vegetable #2 (i.e. carrot)=
+  4 - empty bowl (from farming or xdecor mods)=
+The result is one bowl with vegetable soup in selected inventory slot.=
+
+### cmd_soup.lua ###
+### cmd_place.lua ###
+
+Error: Position protected=Fehler: Position geschützt
+
+### cmd_trees.lua ###
+
+Used to harvest an aspen or pine tree trunk=Wird verwendet, um einen Espen- oder Kiefernstamm zu ernten
+- Place the sign in front of the tree.=- Setze das Zeichen vor den Baum.
+- Place a chest to the right of the sign.=- Setze eine Kiste rechts neben das Zeichen.
+- Put a dirt stack (10 items min.) into the chest.=- Lege einen Stapel (>10) Erde (dirt) in die Kiste.
+Sign "aspen"=Zeichen "Espe"
+Sign 'aspen'=Zeichen 'Espe'
 
 ### commands.lua ###
 
@@ -363,6 +421,8 @@ The sensor has an active side (red) that must point to the observed area.=Der Se
 
 ### signs.lua ###
 
+Instructions:=Anweisungen:
+Code=Code
 Sign "turn right"=Zeichen "rechts drehen"
 Sign "turn left"=Zeichen "links drehen"
 Sign "take item"=Zeichen "Nehme Gegenstand"
@@ -382,6 +442,7 @@ The Bot takes items out of a minecart in front of it, pushes the cart and then t
 
 ### techage.lua ###
 
+no power=kein Strom
 Ignite the techage charcoal lighter=Zünde den Holzkohle-Anzünder an
 Turns the bot off if the@nbattery power is below the@ngiven value in percent (1..99)=Schalte den Bot aus,@nwenn die Batterieladung kleiner@nist als der angegebene Wert@nin Prozent (1.99)
 fully charged=voll geladen
@@ -408,6 +469,3 @@ Connected with=Verbunden mit
 ### tool.lua ###
 
 Sensor Connection Tool=Sensor Verbindungswerkzeug
-
-
-##### not used anymore #####
