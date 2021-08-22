@@ -52,6 +52,7 @@ dofile(MP.."/cmd_sign.lua")
 dofile(MP.."/cmd_pattern.lua")
 dofile(MP.."/cmd_farming.lua")
 dofile(MP.."/cmd_flowers.lua")
+dofile(MP.."/cmd_soup.lua")
 
 dofile(MP.."/signal.lua")
 dofile(MP.."/extender.lua")
