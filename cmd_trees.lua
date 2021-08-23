@@ -65,7 +65,9 @@ local HELP = table.concat({
 	S("- Place the sign in front of the tree."), 
 	S("- Place a chest to the right of the sign."),
 	S("- Put a dirt stack (10 items min.) into the chest."),
-}, "\n")		
+        S("- Preconfigure slot 1 of the bot inventory with dirt"),
+        S("- Preconfigure slot 2 of the bot inventory with saplings"),
+}, "\n")
 
 
 signs_bot.register_signXL({
