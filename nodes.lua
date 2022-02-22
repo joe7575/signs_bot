@@ -14,14 +14,20 @@
 
 signs_bot.FarmingSeed = {}
 signs_bot.FarmingCrop = {}
+signs_bot.FarmingNeedTrellis = {}
+signs_bot.FarmingKeepTrellis = {}
 signs_bot.TreeSaplings = {}
 
 -- inv_seed is the seed inventory name
 -- plantlet is what has to be placed on the ground (stage 1)
 -- crop is the farming crop in the final stage
-function signs_bot.register_farming_plant(inv_seed, plantlet, crop)
+function signs_bot.register_farming_plant(inv_seed, plantlet, crop, trellis)
 	signs_bot.FarmingCrop[crop] = true
 	signs_bot.FarmingSeed[inv_seed] = plantlet
+	if trellis then
+		signs_bot.FarmingNeedTrellis[plantlet] = trellis
+		signs_bot.FarmingKeepTrellis[crop] = trellis
+	end
 end
 
 -- inv_sapling is the sapling inventory name
@@ -45,7 +51,7 @@ end
 -------------------------------------------------------------------------------
 if farming.mod == "redo" then
 	for _, def in pairs(farming.registered_plants) do
-		fp(def.seed, def.crop .. "_1", def.crop .. "_" .. def.steps)
+		fp(def.seed, def.crop .. "_1", def.crop .. "_" .. def.steps, def.trellis)
 	end
 end
 
