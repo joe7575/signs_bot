@@ -50,8 +50,11 @@ end
 -- Farming Redo
 -------------------------------------------------------------------------------
 if farming.mod == "redo" then
-	for _, def in pairs(farming.registered_plants) do
-		fp(def.seed, def.crop .. "_1", def.crop .. "_" .. def.steps, def.trellis)
+	for name, def in pairs(farming.registered_plants) do
+		-- everything except cocoa (these can only be placed on jungletree)
+		if name ~= "farming:cocoa_beans" then
+			fp(def.seed, def.crop .. "_1", def.crop .. "_" .. def.steps, def.trellis)
+		end
 	end
 end
 
