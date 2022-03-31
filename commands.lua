@@ -229,10 +229,11 @@ signs_bot.register_botcommand("jump", {
 	description = S("jump to a label"),
 })	
 
-local function move(mem, any_sensor)
+local function move(base_pos, mem, any_sensor)
 	local new_pos = signs_bot.move_robot(mem)
 	if new_pos then  -- not blocked?
 		mem.robot_pos = new_pos
+		tubelib2.save_mem(base_pos)
 		if any_sensor then
 			activate_sensor(mem.robot_pos, (mem.robot_param2 + 1) % 4)
 			activate_sensor(mem.robot_pos, (mem.robot_param2 + 3) % 4)
@@ -257,7 +258,7 @@ counted as steps.]]),
 	cmnd = function(base_pos, mem, steps)
 		steps = tonumber(steps) or 1
 		local res, idx = signs_bot.steps(mem, 1, steps)
-		move(mem, scan_surrounding(mem))
+		move(base_pos, mem, scan_surrounding(mem))
 		return res
 	end,
 })
@@ -275,7 +276,7 @@ new program from the sign]]),
 	cmnd = function(base_pos, mem)
 		local any_sensor, sign_pos = scan_surrounding(mem)
 		if not sign_pos then
-			move(mem, any_sensor)
+			move(base_pos, mem, any_sensor)
 			return ci.BUSY
 		else
 			mem.script = M(sign_pos):get_string("signs_bot_cmnd").."\ncond_move"

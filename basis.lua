@@ -232,6 +232,7 @@ function signs_bot.start_robot(base_pos)
 		signs_bot.infotext(base_pos, S("running"))
 		reset_robot(base_pos, mem)
 		minetest.get_node_timer(base_pos):start(CYCLE_TIME)
+		tubelib2.save_mem(base_pos)
 		return true
 	end
 end
@@ -255,6 +256,7 @@ function signs_bot.stop_robot(base_pos, mem)
 		end
 		meta:set_string("formspec", formspec(base_pos, mem))
 		signs_bot.remove_robot(mem)
+		tubelib2.save_mem(base_pos)
 	else
 		mem.signal_request = false
 		signs_bot.start_robot(base_pos)

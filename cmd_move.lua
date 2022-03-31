@@ -134,6 +134,7 @@ signs_bot.register_botcommand("backward", {
 		local new_pos = backward_robot(mem)
 		if new_pos then  -- not blocked?
 			mem.robot_pos = new_pos
+			tubelib2.save_mem(base_pos)
 		end
 		return signs_bot.DONE
 	end,
@@ -216,6 +217,7 @@ signs_bot.register_botcommand("move_up", {
 		local new_pos = robot_up(mem.robot_pos, mem.robot_param2)
 		if new_pos then  -- not blocked?
 			mem.robot_pos = new_pos
+			tubelib2.save_mem(base_pos)
 		end
 		return signs_bot.DONE
 	end,
@@ -250,6 +252,7 @@ signs_bot.register_botcommand("move_down", {
 		local new_pos = robot_down(mem.robot_pos, mem.robot_param2)
 		if new_pos then  -- not blocked?
 			mem.robot_pos = new_pos
+			tubelib2.save_mem(base_pos)
 		end
 		return signs_bot.DONE
 	end,
