@@ -23,9 +23,7 @@ function signs_bot.place_robot(pos1, pos2, param2)
 	end
 end
 
--- Called when robot is removed
-function signs_bot.remove_robot(mem)	
-	local pos = mem.robot_pos
+local function replace_robot(pos, replace_node)
 	local node = tubelib2.get_node_lvm(pos)
 	if node.name == "signs_bot:robot" then
 		minetest.remove_node(pos)
@@ -33,19 +31,24 @@ function signs_bot.remove_robot(mem)
 		node = tubelib2.get_node_lvm(pos1)
 		if node.name == "signs_bot:robot_foot" or node.name == "signs_bot:robot_leg" then
 			if node.name == "signs_bot:robot_foot" then
-				minetest.swap_node(pos1, mem.stored_node or {name = "air"})
+				minetest.swap_node(pos1, replace_node)
 			else
 				minetest.remove_node(pos1)
 			end
 			pos1 = {x=pos.x, y=pos.y-2, z=pos.z}
 			node = tubelib2.get_node_lvm(pos1)
 			if node.name == "signs_bot:robot_foot" then
-				minetest.swap_node(pos1, mem.stored_node or {name = "air"})
+				minetest.swap_node(pos1, replace_node)
 			end
 		else
-			minetest.swap_node(pos, mem.stored_node or {name = "air"})
+			minetest.swap_node(pos, replace_node)
 		end
 	end
+end
+
+-- Called when robot is removed
+function signs_bot.remove_robot(mem)
+	replace_robot(mem.robot_pos, mem.stored_node or {name = "air"})
 end
 
 minetest.register_node("signs_bot:robot", {
@@ -136,7 +139,7 @@ minetest.register_lbm({
 			end
 		end)
 		if not found then
-			signs_bot.remove_robot({robot_pos = pos})
+			replace_robot(pos, {name = "air"})
 		end
 	end
 })
