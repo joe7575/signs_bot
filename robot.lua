@@ -125,21 +125,24 @@ minetest.register_node("signs_bot:robot_foot", {
 	sounds = default.node_sound_metal_defaults(),
 })
 
+local function restore_robot(base_pos)
+	local mem = tubelib2.get_mem(base_pos)
+	if mem.running then
+		local pos_below = {x=mem.robot_pos.x, y=mem.robot_pos.y-1, z=mem.robot_pos.z}
+		signs_bot.place_robot(mem.robot_pos, pos_below, mem.robot_param2)
+	end
+end
+
 minetest.register_lbm({
-	label = "[signs_bot] Remove lost robots",
-	name = "signs_bot:lost_robot_remove",
-	nodenames = {"signs_bot:robot"},
+	label = "[signs_bot] Restore robots",
+	name = "signs_bot:robot_restore",
+	nodenames = {"signs_bot:robot", "signs_bot:box"},
 	run_at_every_load = true,
 	action = function(pos, node)
-		local found = false
-		tubelib2.walk_over_all(function(npos, node, mem)
-			if node.name == "signs_bot:box" and mem.robot_pos and
-				vector.equals(pos, mem.robot_pos) then
-				found = true
-			end
-		end)
-		if not found then
+		if node.name == "signs_bot:robot" then
 			replace_robot(pos, {name = "air"})
+		elseif node.name == "signs_bot:box" then
+			minetest.after(1, restore_robot, pos)
 		end
 	end
 })
