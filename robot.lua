@@ -134,7 +134,7 @@ minetest.register_lbm({
 				vector.equals(pos, mem.robot_pos) then
 				found = true
 			end
-		end)
+		end, "robot_pos")
 		if not found then
 			signs_bot.remove_robot({robot_pos = pos})
 		end
