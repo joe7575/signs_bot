@@ -12,9 +12,6 @@
 
 ]]--
 
--- for lazy programmers
-local M = minetest.get_meta
-
 local lib = signs_bot.lib
 
 -- Called when robot is started
@@ -128,32 +125,24 @@ minetest.register_node("signs_bot:robot_foot", {
 	sounds = default.node_sound_metal_defaults(),
 })
 
+local function restore_robot(base_pos)
+	local mem = tubelib2.get_mem(base_pos)
+	if mem.running then
+		local pos_below = {x=mem.robot_pos.x, y=mem.robot_pos.y-1, z=mem.robot_pos.z}
+		signs_bot.place_robot(mem.robot_pos, pos_below, mem.robot_param2)
+	end
+end
+
 minetest.register_lbm({
-	label = "[signs_bot] Syncing robots",
-	name = "signs_bot:robot_sync",
+	label = "[signs_bot] Restore robots",
+	name = "signs_bot:robot_restore",
 	nodenames = {"signs_bot:robot", "signs_bot:box"},
 	run_at_every_load = true,
 	action = function(pos, node)
 		if node.name == "signs_bot:robot" then
-			-- step 1: mark robot
-			M(pos):set_string("syncing", "yes")
-			-- step 3: remove still marked robotor
-			minetest.after(2, function(pos)
-				if (M(pos):get_string("syncing") ~= "") then
-					M(pos):set_string("syncing", "")
-					-- replace_robot checks if robotor is still at this pos
-					replace_robot(pos, {name = "air"})
-				end
-			end, pos)
+			replace_robot(pos, {name = "air"})
 		elseif node.name == "signs_bot:box" then
-			-- step 2: unmark found robot
-			minetest.after(1, function(base_pos)
-				local mem = tubelib2.get_mem(base_pos)
-				if mem.running and
-					minetest.get_node(mem.robot_pos).name == "signs_bot:robot" then
-					M(mem.robot_pos):set_string("syncing", "")
-				end
-			end, pos)
+			minetest.after(1, restore_robot, pos)
 		end
 	end
 })
