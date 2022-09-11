@@ -135,7 +135,7 @@ For all Inventory commands applies: If the bot inventory stack specified by `<sl
 
     jump_check_item <num> <slot> <label>  - Check if there are <num> items in the chest like node.
     		                                If not, jump to <label>.
-    		                                <slot> is the bot inventory slot (1..8) to specify the item,
+                                            <slot> is the bot inventory slot (1..8) to specify the item,
     		                                or 0 for any item.
     jump_low_batt <percent> <label>       - See "Techage specific commands"
 
