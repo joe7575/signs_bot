@@ -48,6 +48,7 @@ function signs_bot.move_robot(mem)
 			if node4.name == "signs_bot:robot_foot" then
 				minetest.swap_node(pos4, mem.stored_node or {name = "air"})
 			end
+			minetest.swap_node(pos3, {name = "air"})
 			minetest.remove_node(pos)
 		else
 			minetest.swap_node(pos, mem.stored_node or {name = "air"})
