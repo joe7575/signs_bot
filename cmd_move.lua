@@ -320,7 +320,7 @@ signs_bot.register_botcommand("stop", {
 		if mem.capa then
 			mem.capa = mem.capa + 2
 		end
-		return signs_bot.DONE
+		return signs_bot.BUSY
 	end,
 })
 
