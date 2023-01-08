@@ -21,11 +21,22 @@ local bot_inv_take_item = signs_bot.bot_inv_take_item
 
 local Flowers = {}
 
+local function contains(table, element)
+	for _, value in pairs(table) do
+		if value == element then
+			return true
+		end
+	end
+	return false
+end
 
 -- Special drop handling is necessary because of waterlily.
 function signs_bot.register_flower(name)
 	local drop = signs_bot.lib.is_simple_node({name = name})
 	if drop then
+		if contains(Flowers, name) then
+			return
+		end
 		Flowers[name] = drop
 	end
 end
