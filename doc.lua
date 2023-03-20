@@ -145,13 +145,17 @@ local sorting_data = {"start", "control", "sensor_doc", "tool", "invent",
 	"bot_sensor", "node_sensor", "crop_sensor", "chest", "timer",
 	"changer", "sensor_extender", "and", "delayer",
 	"farming", "pattern", "copy3x3x3", "flowers", "aspen", 
-	"water", "soup", 
 	"sign_cmnd", "sign_right", "sign_left", "sign_take", "sign_add", "sign_stop", "sign_blank"}
 
 if minetest.global_exists("minecart") then
 	table.insert(sorting_data, "cart_sensor")
 	table.insert(sorting_data, "sign_add_cart")
 	table.insert(sorting_data, "sign_take_cart")
+end
+
+if minetest.global_exists("xdecor") then
+	table.insert(sorting_data, "water")
+	table.insert(sorting_data, "soup")
 end
 
 doc.add_category("signs_bot",
