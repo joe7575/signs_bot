@@ -176,7 +176,7 @@ Or alternatively with the function at the end:
     return          -- end of 'foo'. Jump back
 
 ### License
-Copyright (C) 2019-2022 Joachim Stolberg
+Copyright (C) 2019-2023 Joachim Stolberg
 Copyright (C) 2021 Michal 'Micu' Cieslakiewicz (soup commands)
 Code: Licensed under the GNU GPL version 3 or later. See LICENSE.txt  
 
@@ -213,5 +213,7 @@ optional: farming redo, node_io, doc, techage, minecart, xdecor, compost
 - 2021-09-18  v1.10  * Add techage command 'set <num>' to the Bot Control Unit
 - 2022-03-19  V1.11  * Extend farming (and add ethereal) support (Thanks to nixnoxus)
 - 2022-09-11  V1.12  * Add commands `jump_low_batt` , `jump_check_item`, and `fall_down`
+- 2023-06-27  V1.13  * Add Beduino command support (see bep-006_sb_cmnd.md)
+
 
 
