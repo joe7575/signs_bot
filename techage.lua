@@ -275,6 +275,52 @@ send_cmnd 3465 pull*default:dirt*2]]),
 				return "unsupported"
 			end
 		end,
+		on_beduino_receive_cmnd = function(pos, src, topic, payload)
+			local mem = tubelib2.get_mem(pos)
+			if topic == 1 then
+				if payload[1] == 1 then -- on
+					if not mem.running then
+						signs_bot.start_robot(pos)
+						return 0, {1}
+					end
+				else
+					if mem.running then
+						signs_bot.stop_robot(pos, mem)
+						return 0, {1}
+					end
+				end
+			else
+				return 2, ""  -- topic is unknown or invalid
+			end
+		end,
+		on_beduino_request_data = function(pos, src, topic, payload)
+			local mem = tubelib2.get_mem(pos)
+			if topic == 128 then -- state
+				if mem.error then
+					return 0, {5}
+				elseif mem.running then
+					if mem.curr_cmnd == "stop" then
+						return 0, {3}
+					elseif mem.blocked then
+						return 0, {2} 
+					else
+						return 0, {1}  -- running
+					end
+				elseif mem.capa then
+					if mem.capa <= 0 then
+						return 0, {4}  -- nopower
+					elseif mem.capa >= signs_bot.MAX_CAPA then
+						return 0, {6}  -- stopped
+					else
+						return 0, {7}  -- charging
+					end
+				else
+					return 0, {6}  -- stopped
+				end
+			else
+				return 2, ""  -- topic is unknown or invalid
+			end
+		end,
 	})
 	techage.register_node({"signs_bot:chest"}, {
 		on_inv_request = function(pos, in_dir, access_type)
