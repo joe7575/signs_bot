@@ -46,6 +46,11 @@ Bot Sensor: Not connected=Bot Sensor: Nicht verbunden
 The Bot Sensor detects any bot and sends a signal, if a bot is nearby.=Der Roboter Sensor entdeckt jeden Roboter und sendet ein Signal, sofern ein Roboter in der Nähe ist.
 The sensor direction does not care.=Die Ausrichtung des Sensor spielt keine Rolle.
 
+### bot_sensor.lua ###
+### cart_sensor.lua ###
+
+the sensor range is one node/meter.=Der Sensorbereich ist einen Block/Meter groß.
+
 ### cart_sensor.lua ###
 
 Cart Sensor: Connected with=Wagen Sensor: Verbunden mit
@@ -53,11 +58,6 @@ Cart Sensor=Wagen Sensor
 Cart Sensor: Not connected=Wagen Sensor: Nicht verbunden
 The Cart Sensor detects and sends a signal, if a cart (Minecart) is nearby.=Der Wagen Sensor sendet ein Signal, sofern ein Wagen in der Nähe ist.
 The sensor has an active side (red) that must point to the rail/cart.=Der Sensor hat eine aktive Seite (rot), welche zu den Schienen zeigen muss.
-
-### cart_sensor.lua ###
-### bot_sensor.lua ###
-
-the sensor range is one node/meter.=Der Sensorbereich ist einen Block/Meter groß.
 
 ### changer.lua ###
 
@@ -90,18 +90,18 @@ Sign 'farming'=Zeichen 'Farming'
 Used to harvest and seed a 3x3 field.=Benötigt um ein 3x3 Feld zu ernten und wieder zu sähen.
 The seed to be placed has to be in the first inventory slot of the bot.=Das Saatgut, dass gesät werden soll, muss sich an der 1. Position im Inventar befinden.
 
-### cmd_farming.lua ###
-### cmd_flowers.lua ###
-
-Place the sign in front of the field.=Platziere das Zeichen vor das Feld.
-When finished, the bot turns.=Der Roboter dreht um, wenn er fertig ist.
-
 ### cmd_flowers.lua ###
 
 Cutting flowers, papyrus,@nleaves and tree blocks@nin front of the robot@non a 3x3 field.=Schneide Blumen, Papyrus,@nBlätter und Baumblöcke@nin einem 3x3 großem Feld@nvor dem Roboter.
 Sign "flowers"=Zeichen "Blumen"
 Sign 'flowers'=Zeichen 'Blumen'
 Used to cut flowers on a 3x3 field.=Benötigt um ein 3x3 Blumenfeld zu ernten.
+
+### cmd_flowers.lua ###
+### cmd_farming.lua ###
+
+Place the sign in front of the field.=Platziere das Zeichen vor das Feld.
+When finished, the bot turns.=Der Roboter dreht um, wenn er fertig ist.
 
 ### cmd_item.lua ###
 
@@ -156,6 +156,7 @@ Dig the block on the right side@n<slot> is the inventory slot (1..8)@n<lvl> is o
 Dig the block under the robot.@n<slot> is the inventory slot (1..8)=Entferne einen Block unter dem@nRoboter.@n<slot> ist die Position im@neigenen Inventar (1--8).
 Dig the block above the robot.@n<slot> is the inventory slot (1..8)=Entferne einen Block über dem@nRoboter.@n<slot> ist die Position im@neigenen Inventar (1--8).
 Rotate the block in front of the robot@n<lvl> is one of:  -1   0   +1@n<steps> is one of:  1   2   3=Rotiere den Block vor dem Roboter.@nFür <lvl> ist zulässig: -1   0   +1@nFür <steps> ist zulässig: 1   2   3
+Set param2 of the block in front of the robot@n<lvl> is one of:  -1   0   +1@n<param2> is: 0 - 23=
 Bot torch=Bot Fackel
 
 ### cmd_place.lua ###
@@ -251,7 +252,7 @@ call a subroutine (with 'return' statement)=Aufruf einer Unterfunktion (mit 'ret
 return from a subroutine=Rückkehr von einer Unterfunktion
 jump to a label=Sprung zu einer Marke
 Move the robot 1..999 steps forward@nwithout paying attention to any signs.@nUp and down movements also become@ncounted as steps.=Bewege den Roboter 1..999 Schritte@nvorwärts ohne auf Zeichen zu achten.@nAuf- und Ab-Bewegungen werden auch@nals Schritte gezählt.
-Walk until a sign or obstacle is@nreached. Then continue with the next command.@nWhen a sign has been reached,@nthe current program is ended@nand the bot executes the@nnew program from the sign=Gehe bis ein Zeichen oder Hindernis@nerreicht wurde. Führe dann das nächste@nKommando aus. @nWurde ein Zeichen erreicht, so arbeite@ndie Kommandos des Zeichens als@nUnter-Prozess ab
+Walk until a sign, obstacle or steps are@nreached. Then continue with the next command.@nWhen a sign has been reached,@nthe current program is ended@nand the bot executes the@nnew program from the sign=
 Print given text as chat message.@nFor two or more words, use the '*' character@ninstead of spaces, like "Hello*world"=Gebe den angegebenen Text als Chat-Nachricht aus.@nFür zwei oder mehr Wörter verwende das Zeichen '*' @nanstelle von Leerzeichen, z. B. "Hallo*Welt".
 
 ### compost.lua ###
@@ -412,6 +413,11 @@ inputs=Eingängen
 Signal AND=Signal UND
 Signal is sent, if all input signals are received.=Signal wird gesendet, wenn all Eingangssignale empfangen wurden.
 
+### logic_and.lua ###
+### timer.lua ###
+
+Connected with=Verbunden mit
+
 ### node_sensor.lua ###
 
 Node Sensor: Connected with =Block Sensor: Verbunden mit 
@@ -466,12 +472,11 @@ Bot Timer: Not connected=Roboter Timer: Nicht verbunden
 Special kind of sensor.=Spezielle Form eines Sensors.
 Can be programmed with a time in seconds, e.g. to start the bot cyclically.=Kann mit einer Zeit in Sekunden programmiert werden, um bspw. den Roboter zyklisch zu starten.
 
-### timer.lua ###
-### logic_and.lua ###
-
-Connected with=Verbunden mit
-
 ### tool.lua ###
 
 Sensor Connection Tool=Sensor Verbindungswerkzeug
 
+
+##### not used anymore #####
+
+Walk until a sign or obstacle is@nreached. Then continue with the next command.@nWhen a sign has been reached,@nthe current program is ended@nand the bot executes the@nnew program from the sign=Gehe bis ein Zeichen oder Hindernis@nerreicht wurde. Führe dann das nächste@nKommando aus. @nWurde ein Zeichen erreicht, so arbeite@ndie Kommandos des Zeichens als@nUnter-Prozess ab
