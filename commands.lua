@@ -267,22 +267,39 @@ counted as steps.]]),
 
 signs_bot.register_botcommand("cond_move", {
 	mod = "move",
-	params = "",
-	num_param = 0,
-	description = S([[Walk until a sign or obstacle is
+	params = "<steps>",
+	num_param = 1,
+	description = S([[Walk until a sign, obstacle or steps are
 reached. Then continue with the next command.
 When a sign has been reached,
 the current program is ended
 and the bot executes the
 new program from the sign]]),
-	cmnd = function(base_pos, mem)
+
+	function(new_pos) --Checking if not blocked if yes then execute next bot command
+		new_pos = signs_bot.move_robot(mem)
+		return new_pos
+	end,
+
+	check = function(steps) --Checking if <steps> is specified correctly
+		steps = tonumber(steps) or 1
+		return steps > 0 and steps < 1000
+	end,
+
+	cmnd = function(base_pos, mem, steps, params, any_sensor, new_pos)
 		local any_sensor, sign_pos = scan_surrounding(mem)
-		if not sign_pos then
-			move(mem, any_sensor)
+		steps = tonumber(steps)
+		if not sign_pos and steps == nil then --Checking if number of steps was specified
+    		move(mem, any_sensor)
 			return ci.BUSY
-		else
+		elseif sign_pos then --If next sign is in the way execute it
 			mem.script = M(sign_pos):get_string("signs_bot_cmnd").."\ncond_move"
 			return ci.NEW
+		else --If steps were specified walk until reacging an pbstacle/sign
+			steps = tonumber(steps) or 1
+			local res, idx = signs_bot.steps(mem, 1, steps)
+			move(mem, scan_surrounding(mem))
+			return res
 		end
 	end,
 })
