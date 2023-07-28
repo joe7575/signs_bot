@@ -46,6 +46,11 @@ Bot Sensor: Not connected=
 The Bot Sensor detects any bot and sends a signal, if a bot is nearby.=
 The sensor direction does not care.=
 
+### bot_sensor.lua ###
+### cart_sensor.lua ###
+
+the sensor range is one node/meter.=
+
 ### cart_sensor.lua ###
 
 Cart Sensor: Connected with=
@@ -53,11 +58,6 @@ Cart Sensor=
 Cart Sensor: Not connected=
 The Cart Sensor detects and sends a signal, if a cart (Minecart) is nearby.=
 The sensor has an active side (red) that must point to the rail/cart.=
-
-### cart_sensor.lua ###
-### bot_sensor.lua ###
-
-the sensor range is one node/meter.=
 
 ### changer.lua ###
 
@@ -90,18 +90,18 @@ Sign 'farming'=
 Used to harvest and seed a 3x3 field.=
 The seed to be placed has to be in the first inventory slot of the bot.=
 
-### cmd_farming.lua ###
-### cmd_flowers.lua ###
-
-Place the sign in front of the field.=
-When finished, the bot turns.=
-
 ### cmd_flowers.lua ###
 
 Cutting flowers, papyrus,@nleaves and tree blocks@nin front of the robot@non a 3x3 field.=
 Sign "flowers"=
 Sign 'flowers'=
 Used to cut flowers on a 3x3 field.=
+
+### cmd_flowers.lua ###
+### cmd_farming.lua ###
+
+Place the sign in front of the field.=
+When finished, the bot turns.=
 
 ### cmd_item.lua ###
 
@@ -156,6 +156,7 @@ Dig the block on the right side@n<slot> is the inventory slot (1..8)@n<lvl> is o
 Dig the block under the robot.@n<slot> is the inventory slot (1..8)=
 Dig the block above the robot.@n<slot> is the inventory slot (1..8)=
 Rotate the block in front of the robot@n<lvl> is one of:  -1   0   +1@n<steps> is one of:  1   2   3=
+Set param2 of the block in front of the robot@n<lvl> is one of:  -1   0   +1@n<param2> is: 0 - 23=
 Bot torch=
 
 ### cmd_place.lua ###
@@ -251,7 +252,7 @@ call a subroutine (with 'return' statement)=
 return from a subroutine=
 jump to a label=
 Move the robot 1..999 steps forward@nwithout paying attention to any signs.@nUp and down movements also become@ncounted as steps.=
-Walk until a sign or obstacle is@nreached. Then continue with the next command.@nWhen a sign has been reached,@nthe current program is ended@nand the bot executes the@nnew program from the sign=
+Walk until a sign, obstacle or steps are@nreached. Then continue with the next command.@nWhen a sign has been reached,@nthe current program is ended@nand the bot executes the@nnew program from the sign=
 Print given text as chat message.@nFor two or more words, use the '*' character@ninstead of spaces, like "Hello*world"=
 
 ### compost.lua ###
@@ -412,6 +413,11 @@ inputs=
 Signal AND=
 Signal is sent, if all input signals are received.=
 
+### logic_and.lua ###
+### timer.lua ###
+
+Connected with=
+
 ### node_sensor.lua ###
 
 Node Sensor: Connected with =
@@ -465,11 +471,6 @@ Cycle time [min]:=
 Bot Timer: Not connected=
 Special kind of sensor.=
 Can be programmed with a time in seconds, e.g. to start the bot cyclically.=
-
-### timer.lua ###
-### logic_and.lua ###
-
-Connected with=
 
 ### tool.lua ###
 
