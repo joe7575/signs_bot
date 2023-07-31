@@ -4,7 +4,7 @@ A robot controlled by signs.
 
 On the web: https://github.com/joe7575/signs_bot/blob/master/techage_EN.md
 
-[signs_bot_bot_inv|image]
+[signs_bot_bot_inv.png|image]
 
 ## Firt Steps
 
@@ -32,7 +32,7 @@ There are also the following blocks:
 - Sensors: These can send a signal to an actuator if they are connected to the actuator.
 - Actuators: These perform an action when they receive a signal from a sensor.
 
-[signs_bot_bot_inv|image]
+[signs_bot_bot_inv.png|image]
 
 ## Signs
 
@@ -59,7 +59,7 @@ A standard job for the bot is to move items from one chest to another chest
 (or node with a chest like inventory). This can be done by means of the two signs
 'take item' and 'add item'. These signs have to be placed on top of chest nodes.
 
-[signs_bot_sign_left|image]
+[signs_bot_sign_left.png|image]
 
 ## Sensors and Actuators
 
@@ -83,7 +83,7 @@ Actuators are:
 Sensors must be connected (paired) with actuators. This is what the
 "Sensor Connection Tool" does.
 
-[signs_bot_sensor_crop_inv|image]
+[signs_bot_sensor_crop_inv.png|image]
 
 
 ## Sensor Connection Tool
@@ -98,7 +98,7 @@ requested state. For example: If you want to start the Bot with a sensor, connec
 the sensor with the Bot Box, when the Bot is in the state 'on'. Otherwise the sensor
 signal will stop the Bot, instead of starting it.
 
-[signs_bot_tool|image]
+[signs_bot_tool.png|image]
 
 
 ## Inventory
@@ -131,7 +131,7 @@ it only takes this, if no slot has been specified, it checks all of them one aft
 the other, starting from slot 1 until it finds something. If the number found is
 smaller than requested, he tries to take the rest out of any slot.
 
-[signs_bot_box|image]
+[signs_bot:box|image]
 
 ## Nodes / Blocks
 
@@ -146,14 +146,14 @@ The box inventory simulates the inventory of the bot.
 You will not be able to access the inventory, if the bot is running.
 The bot can carry up to 8 stacks and 6 signs with it.
 
-[signs_bot_box|image]
+[signs_bot:box|image]
 
 ### Bot Flap
 
 The flap is a simple block used as door for the bot. Place the flap in any wall,
 and the bot will automatically open and close the flap as it passes through it.
 
-[signs_bot_bot_flap|image]
+[signs_bot:bot_flap|image]
 
 ### Signs Duplicator
 
@@ -166,14 +166,14 @@ The Duplicator can be used to make copies of signs:
 Written books [default:book_written] can alternatively be used as template.
 Already written signs can be used as input, too.
 
-[signs_bot_duplicator|image]
+[signs_bot:duplicator|image]
 
 ### Bot Sensor
 
 The Bot Sensor detects any bot and sends a signal, if a bot is nearby.
 The sensor range is one node/meter." The sensor direction does not care.
 
-[signs_bot_bot_sensor|image]
+[signs_bot:bot_sensor|image]
 
 ### Node Sensor
 
@@ -182,7 +182,7 @@ or disappeared, but has to be configured accordingly. Valid nodes are all kind
 of blocks and plants. The sensor range is 3 nodes/meters in one direction.
 The sensor has an active side (red) that must point to the observed area.
 
-[signs_bot_node_sensor|image]
+[signs_bot:node_sensor|image]
 
 ### Crop Sensor
 
@@ -190,7 +190,7 @@ The Crop Sensor sends cyclical signals when, for example, wheat is fully grown.
 The sensor range is one node/meter. The sensor has an active side (red) that
 must point to the crop/field.
 
-[signs_bot_crop_sensor|image]
+[signs_bot:crop_sensor|image]
 
 ### Signs Bot Chest
 
@@ -199,14 +199,14 @@ depending on the chest state. Possible states are 'empty', 'not empty', 'almost 
 
 A typical use case is to turn off the bot, when the chest is almost full or empty.
 
-[signs_bot_chest|image]
+[signs_bot:chest|image]
 
 ### Bot Timer
 
 "Special kind of sensor. Can be programmed with a time in seconds, e.g. to start
 the bot cyclically.
 
-[signs_bot_timer|image]
+[signs_bot:timer|image]
 
 ### Bot Control Unit
 
@@ -219,7 +219,7 @@ This can be repeated 3 times.
 
 Use the connection tool to connect up to 4 sensors with the Bot Control Unit.
 
-[signs_bot_changer|image]
+[signs_bot:changer1|image]
 
 ### Sensor Extender
 
@@ -227,27 +227,27 @@ With the Sensor Extender, sensor signals can be sent to more than one actuator.
 Place one or more extender nearby the sensor and connect each extender with one
 further actuator by means of the Connection Tool.
 
-[signs_bot_sensor_extender|image]
+[signs_bot:sensor_extender|image]
 
 ### Signal AND
 
 Signal is sent, if all input signals are received.
 
-[signs_bot_and1|image]
+[signs_bot:and1|image]
 
 ### Signal Delayer
 
 Signals are forwarded delayed. Subsequent signals are queued. 
 The delay time can be configured.
 
-[signs_bot_delayer|image]
+[signs_bot:delayer|image]
 
 ### Sign 'farming'
 
 Used to harvest and seed a 3x3 field. Place the sign in front of the field.
 The seed to be placed has to be in the first inventory slot of the bot. When finished, the bot turns.
 
-[signs_bot_farming|image]
+[signs_bot:farming|image]
 
 ### Sign 'pattern'
 
@@ -255,21 +255,21 @@ Used to make a copy of a 3x3x3 cube. Place the sign in front of the pattern
 to be copied. Use the copy sign to make the copy of this pattern on a different
 location. The bot must first reach the pattern sign, then the copy sign.
 
-[signs_bot_pattern|image]
+[signs_bot:pattern|image]
 
 ### Sign 'copy3x3x3'
 
 Used to make a copy of a 3x3x3 cube. Place the sign in front of the location,
 where the copy should be made. Use the pattern sign to mark the pattern.
 
-[signs_bot_copy|image]
+[signs_bot:copy3x3x3|image]
 
 ### Sign 'flowers'
 
 Used to cut flowers on a 3x3 field. Place the sign in front of the field.
 When finished, the bot turns.
 
-[signs_bot_flowers|image]
+[signs_bot:flowers|image]
 
 ### Sign 'aspen'
 
@@ -281,7 +281,7 @@ Used to harvest an aspen or pine tree trunk
 - Preconfigure slot 1 of the bot inventory with dirt
 - Preconfigure slot 2 of the bot inventory with saplings
 
-[signs_bot_aspen|image]
+[signs_bot:aspen|image]
 
 ### Sign 'command'
 
@@ -290,54 +290,54 @@ of you and use the node menu to program your sequence of bot commands.
 The menu has an edit field for your commands and a help page with all
 available commands. The help page has a copy button to simplify the programming.
 
-[signs_bot_sign_cmnd|image]
+[signs_bot:sign_cmnd|image]
 
 ### Sign "turn right"
 
 The Bot turns right when it detects this sign in front of it.
 
-[signs_bot_sign_right|image]
+[signs_bot:sign_right|image]
 
 ### Sign "turn left"
 
 The Bot turns left when it detects this sign in front of it.
 
-[signs_bot_sign_left|image]
+[signs_bot:sign_left|image]
 
 ### Sign "take item"
 
 The Bot takes items out of a chest in front of it and then turns around.
 This sign has to be placed on top of the chest.
 
-[signs_bot_sign_take|image]
+[signs_bot:sign_take|image]
 
 ### Sign "add item"
 
 The Bot puts items into a chest in front of it and then turns around.
 This sign has to be placed on top of the chest.
 
-[signs_bot_sign_add|image]
+[signs_bot:sign_add|image]
 
 ### Sign "stop"
 
 The Bot will stop in front of this sign until the sign is removed or
 the bot is turned off.
 
-[signs_bot_sign_stop|image]
+[signs_bot:sign_stop|image]
 
 ### Sign "add to cart" (minecart)
 
 The Bot puts items into a minecart in front of it, pushes the cart and then turns
 around. This sign has to be placed on top of the rail at the cart end position.
 
-[signs_bot_sign_add_cart|image]
+[signs_bot:sign_add_cart|image]
 
 ### Sign "take from cart" (minecart)
 
 The Bot takes items out of a minecart in front of it, pushes the cart and then
 turns around. This sign has to be placed on top of the rail at the cart end position.
 
-[signs_bot_sign_take_cart|image]
+[signs_bot:sign_take_cart|image]
 
 ### Sign 'take water' (xdecor)
 
@@ -350,7 +350,7 @@ Items in slots:
 The result is one bucket with water in selected inventory slot. When finished,
 the bot turns around.
 
-[signs_bot_water|image]
+[signs_bot:water|image]
 
 ### Sign 'cook soup' (xdecor)
 
@@ -368,7 +368,7 @@ Items in slots:
   The result is one bowl with vegetable soup in selected inventory slot.
 When finished, the bot turns around.
 
-[signs_bot_soup|image]
+[signs_bot:soup|image]
 
 
 ## Bot Commands
@@ -430,7 +430,7 @@ more can be removed, the next slot will automatically be used.
     flame_on                  - Make fire
     flame_off                 - Put out the fire
 
-[signs_bot_bot_inv|image]
+[signs_bot_bot_inv.png|image]
 
 ### Techage specific commands
 
@@ -447,62 +447,91 @@ more can be removed, the next slot will automatically be used.
                                         instead of spaces, e.g.: 
                                         send_cmnd 3465 pull*default:dirt*2 
 
-[signs_bot_bot_inv|image]
+[signs_bot_bot_inv.png|image]
 
 ### Flow control commands
 
-    jump <label>    -- jump command, <label> is a word from the characters a-z or A-Z
-    <label>:        -- jump label / start of a function
-    return          -- return from a function
-    repeat <num>    -- start of a loop block, <num> is a number 1..999
-    end             -- end of a loop block
-    call <label>    -- call of a function (with return via the command 'return')
+    -- jump command, <label> is a word from the characters a-z or A-Z
+    jump <label>
 
-[signs_bot_bot_inv|image]
+    -- jump label / start of a function
+    <label>:
+
+    -- return from a function
+    return
+
+    -- start of a loop block, <num> is a number 1..999
+    repeat <num>
+
+    -- end of a loop block
+    end
+
+    -- call of a function (with return via the command 'return')
+    call <label>
+
+
+[signs_bot_bot_inv.png|image]
 
 ### Further jump commands
 
-    jump_check_item <num> <slot> <label>  - Check if there are <num> items in the chest like node.
-    		                                If not, jump to <label>.
-                                            <slot> is the bot inventory slot (1..8) to 
-                                            specify the item, or 0 for any item.
-    jump_low_batt <percent> <label>       - See "Techage specific commands"
+    -- Check if there are <num> items in the chest like node.
+    -- If not, jump to <label>.
+    -- <slot> is the bot inventory slot (1..8) to
+    -- specify the item, or 0 for any item.
+    jump_check_item <num> <slot> <label>
+
+    -- See "Techage specific commands"
+    jump_low_batt <percent> <label>
 
 
-[signs_bot_bot_inv|image]
+[signs_bot_bot_inv.png|image]
 
 ### Flow control Examples
 
 #### Example with a function at the beginning:
 
-    jump main       -- jump to the label 'main'
+    -- jump to the label 'main'
+    jump main
     
-    foo:            -- starting point of the function with the name 'foo'
+    -- starting point of the function with the name 'foo'
+    foo:
       cmnd ...
       cmnd ...
-    return          -- end of 'foo'. Jump back
+    -- end of 'foo'. Jump back
+    return
     
-    main:           -- main program
+    -- main program
+    main:
       cmnd ...
-      repeat 10     -- repeat all commands up to 'end' 10 times
+      -- repeat all commands up to 'end' 10 times
+      repeat 10
         cmnd ...
-        call foo    -- call the subfunction 'foo'
+        -- call the subfunction 'foo'
+        call foo
         cmnd ...
-      end           -- end of the 'repeat' loop
-    exit            -- end of the program
+      -- end of the 'repeat' loop
+      end
+    -- end of the program
+    exit
 
 
 #### Example with a function at the end:
     
     cmnd ...
-    repeat 10       -- repeat all commands up to 'end' 10 times
+    -- repeat all commands up to 'end' 10 times
+    repeat 10
       cmnd ...
-      call foo      -- call the subfunction 'foo'
+      -- call the subfunction 'foo'
+      call foo
       cmnd ...
-    end             -- end of the 'repeat' loop
-    exit            -- end of the program
+    -- end of the 'repeat' loop
+    end
+    -- end of the program
+    exit
     
-    foo:            -- starting point of the function with the name 'foo'
+    -- starting point of the function with the name 'foo'
+    foo:
       cmnd ...
       cmnd ...
-    return          -- end of 'foo'. Jump back
+    -- end of 'foo'. Jump back
+    return
