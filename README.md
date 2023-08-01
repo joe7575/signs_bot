@@ -16,7 +16,7 @@ See [manual](https://github.com/joe7575/signs_bot/blob/master/techage_EN.md)
 The mod has an in-game help to all blocks and signs.
 If 'techage' is installed, the techage ingame manual will be expanded.
 If techage is not installed, it is recommended that you have installed the
-mods 'doc' and 'unified_inventory'.
+mod doclib.
 
 
 ### License
@@ -27,7 +27,7 @@ Code: Licensed under the GNU GPL version 3 or later. See LICENSE.txt
 
 ### Dependencies 
 default, farming, basic_materials, tubelib2  
-optional: farming redo, node_io, doc, techage, minecart, xdecor, compost
+optional: farming redo, node_io, doc, techage, minecart, xdecor, compost, doclib
 
 
 ### History
