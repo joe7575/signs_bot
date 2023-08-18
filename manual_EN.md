@@ -11,7 +11,7 @@ On the web: https://github.com/joe7575/signs_bot/blob/master/techage_EN.md
 After you have placed the Signs Bot Box, you can start the bot by means of the
 'On' button in the box menu. If the bot returns to its box right away,
 you will need to charge it with electrical energy (techage) first.
-The bot then runs straight up until it reaches an obstacle
+The bot then runs straight ahead until it reaches an obstacle
 (a step with two or more blocks up or down or a sign.)
 
 The bot can only be controlled by signs that are placed in its path.
@@ -24,7 +24,7 @@ If the bot first reaches an obstacle it will stop, or if available, execute
 the next commands from the last sign.
 
 The Signs Bot Box has an inventory with 6 stacks for signs and 8 stacks for
-other items (to be placed/dug by the bot). This inventory simulates the bot
+other items (which are placed/mined by the bot). This inventory simulates the bot
 internal inventory. That means you will only have access to the inventory
 if the bot is turned off ('sitting' in his box).
 
@@ -36,14 +36,15 @@ There are also the following blocks:
 
 ## Signs
 
-You simply control the direction of the bot by means of the 'turn left' and
-'turn right' signs (signs with the arrow). The bot can run over steps
+You control the direction of the bot using the "turn left" and
+"turn right" signs (signs with the arrow). The bot can run over steps
 (one block up/down). But there are also commands to move the bot up and down.
 
 It is not necessary to mark a way back to the box. With the command 'turn_off'
 the bot will turn off and be back in his box from every position. The same applies
 if you turn off the bot by the box menu. If the bot reaches a sign from the wrong
-direction (from back or sides) the sign will be ignored. The bot will walk over.
+direction (from back or sides) the sign will be ignored.
+The bot will simply step over the sign.
 
 All predefined signs have a menu with a list of the bot commands. These signs
 can't be changed, but you can craft and program your own signs. For this you
@@ -103,7 +104,8 @@ signal will stop the Bot, instead of starting it.
 
 ## Inventory
 
-The following applies to all commands that are used to place items in the bot inventory, like:
+The following applies to all commands that place items/items in the bot inventory, such as:
+
 
 - `take_item <num> <slot>`
 - `pickup_items <slot>`
@@ -116,10 +118,11 @@ inventory are checked one after the other. If a slot was specified (case B),
 only this slot is checked. 
 In both cases the following applies: 
 
-If the slot is pre-configured and fits the item, or if the slot is not configured
-and empty, or is only partially filled with the item type which should be added),
-then the items are added. If not all items can be added, the remaining slots will
-be tried out in case A. Anything that could not be added to your own inventory goes back.
+If the slot is preconfigured and matches the item, or if the slot is unconfigured
+and empty, or only partially filled with the item type to be added, 
+then the item(s) will be added.
+If not all items can be added, in case A the remaining slots are tried. 
+Anything that couldn't be added to your inventory will go back or be dropped.
 
 The following applies to all commands that are used to take items from the bot inventory, like:
 
@@ -129,7 +132,7 @@ It doesn't matter whether a slot is configured or not. The bot takes the first s
 that it can find from its own inventory and tries to use it. If a slot is specified,
 it only takes this, if no slot has been specified, it checks all of them one after
 the other, starting from slot 1 until it finds something. If the number found is
-smaller than requested, he tries to take the rest out of any slot.
+smaller than requested, he tries to take the rest out of any other slot.
 
 [signs_bot:box|image]
 
@@ -203,8 +206,8 @@ A typical use case is to turn off the bot, when the chest is almost full or empt
 
 ### Bot Timer
 
-"Special kind of sensor. Can be programmed with a time in seconds, e.g. to start
-the bot cyclically.
+This is a special kind of sensor. Can be programmed with a time in seconds,
+e.g. to start the bot cyclically.
 
 [signs_bot:timer|image]
 
@@ -245,7 +248,8 @@ The delay time can be configured.
 ### Sign 'farming'
 
 Used to harvest and seed a 3x3 field. Place the sign in front of the field.
-The seed to be placed has to be in the first inventory slot of the bot. When finished, the bot turns.
+The seed used must be in the first slot of the bot inventory.
+When the bot is done, the bot will turn and walk back.
 
 [signs_bot:farming|image]
 
@@ -255,12 +259,17 @@ Used to make a copy of a 3x3x3 cube. Place the sign in front of the pattern
 to be copied. Use the copy sign to make the copy of this pattern on a different
 location. The bot must first reach the pattern sign, then the copy sign.
 
+Used to make a copy of a 3x3x3 cube. Place the shield in front of the blocks
+to be copied. Use the copy sign to make the copy of these blocks in another
+location. The bot must first process the "pattern" sign, only then can the bot
+be directed to the copy sign.
+
 [signs_bot:pattern|image]
 
 ### Sign 'copy3x3x3'
 
-Used to make a copy of a 3x3x3 cube. Place the sign in front of the location,
-where the copy should be made. Use the pattern sign to mark the pattern.
+Used to make a copy of a 3x3x3 cube. Place the sign in front of where you want
+the copy to be made. See also sign "pattern".
 
 [signs_bot:copy3x3x3|image]
 
@@ -377,16 +386,13 @@ The commands are also all described as help in the "Sign command" node.
 All blocks or signs that are set are taken from the bot inventory.
 Any blocks or signs removed will be added back to the Bot Inventory.
 `<slot>` is always the bot internal inventory stack (1..8).
-For all Inventory commands applies: If the bot inventory stack specified by `<slot>`
-is full, so that nothing more can be done, or just empty, so that nothing
-more can be removed, the next slot will automatically be used.
 
-    move <steps>              - to follow one or more steps forward without signs
-    cond_move                 - walk to the next sign and work it off
+    move <steps>              - go one or more steps forward
+    cond_move                 - go to the nearest obstacle or sign
     turn_left                 - turn left
     turn_right                - turn right
     turn_around               - turn around
-    backward                  - one step backward
+    backward                  - take a step back
     turn_off                  - turn off the robot / back to the box
     pause <sec>               - wait one or more seconds
     move_up                   - move up (maximum 2 times)
@@ -394,17 +400,17 @@ more can be removed, the next slot will automatically be used.
     fall_down                 - fall into a hole/chasm (up to 10 blocks)
     take_item <num> <slot>    - take one or more items from a box
     add_item <num> <slot>     - put one or more items in a box
-    add_fuel <num> <slot>     - for furnaces or similar
-    place_front <slot> <lvl>  - Set block in front of the robot
-    place_left <slot> <lvl>   - Set block to the left
-    place_right <slot> <lvl>  - set block to the right
-    place_below <slot>        - set block under the robot
+    add_fuel <num> <slot>     - put fuel in a furnace
+    place_front <slot> <lvl>  - place the block in front of the bot
+    place_left <slot> <lvl>   - place the block to the left of the bot
+    place_right <slot> <lvl>  - place the block to the right of the bot
+    place_below <slot>        - lift the robot and put the block under the robot
     place_above <slot>        - set block above the robot
     dig_front <slot> <lvl>    - remove block in front of the robot
     dig_left <slot> <lvl>     - remove block on the left
     dig_right <slot> <lvl>    - remove block on the right
-    dig_below <slot>          - dig block under the robot
-    dig_above <slot>          - dig block above the robot
+    dig_below <slot>          - remove block under the robot
+    dig_above <slot>          - remove block above the robot
     rotate_item <lvl> <steps> - rotate a block in front of the robot
     set_param2 <lvl> <param2> - set param2 of the block in front of the robot
     place_sign <slot>         - set sign
@@ -415,12 +421,12 @@ more can be removed, the next slot will automatically be used.
     pickup_items <slot>       - pickup items (in a 3x3 field)
     drop_items <num> <slot>   - drop items
     harvest                   - harvest a 3x3 field (farming)
-    cutting                   - cut a 3x3 flower field
-    sow_seed <slot>           - a 3x3 field sowing / planting
+    cutting                   - cut flowers in a 3x3 field
+    sow_seed <slot>           - see/plant a 3x3 field
     plant_sapling <slot>      - plant a sapling in front of the robot
-    pattern                   - save the blocks behind the shield (up to 5x3x3) as template
-    copy <size>               - make a copy of "pattern". Size is e.g. 3x3 (see ingame help)
-    punch_cart                - Punch a rail cart to start it
+    pattern                   - save the block properties behind the sign (3x3x3 cube) as a template
+    copy <size>               - make a 3x3x3 copy of the stored template
+    punch_cart                - bump a mine cart
     add_compost <slot>        - Put 2 leaves into the compost barrel
     take_compost <slot>       - Take a compost item from the barrel
     print <text>              - Output chat message for debug purposes
@@ -443,8 +449,7 @@ more can be removed, the next slot will automatically be used.
     send_cmnd <receiver> <command>    - Send a techage command to a given node. 
                                         Receiver is addressed by the techage node number. 
                                         For commands with two or more words, 
-                                        use the '*' character
-                                        instead of spaces, e.g.: 
+                                        use the '*' character instead of spaces, e.g.: 
                                         send_cmnd 3465 pull*default:dirt*2 
 
 [signs_bot_bot_inv.png|image]

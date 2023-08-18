@@ -58,7 +58,7 @@ optional: farming redo, node_io, doc, techage, minecart, xdecor, compost, doclib
 - 2022-03-19  V1.11  * Extend farming (and add ethereal) support (Thanks to nixnoxus)
 - 2022-09-11  V1.12  * Add commands `jump_low_batt` , `jump_check_item`, and `fall_down`
 - 2023-06-27  V1.13  * Add Beduino command support (see bep-006_sb_cmnd.md)
-- 2023-07-28  V1.13  * Introduction/manual restructured
+- 2023-07-28  V1.13  * Introduction/manual restructured, doclib dependency added
 
 
 

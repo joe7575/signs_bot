@@ -19,6 +19,8 @@ if minetest.global_exists("techage") then
 	-- Use the Techage Construction Board
 	local content = dofile(MP.."/manual_EN.lua")
 	doclib.add_to_manual("techage", "EN", content)
+	local content = dofile(MP.."/manual_DE.lua")
+	doclib.add_to_manual("techage", "DE", content)
 
 elseif minetest.global_exists("doclib") then
 

@@ -52,7 +52,7 @@ return {
     "After you have placed the Signs Bot Box\\, you can start the bot by means of the\n"..
     "'On' button in the box menu. If the bot returns to its box right away\\,\n"..
     "you will need to charge it with electrical energy (techage) first.\n"..
-    "The bot then runs straight up until it reaches an obstacle\n"..
+    "The bot then runs straight ahead until it reaches an obstacle\n"..
     "(a step with two or more blocks up or down or a sign.)\n"..
     "\n"..
     "The bot can only be controlled by signs that are placed in its path.\n"..
@@ -65,7 +65,7 @@ return {
     "the next commands from the last sign.\n"..
     "\n"..
     "The Signs Bot Box has an inventory with 6 stacks for signs and 8 stacks for\n"..
-    "other items (to be placed/dug by the bot). This inventory simulates the bot\n"..
+    "other items (which are placed/mined by the bot). This inventory simulates the bot\n"..
     "internal inventory. That means you will only have access to the inventory\n"..
     "if the bot is turned off ('sitting' in his box).\n"..
     "\n"..
@@ -76,14 +76,15 @@ return {
     "\n"..
     "\n"..
     "\n",
-    "You simply control the direction of the bot by means of the 'turn left' and\n"..
-    "'turn right' signs (signs with the arrow). The bot can run over steps\n"..
+    "You control the direction of the bot using the \"turn left\" and\n"..
+    "\"turn right\" signs (signs with the arrow). The bot can run over steps\n"..
     "(one block up/down). But there are also commands to move the bot up and down.\n"..
     "\n"..
     "It is not necessary to mark a way back to the box. With the command 'turn_off'\n"..
     "the bot will turn off and be back in his box from every position. The same applies\n"..
     "if you turn off the bot by the box menu. If the bot reaches a sign from the wrong\n"..
-    "direction (from back or sides) the sign will be ignored. The bot will walk over.\n"..
+    "direction (from back or sides) the sign will be ignored.\n"..
+    "The bot will simply step over the sign.\n"..
     "\n"..
     "All predefined signs have a menu with a list of the bot commands. These signs\n"..
     "can't be changed\\, but you can craft and program your own signs. For this you\n"..
@@ -135,7 +136,7 @@ return {
     "\n"..
     "\n"..
     "\n",
-    "The following applies to all commands that are used to place items in the bot inventory\\, like:\n"..
+    "The following applies to all commands that place items/items in the bot inventory\\, such as:\n"..
     "\n"..
     "  - 'take_item <num> <slot>'\n"..
     "  - 'pickup_items <slot>'\n"..
@@ -148,10 +149,11 @@ return {
     "only this slot is checked. \n"..
     "In both cases the following applies: \n"..
     "\n"..
-    "If the slot is pre-configured and fits the item\\, or if the slot is not configured\n"..
-    "and empty\\, or is only partially filled with the item type which should be added)\\,\n"..
-    "then the items are added. If not all items can be added\\, the remaining slots will\n"..
-    "be tried out in case A. Anything that could not be added to your own inventory goes back.\n"..
+    "If the slot is preconfigured and matches the item\\, or if the slot is unconfigured\n"..
+    "and empty\\, or only partially filled with the item type to be added\\, \n"..
+    "then the item(s) will be added.\n"..
+    "If not all items can be added\\, in case A the remaining slots are tried. \n"..
+    "Anything that couldn't be added to your inventory will go back or be dropped.\n"..
     "\n"..
     "The following applies to all commands that are used to take items from the bot inventory\\, like:\n"..
     "\n"..
@@ -161,7 +163,7 @@ return {
     "that it can find from its own inventory and tries to use it. If a slot is specified\\,\n"..
     "it only takes this\\, if no slot has been specified\\, it checks all of them one after\n"..
     "the other\\, starting from slot 1 until it finds something. If the number found is\n"..
-    "smaller than requested\\, he tries to take the rest out of any slot.\n"..
+    "smaller than requested\\, he tries to take the rest out of any other slot.\n"..
     "\n"..
     "\n"..
     "\n",
@@ -218,8 +220,8 @@ return {
     "\n"..
     "\n"..
     "\n",
-    "\"Special kind of sensor. Can be programmed with a time in seconds\\, e.g. to start\n"..
-    "the bot cyclically.\n"..
+    "This is a special kind of sensor. Can be programmed with a time in seconds\\,\n"..
+    "e.g. to start the bot cyclically.\n"..
     "\n"..
     "\n"..
     "\n",
@@ -250,7 +252,8 @@ return {
     "\n"..
     "\n",
     "Used to harvest and seed a 3x3 field. Place the sign in front of the field.\n"..
-    "The seed to be placed has to be in the first inventory slot of the bot. When finished\\, the bot turns.\n"..
+    "The seed used must be in the first slot of the bot inventory.\n"..
+    "When the bot is done\\, the bot will turn and walk back.\n"..
     "\n"..
     "\n"..
     "\n",
@@ -258,10 +261,15 @@ return {
     "to be copied. Use the copy sign to make the copy of this pattern on a different\n"..
     "location. The bot must first reach the pattern sign\\, then the copy sign.\n"..
     "\n"..
+    "Used to make a copy of a 3x3x3 cube. Place the shield in front of the blocks\n"..
+    "to be copied. Use the copy sign to make the copy of these blocks in another\n"..
+    "location. The bot must first process the \"pattern\" sign\\, only then can the bot\n"..
+    "be directed to the copy sign.\n"..
+    "\n"..
     "\n"..
     "\n",
-    "Used to make a copy of a 3x3x3 cube. Place the sign in front of the location\\,\n"..
-    "where the copy should be made. Use the pattern sign to mark the pattern.\n"..
+    "Used to make a copy of a 3x3x3 cube. Place the sign in front of where you want\n"..
+    "the copy to be made. See also sign \"pattern\".\n"..
     "\n"..
     "\n"..
     "\n",
@@ -351,16 +359,13 @@ return {
     "All blocks or signs that are set are taken from the bot inventory.\n"..
     "Any blocks or signs removed will be added back to the Bot Inventory.\n"..
     "'<slot>' is always the bot internal inventory stack (1..8).\n"..
-    "For all Inventory commands applies: If the bot inventory stack specified by '<slot>'\n"..
-    "is full\\, so that nothing more can be done\\, or just empty\\, so that nothing\n"..
-    "more can be removed\\, the next slot will automatically be used.\n"..
     "\n"..
-    "    move <steps>              - to follow one or more steps forward without signs\n"..
-    "    cond_move                 - walk to the next sign and work it off\n"..
+    "    move <steps>              - go one or more steps forward\n"..
+    "    cond_move                 - go to the nearest obstacle or sign\n"..
     "    turn_left                 - turn left\n"..
     "    turn_right                - turn right\n"..
     "    turn_around               - turn around\n"..
-    "    backward                  - one step backward\n"..
+    "    backward                  - take a step back\n"..
     "    turn_off                  - turn off the robot / back to the box\n"..
     "    pause <sec>               - wait one or more seconds\n"..
     "    move_up                   - move up (maximum 2 times)\n"..
@@ -368,17 +373,17 @@ return {
     "    fall_down                 - fall into a hole/chasm (up to 10 blocks)\n"..
     "    take_item <num> <slot>    - take one or more items from a box\n"..
     "    add_item <num> <slot>     - put one or more items in a box\n"..
-    "    add_fuel <num> <slot>     - for furnaces or similar\n"..
-    "    place_front <slot> <lvl>  - Set block in front of the robot\n"..
-    "    place_left <slot> <lvl>   - Set block to the left\n"..
-    "    place_right <slot> <lvl>  - set block to the right\n"..
-    "    place_below <slot>        - set block under the robot\n"..
+    "    add_fuel <num> <slot>     - put fuel in a furnace\n"..
+    "    place_front <slot> <lvl>  - place the block in front of the bot\n"..
+    "    place_left <slot> <lvl>   - place the block to the left of the bot\n"..
+    "    place_right <slot> <lvl>  - place the block to the right of the bot\n"..
+    "    place_below <slot>        - lift the robot and put the block under the robot\n"..
     "    place_above <slot>        - set block above the robot\n"..
     "    dig_front <slot> <lvl>    - remove block in front of the robot\n"..
     "    dig_left <slot> <lvl>     - remove block on the left\n"..
     "    dig_right <slot> <lvl>    - remove block on the right\n"..
-    "    dig_below <slot>          - dig block under the robot\n"..
-    "    dig_above <slot>          - dig block above the robot\n"..
+    "    dig_below <slot>          - remove block under the robot\n"..
+    "    dig_above <slot>          - remove block above the robot\n"..
     "    rotate_item <lvl> <steps> - rotate a block in front of the robot\n"..
     "    set_param2 <lvl> <param2> - set param2 of the block in front of the robot\n"..
     "    place_sign <slot>         - set sign\n"..
@@ -389,12 +394,12 @@ return {
     "    pickup_items <slot>       - pickup items (in a 3x3 field)\n"..
     "    drop_items <num> <slot>   - drop items\n"..
     "    harvest                   - harvest a 3x3 field (farming)\n"..
-    "    cutting                   - cut a 3x3 flower field\n"..
-    "    sow_seed <slot>           - a 3x3 field sowing / planting\n"..
+    "    cutting                   - cut flowers in a 3x3 field\n"..
+    "    sow_seed <slot>           - see/plant a 3x3 field\n"..
     "    plant_sapling <slot>      - plant a sapling in front of the robot\n"..
-    "    pattern                   - save the blocks behind the shield (up to 5x3x3) as template\n"..
-    "    copy <size>               - make a copy of \"pattern\". Size is e.g. 3x3 (see ingame help)\n"..
-    "    punch_cart                - Punch a rail cart to start it\n"..
+    "    pattern                   - save the block properties behind the sign (3x3x3 cube) as a template\n"..
+    "    copy <size>               - make a 3x3x3 copy of the stored template\n"..
+    "    punch_cart                - bump a mine cart\n"..
     "    add_compost <slot>        - Put 2 leaves into the compost barrel\n"..
     "    take_compost <slot>       - Take a compost item from the barrel\n"..
     "    print <text>              - Output chat message for debug purposes\n"..
@@ -415,8 +420,7 @@ return {
     "    send_cmnd <receiver> <command>    - Send a techage command to a given node. \n"..
     "                                        Receiver is addressed by the techage node number. \n"..
     "                                        For commands with two or more words\\, \n"..
-    "                                        use the '*' character\n"..
-    "                                        instead of spaces\\, e.g.: \n"..
+    "                                        use the '*' character instead of spaces\\, e.g.: \n"..
     "                                        send_cmnd 3465 pull*default:dirt*2\n"..
     "\n"..
     "\n"..
