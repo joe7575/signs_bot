@@ -11,7 +11,7 @@ Download: [GitHub](https://github.com/joe7575/signs_bot/archive/master.zip)
 
 
 ### Introduction
-See [manual](https://github.com/joe7575/signs_bot/blob/master/techage_EN.md)
+See [manual](https://github.com/joe7575/signs_bot/blob/master/manual_EN.md)
 
 The mod has an in-game help to all blocks and signs.
 If 'techage' is installed, the techage ingame manual will be expanded.
