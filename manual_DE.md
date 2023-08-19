@@ -2,7 +2,7 @@
 
 Ein durch Zeichen/Schilder gesteuerter Roboter.
 
-Web Doku: https://github.com/joe7575/signs_bot/blob/master/techage_EN.md
+Web Doku: https://github.com/joe7575/signs_bot/blob/master/manual_DE.md
 
 [signs_bot_bot_inv.png|image]
 

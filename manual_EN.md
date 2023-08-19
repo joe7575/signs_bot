@@ -2,7 +2,7 @@
 
 A robot controlled by signs.
 
-On the web: https://github.com/joe7575/signs_bot/blob/master/techage_EN.md
+On the web: https://github.com/joe7575/signs_bot/blob/master/manual_EN.md
 
 [signs_bot_bot_inv.png|image]
 
