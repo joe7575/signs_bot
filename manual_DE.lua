@@ -45,7 +45,7 @@ return {
   texts = {
     "Ein durch Zeichen/Schilder gesteuerter Roboter.\n"..
     "\n"..
-    "Web Doku: https://github.com/joe7575/signs_bot/blob/master/techage_EN.md\n"..
+    "Web Doku: https://github.com/joe7575/signs_bot/blob/master/manual_DE.md\n"..
     "\n"..
     "\n"..
     "\n",

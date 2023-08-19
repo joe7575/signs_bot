@@ -45,7 +45,7 @@ return {
   texts = {
     "A robot controlled by signs.\n"..
     "\n"..
-    "On the web: https://github.com/joe7575/signs_bot/blob/master/techage_EN.md\n"..
+    "On the web: https://github.com/joe7575/signs_bot/blob/master/manual_EN.md\n"..
     "\n"..
     "\n"..
     "\n",
