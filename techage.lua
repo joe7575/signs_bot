@@ -221,15 +221,22 @@ send_cmnd 3465 pull*default:dirt*2]]),
 			local meta = minetest.get_meta(pos)
 			return meta:get_inventory(), "main"
 		end,
-		on_pull_item = function(pos, in_dir, num)
+		on_pull_item = function(pos, in_dir, num, item_name)
 			local meta = minetest.get_meta(pos)
 			local inv = meta:get_inventory()
-			return techage.get_items(pos, inv, "main", num)
+			if item_name then
+				local taken = inv:remove_item("main", {name = item_name, count = num})
+				if taken:get_count() > 0 then
+					return taken
+				end
+			else -- no item given
+				return techage.get_items(pos, inv, "main", num)
+			end
 		end,
-		on_push_item = function(pos, in_dir, stack)
+		on_push_item = function(pos, in_dir, stack, idx)
 			local meta = minetest.get_meta(pos)
 			local inv = meta:get_inventory()
-			return techage.put_items(inv, "main", stack)
+			return techage.put_items(inv, "main", stack, idx)
 		end,
 		on_unpull_item = function(pos, in_dir, stack)
 			local meta = minetest.get_meta(pos)
@@ -327,15 +334,22 @@ send_cmnd 3465 pull*default:dirt*2]]),
 			local meta = minetest.get_meta(pos)
 			return meta:get_inventory(), "main"
 		end,
-		on_pull_item = function(pos, in_dir, num)
+		on_pull_item = function(pos, in_dir, num, item_name)
 			local meta = minetest.get_meta(pos)
 			local inv = meta:get_inventory()
-			return techage.get_items(pos, inv, "main", num)
+			if item_name then
+				local taken = inv:remove_item("main", {name = item_name, count = num})
+				if taken:get_count() > 0 then
+					return taken
+				end
+			else -- no item given
+				return techage.get_items(pos, inv, "main", num)
+			end
 		end,
-		on_push_item = function(pos, in_dir, stack)
+		on_push_item = function(pos, in_dir, stack, idx)
 			local meta = minetest.get_meta(pos)
 			local inv = meta:get_inventory()
-			return techage.put_items(inv, "main", stack)
+			return techage.put_items(inv, "main", stack, idx)
 		end,
 		on_unpull_item = function(pos, in_dir, stack)
 			local meta = minetest.get_meta(pos)
