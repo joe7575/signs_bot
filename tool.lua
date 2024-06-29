@@ -39,8 +39,8 @@ local function store_data(placer, pos, name)
 		meta:set_string("signs_bot_spos", spos)
 		meta:set_string("signs_bot_name", name)
 	else
-		meta:set_string("signs_bot_spos", nil)
-		meta:set_string("signs_bot_name", nil)
+		meta:set_string("signs_bot_spos", "")
+		meta:set_string("signs_bot_name", "")
 	end
 end
 
