@@ -44,13 +44,11 @@ minetest.after(1, function()
 
 	for _,def in pairs(minetest.registered_decorations) do
 		local name = def.decoration
-		if name then
-			if type(name) == "string" then
-				add_flower(name)
-			elseif type(name) == "table" then
-				for _,sub_name in ipairs(name) do
-					add_flower(sub_name)
-				end
+		if type(name) == "string" then
+			add_flower(name)
+		elseif type(name) == "table" then
+			for _,sub_name in ipairs(name) do
+				add_flower(sub_name)
 			end
 		end
 	end
