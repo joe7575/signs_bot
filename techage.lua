@@ -185,6 +185,7 @@ send_cmnd 3465 pull*default:dirt*2]]),
 			return address ~= nil and command ~= nil and command ~= ""
 		end,
 		cmnd = function(base_pos, mem, address, command)
+			command = tostring(command)
 			command = command:gsub("*", " ")
 			address = tostring(tonumber(address))
 			local meta = minetest.get_meta(base_pos)
