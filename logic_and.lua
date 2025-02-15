@@ -127,17 +127,26 @@ local function send_signal(pos)
 	infotext(pos)
 end
 
+local function valid_state(pos)
+	local signal = M(pos):get_string("signal_data")
+	local state = signs_bot.get_state(pos)
+	-- Signs box must be in the opposite state
+	return state == nil or (signal == "on" and state == false) or (signal == "off" and state == true)
+end
+
 -- To be called from sensors
 local function signs_bot_on_signal(pos, node, signal)
 	local mem = tubelib2.get_mem(pos)
 	signal = tonumber(signal) or 1
-	mem.inputs = mem.inputs or {}
-	mem.inputs[signal] = true
+	if valid_state(pos) then
+		mem.inputs = mem.inputs or {}
+		mem.inputs[signal] = true
 
-	if all_inputs(mem) then
-		send_signal(pos)
-	else
-		not_zero(pos)
+		if all_inputs(mem) then
+			send_signal(pos)
+		else
+			not_zero(pos)
+		end
 	end
 end
 

@@ -71,3 +71,14 @@ function signs_bot.send_signal(sensor_pos)
 		end
 	end
 end
+
+-- Get the state from the bot box
+function signs_bot.get_state(sensor_pos)
+	local meta = sensor_pos and M(sensor_pos)
+	if meta then
+		local dest_pos = meta:get_string("signal_pos")
+		local pos = S2P(dest_pos)
+		local mem = tubelib2.get_mem(pos)
+		return mem.running
+	end
+end
