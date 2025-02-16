@@ -53,7 +53,16 @@ function signs_bot.bot_inv_put_item(pos, slot, items)
 	else
 		for idx = 1,8 do
 			local name = inv:get_stack("filter", idx):get_name()
-			if name == "" or name == items:get_name() then
+			if name == items:get_name() then
+				local stack = inv:get_stack("main", idx)
+				items = stack:add_item(items)
+				inv:set_stack("main", idx, stack)
+				if items:get_count() == 0 then return items end
+			end
+		end
+		for idx = 1,8 do
+			local name = inv:get_stack("filter", idx):get_name()
+			if name == "" then
 				local stack = inv:get_stack("main", idx)
 				items = stack:add_item(items)
 				inv:set_stack("main", idx, stack)

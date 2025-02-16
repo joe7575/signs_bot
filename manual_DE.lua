@@ -159,6 +159,7 @@ return {
     "Wenn der Slot vorkonfiguriert ist und zum Artikel passt\\, oder wenn der Slot\n"..
     "nicht konfiguriert und leer ist\\, oder nur teilweise mit dem Artikeltyp gefüllt ist\\,\n"..
     "der hinzugefügt werden soll\\, dann werden die oder der Artikel hinzugefügt.\n"..
+    "Dabei werden vorkonfigurierte Slots zuerst gefüllt\\, bevor leere Slots verwendet werden.\n"..
     "\n"..
     "Können nicht alle Artikel hinzugefügt werden\\, werden im Fall A die verbleibenden\n"..
     "Slots durchprobiert. Alles\\, was nicht zum eigenen Inventar hinzugefügt werden\n"..

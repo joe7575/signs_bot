@@ -154,6 +154,7 @@ return {
     "then the item(s) will be added.\n"..
     "If not all items can be added\\, in case A the remaining slots are tried. \n"..
     "Anything that couldn't be added to your inventory will go back or be dropped.\n"..
+    "Preconfigured slots are filled first before empty slots are used.\n"..
     "\n"..
     "The following applies to all commands that are used to take items from the bot inventory\\, like:\n"..
     "\n"..

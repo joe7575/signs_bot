@@ -123,6 +123,7 @@ and empty, or only partially filled with the item type to be added,
 then the item(s) will be added.
 If not all items can be added, in case A the remaining slots are tried. 
 Anything that couldn't be added to your inventory will go back or be dropped.
+Preconfigured slots are filled first before empty slots are used.
 
 The following applies to all commands that are used to take items from the bot inventory, like:
 
