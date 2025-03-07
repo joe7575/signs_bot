@@ -201,6 +201,9 @@ minetest.register_node("signs_bot:and2", {
 		"signs_bot_sensor2.png",
 	},
 
+	on_punch = function(pos, node, puncher, pointed_thing)
+		turn_off(pos)
+	end,
 	signs_bot_get_signal = signs_bot_get_signal,
 	signs_bot_on_signal = signs_bot_on_signal,
 	update_infotext = update_infotext,
