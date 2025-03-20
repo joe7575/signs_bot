@@ -86,10 +86,14 @@ end
 -- Used by the pairing tool
 local function signs_bot_get_signal(pos, node)
 	local mem = tubelib2.get_mem(pos)
-	mem.inputs = mem.inputs or {}
-	mem.inputs[#mem.inputs + 1] = false
-	clear_inputs(mem)
-	infotext(pos)
+	mem.known_sensors = mem.known_sensors or {}
+	if not mem.known_sensors[node.hash] then
+		mem.known_sensors[node.hash] = true
+		mem.inputs = mem.inputs or {}
+		mem.inputs[#mem.inputs + 1] = false
+		clear_inputs(mem)
+		infotext(pos)
+	end
 	return #mem.inputs
 end
 
@@ -202,7 +206,10 @@ minetest.register_node("signs_bot:and2", {
 	},
 
 	on_punch = function(pos, node, puncher, pointed_thing)
+		local mem = tubelib2.get_mem(pos)
+		clear_inputs(mem)
 		turn_off(pos)
+		infotext(pos)
 	end,
 	signs_bot_get_signal = signs_bot_get_signal,
 	signs_bot_on_signal = signs_bot_on_signal,

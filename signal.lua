@@ -34,11 +34,12 @@ function signs_bot.get_node_type(pos)
 end
 
 -- Used by the pairing tool
-function signs_bot.get_signal(actuator_pos)
+function signs_bot.get_signal(actuator_pos, sensor_pos)
 	if actuator_pos then
 		local node = tubelib2.get_node_lvm(actuator_pos)
 		local ndef = minetest.registered_nodes[node.name]
 		if ndef	and ndef.signs_bot_get_signal then
+			node.hash = minetest.hash_node_position(sensor_pos)
 			return ndef.signs_bot_get_signal(actuator_pos, node)
 		end
 	end
