@@ -195,6 +195,7 @@ function signs_bot.run_next_command(base_pos, mem)
 		mem.bot_state = "nopower"
 		return bot_error(base_pos, mem, "No power")
 	end
+	mem.error = false
 	return true
 end
 
