@@ -306,5 +306,13 @@ function signs_bot.lib.fake_player(name)
 	}
 end
 
+function signs_bot.lib.swap_node(pos, node_name)
+	minetest.swap_node(pos, node_name)
+	local mod = node_name.name:match("(.*):")
+	if mod == "farming" then
+		farming.start_seed_timer(pos)
+	end
+end
+
 signs_bot.lib.register_node_to_be_dug("default:cactus")
 signs_bot.lib.register_node_to_be_dug("default:papyrus")
