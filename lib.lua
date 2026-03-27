@@ -118,7 +118,8 @@ function signs_bot.lib.is_simple_node(node)
 		if not ndef or node.name == "air" then return false end
 		if ndef.drop == "" then return false end
 		if ndef.diggable == false then return false end
-		if ndef.after_dig_node then return false end
+		-- Allow digging nodes with after_dig_node only when everness is loaded
+		if ndef.after_dig_node and not minetest.get_modpath("everness") then return false end
 	end
 	if type(ndef.drop) == "table" then
 		return handle_drop(ndef.drop)
