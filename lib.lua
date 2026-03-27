@@ -309,7 +309,7 @@ end
 function signs_bot.lib.swap_node(pos, node_name)
 	minetest.swap_node(pos, node_name)
 	local mod = node_name.name:match("(.*):")
-	if mod == "farming" then
+	if mod == "farming" and farming.start_seed_timer then
 		farming.start_seed_timer(pos)
 	end
 end
