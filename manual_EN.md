@@ -535,6 +535,14 @@ that item type and the bot will only use or fill that slot with that specific it
     -- specify the item, or 0 for any item.
     jump_check_item <num> <slot> <label>
 
+    -- Jump to <label> if the block in front of the bot at <lvl> IS <nodename>.
+    -- <lvl> is one of: -1   0   +1
+    jump_if_block <lvl> <nodename> <label>
+
+    -- Jump to <label> if the block in front of the bot at <lvl> is NOT <nodename>.
+    -- <lvl> is one of: -1   0   +1
+    jump_ifnot_block <lvl> <nodename> <label>
+
     -- See "Techage specific commands"
     jump_low_batt <percent> <label>
 
@@ -543,10 +551,18 @@ that item type and the bot will only use or fill that slot with that specific it
 
 ### Flow control Examples
 
-#### Example with a function at the beginning:
+#### Example with jump_if_block / jump_ifnot_block:
 
-    -- jump to the label 'main'
-    jump main
+    -- Walk forward, dig dirt blocks, ignore everything else.
+    -- The loop ends naturally when the bot reaches a sign or obstacle.
+    loop:
+      jump_ifnot_block 0 default:dirt skip
+      dig_front 1 0
+    skip:
+      move 1
+      jump loop
+
+#### Example with a function at the beginning:
     
     -- starting point of the function with the name 'foo'
     foo:

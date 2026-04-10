@@ -3,7 +3,7 @@ return {
     "1,Signs Bot",
     "2,Erste Schritte",
     "2,Schilder",
-    "2,Sensors and Actuators",
+    "2,Sensoren und Aktoren",
     "2,Sensor Verbindungswerkzeug",
     "2,Inventar",
     "2,Blöcke",
@@ -35,10 +35,12 @@ return {
     "3,Zeichen 'Schöpfe Wasser' (xdecor)",
     "3,Zeichen 'Koche Suppe' (xdecor)",
     "2,Bot Kommandos",
+    "3,Hinweise zu Parametern",
     "3,Techage spezifische Kommandos",
     "3,Flow Control Kommandos",
-    "3,Weitere Sprungkommands",
+    "3,Weitere Sprungkommandos",
     "3,Flow Control Beispiele",
+    "4,Beispiel mit jump_if_block / jump_ifnot_block:",
     "4,Beispiel mit einer Funktion am Anfang:",
     "4,Beispiel mit einer Funktion am Ende:",
   },
@@ -173,22 +175,22 @@ return {
     "Hier spielt es keine Rolle\\, ob ein Slot vorkonfiguriert ist oder nicht. Der Bot nimmt\n"..
     "den ersten Stapel\\, den er aus seinem eigenen Inventar finden kann\\, und versucht\\,\n"..
     "ihn zu verwenden. Wenn ein Slot angegeben ist\\, nimmt er Artikel nur aus diesem\n"..
-    "Slot. Ist kein Slot angegeben\\, prüft der Bot nacheinander alle Positiionen\\,\n"..
+    "Slot. Ist kein Slot angegeben\\, prüft der Bot nacheinander alle Positionen\\,\n"..
     "beginnend bei Slot 1\\, bis es etwas findet. Ist die gefundene Anzahl kleiner als\n"..
     "gefordert\\, versucht er\\, den Rest aus einem beliebigen anderen Slot zu entnehmen.\n"..
     "\n"..
     "\n"..
     "\n",
     "",
-    "Die Box ist das Gehäuse des Bots. Platzieren Sie die Box und starten Sie den Bot über\n"..
-    "die Schaltfläche „An“. Wenn die Mod Techage installiert ist\\, benötigt der Bot auch Strom.\n"..
-    "Der Bot verlässt die Box auf der rechten Seite. Es startet nicht\\, wenn diese Position\n"..
+    "Die Box ist das Gehäuse des Bots. Platziere die Box und starte den Bot über\n"..
+    "die Schaltfläche „An\". Wenn die Mod Techage installiert ist\\, benötigt der Bot auch Strom.\n"..
+    "Der Bot verlässt die Box auf der rechten Seite. Er startet nicht\\, wenn diese Position\n"..
     "blockiert ist.\n"..
     "\n"..
-    "Um den Bot anzuhalten und zu entfernen\\, drücken Sie die „Aus“-Taste.\n"..
+    "Um den Bot anzuhalten und zu entfernen\\, drücke die „Aus\"-Taste.\n"..
     "Das Box-Inventar simuliert das Inventar des Bots.\n"..
-    "Sie können nicht auf das Inventar zugreifen\\, wenn der Bot aktiv ist..\n"..
-    "Der Bot kann bis zu 8 Stapel mit Gengeständen und 6 Schilder mit sich führen.\n"..
+    "Du kannst nicht auf das Inventar zugreifen\\, wenn der Bot aktiv ist.\n"..
+    "Der Bot kann bis zu 8 Stapel mit Gegenständen und 6 Schilder mit sich führen.\n"..
     "\n"..
     "\n"..
     "\n",
@@ -200,9 +202,9 @@ return {
     "\n",
     "Mit dem Kopierer können Schilderkopien erstellt werden:\n"..
     "\n"..
-    "  - Fügen Sie ein „cmnd“-Schild\\, das als Vorlage verwendet werden soll\\, \n in das Inventar „Vorlage“ ein\n"..
-    "  - Fügen Sie ein oder mehrere „Leerzeichen“ zum Inventar „Eingabe“ hinzu.\n"..
-    "  - Nehmen Sie die Kopien aus dem Inventar „Ausgabe“.\n"..
+    "  - Lege ein „cmnd\"-Schild\\, das als Vorlage verwendet werden soll\\,\nin das Inventar „Vorlage\"\n"..
+    "  - Lege ein oder mehrere Leerzeichen in das Inventar „Eingabe\".\n"..
+    "  - Nimm die Kopien aus dem Inventar „Ausgabe\".\n"..
     "\n"..
     "Alternativ können auch geschriebene Bücher \\[default:book_written\\] als\n"..
     "Vorlage verwendet werden.\n"..
@@ -226,7 +228,7 @@ return {
     "\n"..
     "\n",
     "Der Ernte Sensor sendet zyklische Signale\\, wenn beispielsweise Weizen\n"..
-    "ausgewachsen ist. Der Sensorbereich beträgt einen Block/Meter.#\n"..
+    "ausgewachsen ist. Der Sensorbereich beträgt einen Block/Meter.\n"..
     "Der Sensor hat eine aktive Seite (rot)\\, die auf die Ernte/das Feld\n"..
     "zeigen muss.\n"..
     "\n"..
@@ -250,21 +252,21 @@ return {
     "Das Gerät kann mit bis zu 4 verschiedenen Schildern bestückt und mittels\n"..
     "Sensoren programmiert werden.\n"..
     "\n"..
-    "Um die Steuerungseinheit zu laden\\, platzieren Sie ein Schild auf der roten Seite\n"..
-    "der Steuerungseinheit und klicken Sie auf die Steuerungseinheit.\n"..
+    "Um die Steuerungseinheit zu laden\\, platziere ein Schild auf der roten Seite\n"..
+    "der Steuerungseinheit und klicke auf die Steuerungseinheit.\n"..
     "Das Schild verschwindet / wird in das Inventar der Steuerungseinheit verschoben.\n"..
     "Dies kann dreimal wiederholt werden.\n"..
     "\n"..
-    "Verwenden Sie das Verbindungstool\\, um bis zu 4 Sensoren mit der\n"..
+    "Verwende das Verbindungstool\\, um bis zu 4 Sensoren mit der\n"..
     "Steuerungseinheit zu verbinden.\n"..
     "\n"..
     "\n"..
     "\n",
-    "Mit der  Sensor Erweiterung können Sensorsignale an mehr als einen Aktor\n"..
+    "Mit der Sensor Erweiterung können Sensorsignale an mehr als einen Aktor\n"..
     "gesendet werden.\n"..
-    "Platzieren Sie eine oder mehrere Sensor Erweiterungen in der Nähe des\n"..
-    "Sensors und verbinden Sie jede  Sensor Erweiterung mithilfe des\n"..
-    "Verbindungswerkzeug mit einem weiteren Aktor.\n"..
+    "Platziere eine oder mehrere Sensor Erweiterungen in der Nähe des\n"..
+    "Sensors und verbinde jede Sensor Erweiterung mithilfe des\n"..
+    "Verbindungswerkzeugs mit einem weiteren Aktor.\n"..
     "\n"..
     "\n"..
     "\n",
@@ -313,7 +315,7 @@ return {
     "\n"..
     "\n"..
     "\n",
-    "Wird zum Schneiden von Blumen auf einem 3x3-Feld verwendet. Platziere das SWenn der Bot fertig ist\\, dreht sich der Bot und geht zurück.child\n"..
+    "Wird zum Schneiden von Blumen auf einem 3x3-Feld verwendet. Platziere das Schild\n"..
     "vor dem Feld.\n"..
     "Wenn der Bot fertig ist\\, dreht er sich um.\n"..
     "\n"..
@@ -323,7 +325,7 @@ return {
     "\n"..
     "  - Platziere das Schild vor dem Baum.\n"..
     "  - Platziere eine Truhe rechts neben dem Schild.\n"..
-    "  - Legen Sie einen Erdstapel (mindestens 10 Blöcke) in die Truhe.\n"..
+    "  - Lege einen Erdstapel (mindestens 10 Blöcke) in die Truhe.\n"..
     "  - Slot 1 des Bot-Inventars für Erde vorkonfigurieren\n"..
     "  - Slot 2 des Bot-Inventars für Setzlingen vorkonfigurieren\n"..
     "\n"..
@@ -332,8 +334,8 @@ return {
     "Das „Kommando“-Zeichen kann vom Spieler programmiert werden. Platziere\n"..
     "das Schild und verwende das Blockmenü\\, um die Abfolge von Bot-Befehlen zu\n"..
     "programmieren.\n"..
-    "Das Menü verfügt über ein Bearbeitungsfeld für Ihre Befehle und eine Hilfeseite\n"..
-    "mit allen verfügbaren Befehle. Die Hilfeseite verfügt über eine Kopierschaltfläche\\,\n"..
+    "Das Menü verfügt über ein Bearbeitungsfeld für deine Befehle und eine Hilfeseite\n"..
+    "mit allen verfügbaren Befehlen. Die Hilfeseite verfügt über eine Kopierschaltfläche\\,\n"..
     "um die Programmierung zu vereinfachen.\n"..
     "\n"..
     "\n"..
@@ -373,7 +375,7 @@ return {
     "\n"..
     "\n"..
     "\n",
-    "Wird verwendet\\, um Wasser in einen Eimer zu füllen. Platzieren Sie das Schild\n"..
+    "Wird verwendet\\, um Wasser in einen Eimer zu füllen. Platziere das Schild\n"..
     "am Ufer vor dem stillen Wasserbecken.\n"..
     "\n"..
     "Gegenstände in den Slots:\n"..
@@ -392,7 +394,7 @@ return {
     "\n"..
     "Gegenstände in den Slots:\n"..
     "\n"..
-    "   1 - Wassereimer\"\n"..
+    "   1 - Wassereimer\n"..
     "   2 – Gemüse Nr. 1 (z. B. Tomate)\n"..
     "   3 – Gemüse Nr. 2 (z. B. Karotte)\n"..
     "   4 – leere Schüssel (von Farming- oder Xdecor-Mods)\n"..
@@ -412,7 +414,7 @@ return {
     "    turn_left                 - drehe links\n"..
     "    turn_right                - drehe rechts\n"..
     "    turn_around               - drehe um\n"..
-    "    backward                  - gehe ein Schitt zurück\n"..
+    "    backward                  - gehe einen Schritt zurück\n"..
     "    turn_off                  - schalte den Bot aus / zurück in die Box\n"..
     "    pause <sec>               - warte eine oder mehrere Sekunden\n"..
     "    move_up                   - nach oben bewegen (maximal 2 Mal)\n"..
@@ -442,7 +444,7 @@ return {
     "    drop_items <num> <slot>   - lasse Gegenstände fallen\n"..
     "    harvest                   - ernte ein 3x3 Feld ab (farming)\n"..
     "    cutting                   - schneide Blumen in einem 3x3 Feld ab\n"..
-    "    sow_seed <slot>           - sähe/pflanze ein 3x3 Feld an\n"..
+    "    sow_seed <slot>           - säe/pflanze ein 3x3 Feld an\n"..
     "    plant_sapling <slot>      - pflanze einen Setzling vor dem Roboter\n"..
     "    pattern                   - speichere die Blockeigenschaften hinter dem Schild (3x3x3 Würfel) als Vorlage\n"..
     "    copy <size>               - erstelle eine 3x3x3-Kopie der gespeicherten Vorlage\n"..
@@ -458,6 +460,42 @@ return {
     "\n"..
     "\n"..
     "\n",
+    "*Parameter '<lvl>'* (verwendet bei 'place_front/left/right' und 'dig_front/left/right'):\n"..
+    "\n"..
+    "  - '-1' = einen Block *unterhalb* der aktuellen Bot-Ebene\n"..
+    "  - '0' = gleiche Ebene wie der Bot\n"..
+    "  - '+1' = einen Block *oberhalb* der Bot-Ebene\n"..
+    "\n"..
+    "*'cond_move'*: Der Bot läuft Schritt für Schritt vorwärts\\, bis er entweder auf ein\n"..
+    "Hindernis trifft (zwei oder mehr Blöcke hoch/runter) oder ein Schild erreicht.\n"..
+    "Im Gegensatz zu 'move <steps>' ist die Schrittanzahl nicht vorher festgelegt.\n"..
+    "\n"..
+    "*'move_up'*: Kann maximal 2 Mal hintereinander verwendet werden\\, da der Bot\n"..
+    "beim Klettern bis zu 3 Blöcke Höhe einnimmt (Fuß\\, Körper\\, Kopf).\n"..
+    "\n"..
+    "*'copy <size>'*: '<size>' muss auf '3' gesetzt werden. Es wird der 3x3x3-Würfel\n"..
+    "kopiert\\, der zuvor mit dem Befehl 'pattern' gespeichert wurde.\n"..
+    "\n"..
+    "*'rotate_item <lvl> <steps>'*: Dreht den Block vor dem Bot um '<steps>' × 90°.\n"..
+    "Gültige Werte für '<steps>' sind 1\\, 2 oder 3. '<lvl>' verwendet denselben\n"..
+    "-1/0/+1-Versatz wie die place/dig-Befehle.\n"..
+    "\n"..
+    "*'set_param2 <lvl> <param2>'*: Setzt den rohen 'param2'-Wert des Blocks vor\n"..
+    "dem Bot. Nützlich für Nodes\\, die 'param2' für Ausrichtung oder Zustand verwenden.\n"..
+    "'<lvl>' verwendet denselben -1/0/+1-Versatz.\n"..
+    "\n"..
+    "*'jump_check_item <num> <slot> <label>'*: Prüft den truhenartigen Block\\, der sich\n"..
+    "*direkt vor dem Bot* befindet (nicht das eigene Inventar). Enthält er weniger als\n"..
+    "'<num>' Items des in '<slot>' konfigurierten Typs\\, springt der Bot zu '<label>'.\n"..
+    "Slot 0 prüft auf beliebige Items.\n"..
+    "\n"..
+    "*Slot-Vorkonfiguration*: Klicke mit der rechten Maustaste auf einen Slot im\n"..
+    "Bot-Box-Inventar (während der Bot steht) und lege den gewünschten Item-Typ hinein.\n"..
+    "Der Slot merkt sich diesen Typ. Der Bot befüllt oder entnimmt diesen Slot dann\n"..
+    "ausschließlich mit diesem Item-Typ.\n"..
+    "\n"..
+    "\n"..
+    "\n",
     "    ignite                            - Zünde den Techage-Kohleanzünder an\n"..
     "    low_batt <percent>                - Schalte den Bot aus\\, wenn die Batterieleistung\n"..
     "                                        unter dem angegebenen Wert in Prozent (1..99) liegt.\n"..
@@ -467,7 +505,7 @@ return {
     "    send_cmnd <receiver> <command>    - Sende ein Techage-Befehl an einen bestimmten Knoten.\n"..
     "                                        Der Empfänger wird über die Techage-Knotennummer angesprochen.\n"..
     "                                        Für Befehle mit zwei oder mehr Wörtern:\n"..
-    "                                        Verwenden Sie das Zeichen „*“ statt Leerzeichen\\, z.B.:\n"..
+    "                                        Verwende das Zeichen „*\" statt Leerzeichen\\, z.B.:\n"..
     "                                        send_cmnd 3465 pull*default:dirt*2\n"..
     "\n"..
     "\n"..
@@ -499,53 +537,70 @@ return {
     "    -- oder 0 für jeden Artikel.\n"..
     "    jump_check_item <num> <slot> <label>\n"..
     "    \n"..
+    "    -- Springe zu <label>\\, wenn der Block vor dem Bot auf Ebene <lvl> gleich <nodename> ist.\n"..
+    "    -- <lvl> ist eines von: -1   0   +1\n"..
+    "    jump_if_block <lvl> <nodename> <label>\n"..
+    "    \n"..
+    "    -- Springe zu <label>\\, wenn der Block vor dem Bot auf Ebene <lvl> UNGLEICH <nodename> ist.\n"..
+    "    -- <lvl> ist eines von: -1   0   +1\n"..
+    "    jump_ifnot_block <lvl> <nodename> <label>\n"..
+    "    \n"..
     "    -- Siehe \"Techage spezifische Kommandos\"\n"..
     "    jump_low_batt <percent> <label>\n"..
     "\n"..
     "\n"..
     "\n",
     "",
-    "    -- jump to the label 'main'\n"..
+    "    -- Vorwärtslaufen und Erde abbauen\\, alles andere überspringen.\n"..
+    "    -- Die Schleife endet automatisch\\, wenn der Bot ein Schild oder Hindernis erreicht.\n"..
+    "    loop:\n"..
+    "      jump_ifnot_block 0 default:dirt skip\n"..
+    "      dig_front 1 0\n"..
+    "    skip:\n"..
+    "      move 1\n"..
+    "      jump loop\n"..
+    "\n",
+    "    -- Springe zur Marke 'main'\n"..
     "    jump main\n"..
     "    \n"..
-    "    -- starting point of the function with the name 'foo'\n"..
+    "    -- Startpunkt der Funktion 'foo'\n"..
     "    foo:\n"..
     "      cmnd ...\n"..
     "      cmnd ...\n"..
-    "    -- end of 'foo'. Jump back\n"..
+    "    -- Ende von 'foo'. Zurückspringen\n"..
     "    return\n"..
     "    \n"..
-    "    -- main program\n"..
+    "    -- Hauptprogramm\n"..
     "    main:\n"..
     "      cmnd ...\n"..
-    "      -- repeat all commands up to 'end' 10 times\n"..
+    "      -- alle Befehle bis 'end' 10 Mal wiederholen\n"..
     "      repeat 10\n"..
     "        cmnd ...\n"..
-    "        -- call the subfunction 'foo'\n"..
+    "        -- Unterfunktion 'foo' aufrufen\n"..
     "        call foo\n"..
     "        cmnd ...\n"..
-    "      -- end of the 'repeat' loop\n"..
+    "      -- Ende der 'repeat'-Schleife\n"..
     "      end\n"..
-    "    -- end of the program\n"..
+    "    -- Ende des Programms\n"..
     "    exit\n"..
     "\n",
     "    cmnd ...\n"..
-    "    -- repeat all commands up to 'end' 10 times\n"..
+    "    -- alle Befehle bis 'end' 10 Mal wiederholen\n"..
     "    repeat 10\n"..
     "      cmnd ...\n"..
-    "      -- call the subfunction 'foo'\n"..
+    "      -- Unterfunktion 'foo' aufrufen\n"..
     "      call foo\n"..
     "      cmnd ...\n"..
-    "    -- end of the 'repeat' loop\n"..
+    "    -- Ende der 'repeat'-Schleife\n"..
     "    end\n"..
-    "    -- end of the program\n"..
+    "    -- Ende des Programms\n"..
     "    exit\n"..
     "    \n"..
-    "    -- starting point of the function with the name 'foo'\n"..
+    "    -- Startpunkt der Funktion 'foo'\n"..
     "    foo:\n"..
     "      cmnd ...\n"..
     "      cmnd ...\n"..
-    "    -- end of 'foo'. Jump back\n"..
+    "    -- Ende von 'foo'. Zurückspringen\n"..
     "    return\n"..
     "\n",
   },
@@ -588,11 +643,15 @@ return {
     "signs_bot_bot_inv.png",
     "signs_bot_bot_inv.png",
     "signs_bot_bot_inv.png",
+    "signs_bot_bot_inv.png",
+    "",
     "",
     "",
     "",
   },
   plans = {
+    "",
+    "",
     "",
     "",
     "",

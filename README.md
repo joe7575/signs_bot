@@ -75,5 +75,6 @@ optional: farming redo, node_io, doc, techage, minecart, xdecor, compost, doclib
 - 2023-06-27  V1.13  * Add Beduino command support (see bep-006_sb_cmnd.md)
 - 2023-07-28  V1.13  * Introduction/manual restructured, doclib dependency added
 - 2025-02-16  V1.14  * Filling of slots changed. AND gate improved. Consider falling nodes.
+- 2026-04-10  V1.15  * Add commands `jump_if_block` and `jump_ifnot_block`
 
 

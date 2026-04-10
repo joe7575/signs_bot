@@ -431,6 +431,56 @@ signs_bot.register_botcommand("set_param2", {
 	end,
 })
 
+local function get_node_in_front(robot_pos, param2, level)
+	local pos1 = lib.dest_pos(robot_pos, param2, {0})
+	pos1.y = pos1.y + level
+	return tubelib2.get_node_lvm(pos1)
+end
+
+signs_bot.register_botcommand("jump_if_block", {
+	mod = "place",
+	params = "<lvl> <nodename> <label>",
+	num_param = 3,
+	description = S("Jump to <label> if the block in front of the robot\n"..
+		"matches <nodename> (e.g. default:dirt).\n"..
+		"<lvl> is one of:  -1   0   +1"),
+	check = function(lvl, nodename, lbl)
+		if tValidLevels[lvl] == nil then return false end
+		if not nodename or not nodename:find(":") then return false end
+		return signs_bot.check_label(lbl)
+	end,
+	cmnd = function(base_pos, mem, lvl, nodename, addr)
+		local level = tValidLevels[lvl] or 0
+		local node = get_node_in_front(mem.robot_pos, mem.robot_param2, level)
+		if node.name == nodename then
+			mem.pc = addr - 4
+		end
+		return signs_bot.DONE
+	end,
+})
+
+signs_bot.register_botcommand("jump_ifnot_block", {
+	mod = "place",
+	params = "<lvl> <nodename> <label>",
+	num_param = 3,
+	description = S("Jump to <label> if the block in front of the robot\n"..
+		"does NOT match <nodename> (e.g. default:dirt).\n"..
+		"<lvl> is one of:  -1   0   +1"),
+	check = function(lvl, nodename, lbl)
+		if tValidLevels[lvl] == nil then return false end
+		if not nodename or not nodename:find(":") then return false end
+		return signs_bot.check_label(lbl)
+	end,
+	cmnd = function(base_pos, mem, lvl, nodename, addr)
+		local level = tValidLevels[lvl] or 0
+		local node = get_node_in_front(mem.robot_pos, mem.robot_param2, level)
+		if node.name ~= nodename then
+			mem.pc = addr - 4
+		end
+		return signs_bot.DONE
+	end,
+})
+
 -- Simplified torch which can be placed w/o a fake player
 minetest.register_node("signs_bot:torch", {
 	description = S("Bot torch"),

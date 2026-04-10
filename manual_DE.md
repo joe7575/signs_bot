@@ -575,7 +575,15 @@ ausschließlich mit diesem Item-Typ.
     -- <slot> ist der Bot-Inventar-Slot (1..8) um den Artikel anzugeben, 
     -- oder 0 für jeden Artikel.
     jump_check_item <num> <slot> <label>
-    
+
+    -- Springe zu <label>, wenn der Block vor dem Bot auf Ebene <lvl> gleich <nodename> ist.
+    -- <lvl> ist eines von: -1   0   +1
+    jump_if_block <lvl> <nodename> <label>
+
+    -- Springe zu <label>, wenn der Block vor dem Bot auf Ebene <lvl> UNGLEICH <nodename> ist.
+    -- <lvl> ist eines von: -1   0   +1
+    jump_ifnot_block <lvl> <nodename> <label>
+
     -- Siehe "Techage spezifische Kommandos"
     jump_low_batt <percent> <label>
 
@@ -583,6 +591,17 @@ ausschließlich mit diesem Item-Typ.
 [signs_bot_bot_inv.png|image]
 
 ### Flow Control Beispiele
+
+#### Beispiel mit jump_if_block / jump_ifnot_block:
+
+    -- Vorwärtslaufen und Erde abbauen, alles andere überspringen.
+    -- Die Schleife endet automatisch, wenn der Bot ein Schild oder Hindernis erreicht.
+    loop:
+      jump_ifnot_block 0 default:dirt skip
+      dig_front 1 0
+    skip:
+      move 1
+      jump loop
 
 #### Beispiel mit einer Funktion am Anfang:
 
