@@ -6,7 +6,7 @@ On the web: https://github.com/joe7575/signs_bot/blob/master/manual_EN.md
 
 [signs_bot_bot_inv.png|image]
 
-## Firt Steps
+## First Steps
 
 After you have placed the Signs Bot Box, you can start the bot by means of the
 'On' button in the box menu. If the bot returns to its box right away,
@@ -272,11 +272,7 @@ When the bot is done, the bot will turn and walk back.
 
 ### Sign 'pattern'
 
-Used to make a copy of a 3x3x3 cube. Place the sign in front of the pattern
-to be copied. Use the copy sign to make the copy of this pattern on a different
-location. The bot must first reach the pattern sign, then the copy sign.
-
-Used to make a copy of a 3x3x3 cube. Place the shield in front of the blocks
+Used to make a copy of a 3x3x3 cube. Place the sign in front of the blocks
 to be copied. Use the copy sign to make the copy of these blocks in another
 location. The bot must first process the "pattern" sign, only then can the bot
 be directed to the copy sign.
@@ -434,12 +430,12 @@ Any blocks or signs removed will be added back to the Bot Inventory.
     place_sign_behind <slot>  - put a sign behind the bot
     dig_sign <slot>           - remove the sign
     trash_sign <slot>         - Remove the sign, clear data and add to the item Inventory
-    stop                      - Bot stops until the shield is removed
+    stop                      - Bot stops until the sign is removed
     pickup_items <slot>       - pickup items (in a 3x3 field)
     drop_items <num> <slot>   - drop items
     harvest                   - harvest a 3x3 field (farming)
     cutting                   - cut flowers in a 3x3 field
-    sow_seed <slot>           - see/plant a 3x3 field
+    sow_seed <slot>           - sow/plant a 3x3 field
     plant_sapling <slot>      - plant a sapling in front of the robot
     pattern                   - save the block properties behind the sign (3x3x3 cube) as a template
     copy <size>               - make a 3x3x3 copy of the stored template
@@ -452,6 +448,43 @@ Any blocks or signs removed will be added back to the Bot Inventory.
     take_soup <slot>          - Take boiling soup into empty bowl from cauldron
     flame_on                  - Make fire
     flame_off                 - Put out the fire
+
+[signs_bot_bot_inv.png|image]
+
+### Parameter Notes
+
+**`<lvl>` parameter** (used with `place_front/left/right` and `dig_front/left/right`):
+
+- `-1` = one block *below* the bot's current level
+- `0` = same level as the bot
+- `+1` = one block *above* the bot's current level
+
+**`cond_move`**: The bot moves forward step by step until it either hits an obstacle
+(two or more blocks up/down) or reaches a sign. Unlike `move <steps>`, the number
+of steps is not fixed in advance.
+
+**`move_up`**: Can be used at most 2 times in a row, because the bot occupies up to
+3 blocks in height while climbing (foot, body, head).
+
+**`copy <size>`**: `<size>` must be set to `3`. It copies the 3x3x3 cube that was
+previously saved with the `pattern` command.
+
+**`rotate_item <lvl> <steps>`**: Rotates the block in front of the bot by `<steps>`
+times 90°. Valid values for `<steps>` are 1, 2, or 3. `<lvl>` uses the same
+-1/0/+1 offset as the place/dig commands.
+
+**`set_param2 <lvl> <param2>`**: Sets the raw `param2` value of the block in front
+of the bot. Useful for nodes that use `param2` for orientation or state (e.g.
+facedir nodes). `<lvl>` uses the same -1/0/+1 offset.
+
+**`jump_check_item <num> <slot> <label>`**: Checks the chest-like node that is
+*directly in front of the bot* (not the bot's own inventory). If it contains fewer
+than `<num>` items of the type configured in `<slot>`, the bot jumps to `<label>`.
+Use slot 0 to check for any item.
+
+**Slot preconfiguration**: Right-click a slot in the bot box inventory while the bot
+is stopped, then place the desired item type into the slot. The slot will remember
+that item type and the bot will only use or fill that slot with that specific item.
 
 [signs_bot_bot_inv.png|image]
 

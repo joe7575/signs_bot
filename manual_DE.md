@@ -70,7 +70,7 @@ Diese Schilder müssen auf dem Truhenblock platziert werden.
 
 [signs_bot_sign_left.png|image]
 
-## Sensors and Actuators
+## Sensoren und Aktoren
 
 Zusätzlich zu den Schildern kann der Bot mittels Sensoren gesteuert werden. Sensoren wie der Bot-Sensor haben zwei Zustände: ein und aus. Wenn der Bot-Sensor einen Bot erkennt, wechselt er in den Zustand „Ein“ und sendet ein Signal an einen angeschlossenen Block, einen sogenannten Aktor.
 
@@ -143,7 +143,7 @@ Bot-Inventar zu entnehmen, wie zum Beispiel:
 Hier spielt es keine Rolle, ob ein Slot vorkonfiguriert ist oder nicht. Der Bot nimmt
 den ersten Stapel, den er aus seinem eigenen Inventar finden kann, und versucht,
 ihn zu verwenden. Wenn ein Slot angegeben ist, nimmt er Artikel nur aus diesem
-Slot. Ist kein Slot angegeben, prüft der Bot nacheinander alle Positiionen,
+Slot. Ist kein Slot angegeben, prüft der Bot nacheinander alle Positionen,
 beginnend bei Slot 1, bis es etwas findet. Ist die gefundene Anzahl kleiner als
 gefordert, versucht er, den Rest aus einem beliebigen anderen Slot zu entnehmen.
 
@@ -153,15 +153,15 @@ gefordert, versucht er, den Rest aus einem beliebigen anderen Slot zu entnehmen.
 
 ### Signs Bot Box
 
-Die Box ist das Gehäuse des Bots. Platzieren Sie die Box und starten Sie den Bot über
-die Schaltfläche „An“. Wenn die Mod Techage installiert ist, benötigt der Bot auch Strom.
-Der Bot verlässt die Box auf der rechten Seite. Es startet nicht, wenn diese Position
+Die Box ist das Gehäuse des Bots. Platziere die Box und starte den Bot über
+die Schaltfläche „An". Wenn die Mod Techage installiert ist, benötigt der Bot auch Strom.
+Der Bot verlässt die Box auf der rechten Seite. Er startet nicht, wenn diese Position
 blockiert ist.
 
-Um den Bot anzuhalten und zu entfernen, drücken Sie die „Aus“-Taste.
+Um den Bot anzuhalten und zu entfernen, drücke die „Aus"-Taste.
 Das Box-Inventar simuliert das Inventar des Bots.
-Sie können nicht auf das Inventar zugreifen, wenn der Bot aktiv ist..
-Der Bot kann bis zu 8 Stapel mit Gengeständen und 6 Schilder mit sich führen.
+Du kannst nicht auf das Inventar zugreifen, wenn der Bot aktiv ist.
+Der Bot kann bis zu 8 Stapel mit Gegenständen und 6 Schilder mit sich führen.
 
 [signs_bot:box|image]
 
@@ -177,10 +177,10 @@ automatisch, wenn er an dieser Stelle durch die Wand geht.
 
 Mit dem Kopierer können Schilderkopien erstellt werden:
 
-1. Fügen Sie ein „cmnd“-Schild, das als Vorlage verwendet werden soll, 
-    in das Inventar „Vorlage“ ein
-2. Fügen Sie ein oder mehrere „Leerzeichen“ zum Inventar „Eingabe“ hinzu.
-3. Nehmen Sie die Kopien aus dem Inventar „Ausgabe“.
+1. Lege ein „cmnd"-Schild, das als Vorlage verwendet werden soll,
+   in das Inventar „Vorlage"
+2. Lege ein oder mehrere Leerzeichen in das Inventar „Eingabe".
+3. Nimm die Kopien aus dem Inventar „Ausgabe".
 
 Alternativ können auch geschriebene Bücher [default:book_written] als
 Vorlage verwendet werden.
@@ -210,7 +210,7 @@ zeigen muss.
 ### Ernte Sensor
 
 Der Ernte Sensor sendet zyklische Signale, wenn beispielsweise Weizen
-ausgewachsen ist. Der Sensorbereich beträgt einen Block/Meter.#
+ausgewachsen ist. Der Sensorbereich beträgt einen Block/Meter.
 Der Sensor hat eine aktive Seite (rot), die auf die Ernte/das Feld
 zeigen muss.
 
@@ -240,23 +240,23 @@ Die Roboter Steuerungseinheit dient der Steuerung des Bots mittels Zeichen.
 Das Gerät kann mit bis zu 4 verschiedenen Schildern bestückt und mittels
 Sensoren programmiert werden.
 
-Um die Steuerungseinheit zu laden, platzieren Sie ein Schild auf der roten Seite
-der Steuerungseinheit und klicken Sie auf die Steuerungseinheit.
+Um die Steuerungseinheit zu laden, platziere ein Schild auf der roten Seite
+der Steuerungseinheit und klicke auf die Steuerungseinheit.
 Das Schild verschwindet / wird in das Inventar der Steuerungseinheit verschoben.
 Dies kann dreimal wiederholt werden.
 
-Verwenden Sie das Verbindungstool, um bis zu 4 Sensoren mit der
+Verwende das Verbindungstool, um bis zu 4 Sensoren mit der
 Steuerungseinheit zu verbinden.
 
 [signs_bot:changer1|image]
 
 ### Sensor Erweiterung
 
-Mit der  Sensor Erweiterung können Sensorsignale an mehr als einen Aktor
+Mit der Sensor Erweiterung können Sensorsignale an mehr als einen Aktor
 gesendet werden.
-Platzieren Sie eine oder mehrere Sensor Erweiterungen in der Nähe des
-Sensors und verbinden Sie jede  Sensor Erweiterung mithilfe des
-Verbindungswerkzeug mit einem weiteren Aktor.
+Platziere eine oder mehrere Sensor Erweiterungen in der Nähe des
+Sensors und verbinde jede Sensor Erweiterung mithilfe des
+Verbindungswerkzeugs mit einem weiteren Aktor.
 
 [signs_bot:sensor_extender|image]
 
@@ -318,7 +318,7 @@ vor der Stelle, an der die Kopie angefertigt werden soll. Siehe auch "Vorlage" Z
 
 ### Zeichen 'Blumen'
 
-Wird zum Schneiden von Blumen auf einem 3x3-Feld verwendet. Platziere das SWenn der Bot fertig ist, dreht sich der Bot und geht zurück.child
+Wird zum Schneiden von Blumen auf einem 3x3-Feld verwendet. Platziere das Schild
 vor dem Feld.
 Wenn der Bot fertig ist, dreht er sich um.
 
@@ -330,7 +330,7 @@ Wird zum Ernten eines Espen- oder Kiefernstamms verwendet:
 
 - Platziere das Schild vor dem Baum.
 - Platziere eine Truhe rechts neben dem Schild.
-- Legen Sie einen Erdstapel (mindestens 10 Blöcke) in die Truhe.
+- Lege einen Erdstapel (mindestens 10 Blöcke) in die Truhe.
 - Slot 1 des Bot-Inventars für Erde vorkonfigurieren
 - Slot 2 des Bot-Inventars für Setzlingen vorkonfigurieren
 
@@ -341,8 +341,8 @@ Wird zum Ernten eines Espen- oder Kiefernstamms verwendet:
 Das „Kommando“-Zeichen kann vom Spieler programmiert werden. Platziere
 das Schild und verwende das Blockmenü, um die Abfolge von Bot-Befehlen zu
 programmieren.
-Das Menü verfügt über ein Bearbeitungsfeld für Ihre Befehle und eine Hilfeseite
-mit allen verfügbaren Befehle. Die Hilfeseite verfügt über eine Kopierschaltfläche,
+Das Menü verfügt über ein Bearbeitungsfeld für deine Befehle und eine Hilfeseite
+mit allen verfügbaren Befehlen. Die Hilfeseite verfügt über eine Kopierschaltfläche,
 um die Programmierung zu vereinfachen.
 
 [signs_bot:sign_cmnd|image]
@@ -399,7 +399,7 @@ Endposition des Wagens über der Schiene angebracht werden.
 
 ### Zeichen 'Schöpfe Wasser' (xdecor)
 
-Wird verwendet, um Wasser in einen Eimer zu füllen. Platzieren Sie das Schild
+Wird verwendet, um Wasser in einen Eimer zu füllen. Platziere das Schild
 am Ufer vor dem stillen Wasserbecken.
 
 Gegenstände in den Slots:
@@ -420,7 +420,7 @@ ein Feld vor den Kessel.
 
 Gegenstände in den Slots:
 
-   1 - Wassereimer"
+   1 - Wassereimer
    2 – Gemüse Nr. 1 (z. B. Tomate)
    3 – Gemüse Nr. 2 (z. B. Karotte)
    4 – leere Schüssel (von Farming- oder Xdecor-Mods)
@@ -444,7 +444,7 @@ Alle entfernten Blöcke oder Schilder werden wieder dem Bot-Inventar hinzugefüg
     turn_left                 - drehe links
     turn_right                - drehe rechts
     turn_around               - drehe um
-    backward                  - gehe ein Schitt zurück
+    backward                  - gehe einen Schritt zurück
     turn_off                  - schalte den Bot aus / zurück in die Box
     pause <sec>               - warte eine oder mehrere Sekunden
     move_up                   - nach oben bewegen (maximal 2 Mal)
@@ -474,7 +474,7 @@ Alle entfernten Blöcke oder Schilder werden wieder dem Bot-Inventar hinzugefüg
     drop_items <num> <slot>   - lasse Gegenstände fallen
     harvest                   - ernte ein 3x3 Feld ab (farming)
     cutting                   - schneide Blumen in einem 3x3 Feld ab
-    sow_seed <slot>           - sähe/pflanze ein 3x3 Feld an
+    sow_seed <slot>           - säe/pflanze ein 3x3 Feld an
     plant_sapling <slot>      - pflanze einen Setzling vor dem Roboter
     pattern                   - speichere die Blockeigenschaften hinter dem Schild (3x3x3 Würfel) als Vorlage
     copy <size>               - erstelle eine 3x3x3-Kopie der gespeicherten Vorlage
@@ -490,6 +490,44 @@ Alle entfernten Blöcke oder Schilder werden wieder dem Bot-Inventar hinzugefüg
 
 [signs_bot_bot_inv.png|image]
 
+### Hinweise zu Parametern
+
+**Parameter `<lvl>`** (verwendet bei `place_front/left/right` und `dig_front/left/right`):
+
+- `-1` = einen Block *unterhalb* der aktuellen Bot-Ebene
+- `0` = gleiche Ebene wie der Bot
+- `+1` = einen Block *oberhalb* der Bot-Ebene
+
+**`cond_move`**: Der Bot läuft Schritt für Schritt vorwärts, bis er entweder auf ein
+Hindernis trifft (zwei oder mehr Blöcke hoch/runter) oder ein Schild erreicht.
+Im Gegensatz zu `move <steps>` ist die Schrittanzahl nicht vorher festgelegt.
+
+**`move_up`**: Kann maximal 2 Mal hintereinander verwendet werden, da der Bot
+beim Klettern bis zu 3 Blöcke Höhe einnimmt (Fuß, Körper, Kopf).
+
+**`copy <size>`**: `<size>` muss auf `3` gesetzt werden. Es wird der 3x3x3-Würfel
+kopiert, der zuvor mit dem Befehl `pattern` gespeichert wurde.
+
+**`rotate_item <lvl> <steps>`**: Dreht den Block vor dem Bot um `<steps>` × 90°.
+Gültige Werte für `<steps>` sind 1, 2 oder 3. `<lvl>` verwendet denselben
+-1/0/+1-Versatz wie die place/dig-Befehle.
+
+**`set_param2 <lvl> <param2>`**: Setzt den rohen `param2`-Wert des Blocks vor
+dem Bot. Nützlich für Nodes, die `param2` für Ausrichtung oder Zustand verwenden.
+`<lvl>` verwendet denselben -1/0/+1-Versatz.
+
+**`jump_check_item <num> <slot> <label>`**: Prüft den truhenartigen Block, der sich
+*direkt vor dem Bot* befindet (nicht das eigene Inventar). Enthält er weniger als
+`<num>` Items des in `<slot>` konfigurierten Typs, springt der Bot zu `<label>`.
+Slot 0 prüft auf beliebige Items.
+
+**Slot-Vorkonfiguration**: Klicke mit der rechten Maustaste auf einen Slot im
+Bot-Box-Inventar (während der Bot steht) und lege den gewünschten Item-Typ hinein.
+Der Slot merkt sich diesen Typ. Der Bot befüllt oder entnimmt diesen Slot dann
+ausschließlich mit diesem Item-Typ.
+
+[signs_bot_bot_inv.png|image]
+
 ### Techage spezifische Kommandos
 
     ignite                            - Zünde den Techage-Kohleanzünder an
@@ -501,7 +539,7 @@ Alle entfernten Blöcke oder Schilder werden wieder dem Bot-Inventar hinzugefüg
     send_cmnd <receiver> <command>    - Sende ein Techage-Befehl an einen bestimmten Knoten.
                                         Der Empfänger wird über die Techage-Knotennummer angesprochen.
                                         Für Befehle mit zwei oder mehr Wörtern:
-                                        Verwenden Sie das Zeichen „*“ statt Leerzeichen, z.B.:
+                                        Verwende das Zeichen „*" statt Leerzeichen, z.B.:
                                         send_cmnd 3465 pull*default:dirt*2
 
 [signs_bot_bot_inv.png|image]
@@ -529,7 +567,7 @@ Alle entfernten Blöcke oder Schilder werden wieder dem Bot-Inventar hinzugefüg
 
 [signs_bot_bot_inv.png|image]
 
-### Weitere Sprungkommands
+### Weitere Sprungkommandos
 
     -- Überprüfe, ob sich <num> Gegenstände im 
     -- truhenähnlichen Knoten befinden.
@@ -548,48 +586,48 @@ Alle entfernten Blöcke oder Schilder werden wieder dem Bot-Inventar hinzugefüg
 
 #### Beispiel mit einer Funktion am Anfang:
 
-    -- jump to the label 'main'
+    -- Springe zur Marke 'main'
     jump main
     
-    -- starting point of the function with the name 'foo'
+    -- Startpunkt der Funktion 'foo'
     foo:
       cmnd ...
       cmnd ...
-    -- end of 'foo'. Jump back
+    -- Ende von 'foo'. Zurückspringen
     return
     
-    -- main program
+    -- Hauptprogramm
     main:
       cmnd ...
-      -- repeat all commands up to 'end' 10 times
+      -- alle Befehle bis 'end' 10 Mal wiederholen
       repeat 10
         cmnd ...
-        -- call the subfunction 'foo'
+        -- Unterfunktion 'foo' aufrufen
         call foo
         cmnd ...
-      -- end of the 'repeat' loop
+      -- Ende der 'repeat'-Schleife
       end
-    -- end of the program
+    -- Ende des Programms
     exit
 
 
 #### Beispiel mit einer Funktion am Ende:
 
     cmnd ...
-    -- repeat all commands up to 'end' 10 times
+    -- alle Befehle bis 'end' 10 Mal wiederholen
     repeat 10
       cmnd ...
-      -- call the subfunction 'foo'
+      -- Unterfunktion 'foo' aufrufen
       call foo
       cmnd ...
-    -- end of the 'repeat' loop
+    -- Ende der 'repeat'-Schleife
     end
-    -- end of the program
+    -- Ende des Programms
     exit
     
-    -- starting point of the function with the name 'foo'
+    -- Startpunkt der Funktion 'foo'
     foo:
       cmnd ...
       cmnd ...
-    -- end of 'foo'. Jump back
+    -- Ende von 'foo'. Zurückspringen
     return
