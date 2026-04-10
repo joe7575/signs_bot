@@ -443,6 +443,7 @@ Any blocks or signs removed will be added back to the Bot Inventory.
     add_compost <slot>        - Put 2 leaves into the compost barrel
     take_compost <slot>       - Take a compost item from the barrel
     print <text>              - Output chat message for debug purposes
+    debug_mode                - Switch bot into single-step debugger mode (write on a sign placed before the problem spot)
     take_water <slot>         - Take water with empty bucket
     fill_cauldron <slot>      - Fill the xdecor cauldron for a soup
     take_soup <slot>          - Take boiling soup into empty bowl from cauldron
@@ -606,3 +607,33 @@ that item type and the bot will only use or fill that slot with that specific it
       cmnd ...
     -- end of 'foo'. Jump back
     return
+
+## Debugging
+
+Two commands are available to help debug bot scripts:
+
+**`print <text>`**  
+Sends a chat message to the box owner during script execution.  
+Use `*` instead of spaces in the text (e.g. `print Hello*world`).  
+Useful to trace which branch of a conditional was taken.
+
+**`debug_mode`**  
+Switches the bot into the single-step debugger.  
+The bot pauses immediately after this command and the box formspec
+changes to the debugger view, which shows:
+
+- The full script with a `►` marker on the **next** line to be executed
+- The current program counter (PC) and the call/repeat stack
+- Four buttons: **Step** (execute one command), **Run** (continue at normal speed), **Stop** (turn off), **Debug Off** (close debugger, keep running)
+
+The typical workflow is to write `debug_mode` on a sign and place it
+just before the section you want to inspect. When the bot reads the sign,
+it activates the debugger automatically – no need to open the box formspec first.
+
+    -- normal commands ...
+    move 3
+    turn_left
+    -- HERE: activate debugger for the lines that follow
+    debug_mode
+    dig_front 1 0
+    place_front 2 0

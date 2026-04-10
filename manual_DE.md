@@ -482,6 +482,7 @@ Alle entfernten Blöcke oder Schilder werden wieder dem Bot-Inventar hinzugefüg
     add_compost <slot>        - gebe 2 Blätter in das Kompostfass
     take_compost <slot>       - nehme Kompost aus dem Kompostfass
     print <text>              - gebe eine Chat-Nachricht für Debug-Zwecke aus
+    debug_mode                - schalte den Bot in den Einzelschritt-Debugger (Schild vor der Problemstelle setzen)
     take_water <slot>         - schöpfe Wasser mit einem leeren Eimer
     fill_cauldron <slot>      - fülle den xdecor Kessel für eine Suppe
     take_soup <slot>          - fülle die kochende Suppe aus dem Kessel in eine leere Schüssel
@@ -650,3 +651,34 @@ ausschließlich mit diesem Item-Typ.
       cmnd ...
     -- Ende von 'foo'. Zurückspringen
     return
+
+## Debugging
+
+Zwei Kommandos stehen zur Fehlersuche in Bot-Skripten zur Verfügung:
+
+**`print <text>`**  
+Schickt eine Chat-Nachricht an den Besitzer der Box während der Skriptausführung.  
+Verwende `*` statt Leerzeichen im Text (z. B. `print Hallo*Welt`).  
+Nützlich, um zu verfolgen, welcher Zweig einer Bedingung ausgeführt wurde.
+
+**`debug_mode`**  
+Schaltet den Bot in den Einzelschritt-Debugger.  
+Der Bot hält unmittelbar nach diesem Kommando an, und das Formspec der Box
+wechselt in die Debugger-Ansicht, die Folgendes zeigt:
+
+- Das vollständige Skript mit einem `►`-Marker auf der **nächsten** auszuführenden Zeile
+- Den aktuellen Programm-Zähler (PC) und den Aufruf-/Wiederholungs-Stack
+- Vier Buttons: **Step** (einen Befehl ausführen), **Run** (normal weiterlaufen lassen), **Stop** (Bot ausschalten), **Debug Off** (Debugger schließen, Bot läuft weiter)
+
+Das typische Vorgehen ist, `debug_mode` auf ein Schild zu schreiben und dieses
+direkt vor dem Abschnitt zu platzieren, den du untersuchen möchtest. Wenn der Bot
+das Schild liest, aktiviert er den Debugger automatisch – das Formspec muss
+nicht vorher geöffnet werden.
+
+    -- normale Befehle ...
+    move 3
+    turn_left
+    -- HIER: Debugger für die folgenden Zeilen aktivieren
+    debug_mode
+    dig_front 1 0
+    place_front 2 0

@@ -156,8 +156,9 @@ local function formspec(pos, mem)
 	"list[context;main;5,1;4,2;]"..
 	"label[5.3,3;5]label[6.3,3;6]label[7.3,3;7]label[8.3,3;8]"..
 	"button[0.2,1;1.5,1;config;"..S("Config").."]"..
-	"button[0.2,2;1.5,1;"..cmnd.."]"..
-	"label[1,3.6;"..status(mem).."]"..
+	"button[0.2,1.8;1.5,1;"..cmnd.."]"..
+	"button[0.2,2.6;1.5,0.9;debug;"..S("Debug").."]"..
+	"label[0.4,3.5;"..status(mem).."]"..
 	"list[current_player;main;0.5,4.4;8,4;]"..
 	"listring[context;main]"..
 	"listring[current_player;main]"
@@ -176,6 +177,37 @@ local function formspec_cfg()
 	"list[current_player;main;0.5,4.4;8,4;]"..
 	"listring[context;filter]"..
 	"listring[current_player;main]"
+end
+
+local function formspec_debug(pos, mem)
+	-- Build the script text with a "►" marker on the current source line.
+	local script = mem.script or ""
+	local current_line = signs_bot.get_source_line(script, mem.pc or 1)
+	local lines = string.split(script, "\n", true)
+	for i = 1, #lines do
+		if i == current_line then
+			lines[i] = "\226\150\186 " .. lines[i]  -- UTF-8 for ►
+		else
+			lines[i] = "  " .. lines[i]
+		end
+	end
+	local marked = table.concat(lines, "\n")
+
+	-- Current command and stack info for the header label.
+	local stack_str = table.concat(mem.Stack or {}, ", ")
+	local pc_info = "PC:" .. (mem.pc or 1) ..
+		"   Stack:[" .. stack_str .. "]"
+
+	return "size[9,7.5]" ..
+	default.gui_bg ..
+	default.gui_bg_img ..
+	default.gui_slots ..
+	"label[0.2,0.1;" .. minetest.formspec_escape(S("Debugger") .. "  " .. pc_info) .. "]" ..
+	"textarea[0.2,0.6;8.6,5.5;script;;" .. minetest.formspec_escape(marked) .. "]" ..
+	"button[0.2,6.3;1.9,0.9;step;"   .. S("Step")      .. "]" ..
+	"button[2.3,6.3;1.9,0.9;resume;" .. S("Run")       .. "]" ..
+	"button[4.4,6.3;1.9,0.9;stop;"   .. S("Stop")      .. "]" ..
+	"button[6.5,6.3;2.3,0.9;debugoff;" .. S("Debug Off") .. "]"
 end
 
 local function get_capa(itemstack)
@@ -306,6 +338,14 @@ local function node_timer(pos, elapsed)
 		--local t = minetest.get_us_time()
 		if mem.running then
 			res = signs_bot.run_next_command(pos, mem)
+			if mem.debug_mode then
+				-- In debug mode: update the debugger formspec and pause the
+				-- timer so the user can inspect state before the next step.
+				if mem.running then
+					M(pos):set_string("formspec", formspec_debug(pos, mem))
+				end
+				return false
+			end
 		end
 		--t = minetest.get_us_time() - t
 		--print("node_timer", t)
@@ -330,6 +370,42 @@ local function on_receive_fields(pos, formname, fields, player)
 		signs_bot.start_robot(pos)
 	elseif fields.stop then
 		signs_bot.stop_robot(pos, mem)
+	elseif fields.debug then
+		-- Toggle debug mode (only while the bot is running).
+		if mem.running then
+			mem.debug_mode = not mem.debug_mode
+			if mem.debug_mode then
+				minetest.get_node_timer(pos):stop()
+				meta:set_string("formspec", formspec_debug(pos, mem))
+			else
+				meta:set_string("formspec", formspec(pos, mem))
+				minetest.get_node_timer(pos):start(CYCLE_TIME)
+			end
+		end
+	elseif fields.step then
+		-- Execute exactly one bot command and refresh the debug view.
+		if mem.running and mem.debug_mode then
+			signs_bot.run_next_command(pos, mem)
+			if mem.running then
+				meta:set_string("formspec", formspec_debug(pos, mem))
+			end
+			-- If the bot stopped (exit/error), stop_robot already updated
+			-- the formspec, so we don't override it here.
+		end
+	elseif fields.resume then
+		-- Leave debug mode and let the bot run at normal speed.
+		if mem.running and mem.debug_mode then
+			mem.debug_mode = false
+			meta:set_string("formspec", formspec(pos, mem))
+			minetest.get_node_timer(pos):start(CYCLE_TIME)
+		end
+	elseif fields.debugoff then
+		-- Alias for resume: leave debug mode.
+		mem.debug_mode = false
+		meta:set_string("formspec", formspec(pos, mem))
+		if mem.running then
+			minetest.get_node_timer(pos):start(CYCLE_TIME)
+		end
 	end
 end
 

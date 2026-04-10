@@ -314,4 +314,39 @@ function api.reset_script(base_pos, mem)
 	mem.bot_falling = nil
 end
 
+-- Map bytecode pc (index into code[]) back to the source line number.
+-- Used by the debugger to highlight the current line.
+function api.get_source_line(script, pc)
+	local bcode_pc = 1
+	local last_line = 1
+	for line_num, cmnd in get_line_tokens(script) do
+		if tCmdDef[cmnd] then
+			if bcode_pc >= pc then
+				return line_num
+			end
+			bcode_pc = bcode_pc + 1 + tCmdDef[cmnd].num_param
+			last_line = line_num
+		end
+		-- labels don't advance bcode_pc
+	end
+	return last_line
+end
+
+-- Return the current command (at mem.pc) as a human-readable string,
+-- without executing it.  Returns "?" when the code is not yet compiled.
+function api.get_current_cmnd(base_pos, mem)
+	local hash = minetest.hash_node_position(base_pos)
+	local code = CodeCache[hash]
+	if not code then
+		return "?"
+	end
+	local pc = mem.pc or 1
+	local opcode = code[pc]
+	if opcode then
+		local num_param = lCmdLookup[opcode][1]
+		return gen_string_cmnd(code, pc, num_param, mem.script)
+	end
+	return "exit"
+end
+
 return api

@@ -32,6 +32,8 @@ signs_bot.TURN_OFF = ci.TURN_OFF
 
 -- API functions
 signs_bot.check_label = ci.check_label
+signs_bot.get_source_line = ci.get_source_line
+signs_bot.get_current_cmnd = ci.get_current_cmnd
 
 local tCommands = {}
 local SortedKeys = {}
@@ -307,6 +309,20 @@ instead of spaces, like "Hello*world"]]),
 		if owner ~= "" and text ~= "" then
 			minetest.chat_send_player(owner, "Bot: " .. text)
 		end
+		return signs_bot.DONE
+	end,
+})
+
+signs_bot.register_botcommand("debug_mode", {
+	mod = "debug",
+	params = "",
+	num_param = 0,
+	description = S([[Switch the bot into single-step debugger mode.
+The debugger view opens on the bot box and the bot
+pauses after every command until 'Run' or 'Debug Off'
+is pressed. Useful on signs placed before a problem spot.]]),
+	cmnd = function(base_pos, mem)
+		mem.debug_mode = true
 		return signs_bot.DONE
 	end,
 })
