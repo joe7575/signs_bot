@@ -542,6 +542,37 @@ ausschließlich mit diesem Item-Typ.
                                         Für Befehle mit zwei oder mehr Wörtern:
                                         Verwende das Zeichen „*" statt Leerzeichen, z.B.:
                                         send_cmnd 3465 pull*default:dirt*2
+    move_platform <ctrl_num> <x,y,z>  - Bewege eine TA4-Move-Controller-II-Plattform zur
+                                        angegebenen absoluten Position und fahre darauf mit.
+                                        Der Bot muss auf einem Plattform-Block stehen.
+                                        Die Position muss als x,y,z ohne Leerzeichen angegeben werden.
+                                        Erfordert techage v1.25 oder neuer.
+                                        Beispiel: move_platform 84 751,14,-308
+
+[signs_bot_bot_inv.png|image]
+
+### Aufzug-Beispiel mit TA4 Move Controller II
+
+Dieses Beispiel zeigt, wie ein Bot einen TA4 Move Controller II als Aufzug nutzen kann.
+Auf jeder Ebene befindet sich ein "command"-Schild, das der Bot beim Ankommen liest.
+Der Bot startet auf der Plattform an der unteren Position.
+
+**Unteres "command"-Schild** (dort wo der Bot unten steht, wird gelesen wenn der Bot startet):
+
+    -- Plattform (und Bot) zur oberen Position fahren
+    move_platform 84 751,14,-308
+
+**Oberes "command"-Schild** (dort wo der Bot oben ankommt,
+wird gelesen nachdem die Plattform hochgefahren ist):
+
+    -- Arbeit auf der oberen Ebene erledigen, dann umdrehen
+    -- und zurück auf die Plattform gehen
+    turn_around
+    move 2
+    -- Plattform (und Bot) zurück zur unteren Position fahren
+    move_platform 84 751,8,-308
+
+Der Bot läuft dann automatisch zurück zu seiner Box.
 
 [signs_bot_bot_inv.png|image]
 

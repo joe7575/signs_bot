@@ -37,12 +37,14 @@ return {
     "2,Bot Kommandos",
     "3,Hinweise zu Parametern",
     "3,Techage spezifische Kommandos",
+    "3,Aufzug-Beispiel mit TA4 Move Controller II",
     "3,Flow Control Kommandos",
     "3,Weitere Sprungkommandos",
     "3,Flow Control Beispiele",
     "4,Beispiel mit jump_if_block / jump_ifnot_block:",
     "4,Beispiel mit einer Funktion am Anfang:",
     "4,Beispiel mit einer Funktion am Ende:",
+    "2,Debugging",
   },
   texts = {
     "Ein durch Zeichen/Schilder gesteuerter Roboter.\n"..
@@ -452,6 +454,7 @@ return {
     "    add_compost <slot>        - gebe 2 Blätter in das Kompostfass\n"..
     "    take_compost <slot>       - nehme Kompost aus dem Kompostfass\n"..
     "    print <text>              - gebe eine Chat-Nachricht für Debug-Zwecke aus\n"..
+    "    debug_mode                - schalte den Bot in den Einzelschritt-Debugger (Schild vor der Problemstelle setzen)\n"..
     "    take_water <slot>         - schöpfe Wasser mit einem leeren Eimer\n"..
     "    fill_cauldron <slot>      - fülle den xdecor Kessel für eine Suppe\n"..
     "    take_soup <slot>          - fülle die kochende Suppe aus dem Kessel in eine leere Schüssel\n"..
@@ -507,6 +510,35 @@ return {
     "                                        Für Befehle mit zwei oder mehr Wörtern:\n"..
     "                                        Verwende das Zeichen „*\" statt Leerzeichen\\, z.B.:\n"..
     "                                        send_cmnd 3465 pull*default:dirt*2\n"..
+    "    move_platform <ctrl_num> <x\\,y\\,z>  - Bewege eine TA4-Move-Controller-II-Plattform zur\n"..
+    "                                        angegebenen absoluten Position und fahre darauf mit.\n"..
+    "                                        Der Bot muss auf einem Plattform-Block stehen.\n"..
+    "                                        Die Position muss als x\\,y\\,z ohne Leerzeichen angegeben werden.\n"..
+    "                                        Erfordert techage v1.25 oder neuer.\n"..
+    "                                        Beispiel: move_platform 84 751\\,14\\,-308\n"..
+    "\n"..
+    "\n"..
+    "\n",
+    "Dieses Beispiel zeigt\\, wie ein Bot einen TA4 Move Controller II als Aufzug nutzen kann.\n"..
+    "Auf jeder Ebene befindet sich ein \"command\"-Schild\\, das der Bot beim Ankommen liest.\n"..
+    "Der Bot startet auf der Plattform an der unteren Position.\n"..
+    "\n"..
+    "*Unteres \"command\"-Schild* (dort wo der Bot unten steht\\, wird gelesen wenn der Bot startet):\n"..
+    "\n"..
+    "    -- Plattform (und Bot) zur oberen Position fahren\n"..
+    "    move_platform 84 751\\,14\\,-308\n"..
+    "\n"..
+    "*Oberes \"command\"-Schild* (dort wo der Bot oben ankommt\\,\n"..
+    "wird gelesen nachdem die Plattform hochgefahren ist):\n"..
+    "\n"..
+    "    -- Arbeit auf der oberen Ebene erledigen\\, dann umdrehen\n"..
+    "    -- und zurück auf die Plattform gehen\n"..
+    "    turn_around\n"..
+    "    move 2\n"..
+    "    -- Plattform (und Bot) zurück zur unteren Position fahren\n"..
+    "    move_platform 84 751\\,8\\,-308\n"..
+    "\n"..
+    "Der Bot läuft dann automatisch zurück zu seiner Box.\n"..
     "\n"..
     "\n"..
     "\n",
@@ -603,6 +635,35 @@ return {
     "    -- Ende von 'foo'. Zurückspringen\n"..
     "    return\n"..
     "\n",
+    "Zwei Kommandos stehen zur Fehlersuche in Bot-Skripten zur Verfügung:\n"..
+    "\n"..
+    "*'print <text>'*\n"..
+    "Schickt eine Chat-Nachricht an den Besitzer der Box während der Skriptausführung.\n"..
+    "Verwende '*' statt Leerzeichen im Text (z. B. 'print Hallo*Welt').\n"..
+    "Nützlich\\, um zu verfolgen\\, welcher Zweig einer Bedingung ausgeführt wurde.\n"..
+    "\n"..
+    "*'debug_mode'*\n"..
+    "Schaltet den Bot in den Einzelschritt-Debugger.\n"..
+    "Der Bot hält unmittelbar nach diesem Kommando an\\, und das Formspec der Box\n"..
+    "wechselt in die Debugger-Ansicht\\, die Folgendes zeigt:\n"..
+    "\n"..
+    "  - Das vollständige Skript mit einem '►'-Marker auf der *nächsten* auszuführenden Zeile\n"..
+    "  - Den aktuellen Programm-Zähler (PC) und den Aufruf-/Wiederholungs-Stack\n"..
+    "  - Vier Buttons: *Step* (einen Befehl ausführen)\\, *Run* (normal weiterlaufen lassen)\\, *Stop* (Bot ausschalten)\\, *Debug Off* (Debugger schließen\\, Bot läuft weiter)\n"..
+    "\n"..
+    "Das typische Vorgehen ist\\, 'debug_mode' auf ein Schild zu schreiben und dieses\n"..
+    "direkt vor dem Abschnitt zu platzieren\\, den du untersuchen möchtest. Wenn der Bot\n"..
+    "das Schild liest\\, aktiviert er den Debugger automatisch – das Formspec muss\n"..
+    "nicht vorher geöffnet werden.\n"..
+    "\n"..
+    "    -- normale Befehle ...\n"..
+    "    move 3\n"..
+    "    turn_left\n"..
+    "    -- HIER: Debugger für die folgenden Zeilen aktivieren\n"..
+    "    debug_mode\n"..
+    "    dig_front 1 0\n"..
+    "    place_front 2 0\n"..
+    "\n",
   },
   images = {
     "signs_bot_bot_inv.png",
@@ -644,12 +705,16 @@ return {
     "signs_bot_bot_inv.png",
     "signs_bot_bot_inv.png",
     "signs_bot_bot_inv.png",
+    "signs_bot_bot_inv.png",
+    "",
     "",
     "",
     "",
     "",
   },
   plans = {
+    "",
+    "",
     "",
     "",
     "",

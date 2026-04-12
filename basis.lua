@@ -337,14 +337,18 @@ local function node_timer(pos, elapsed)
 		local res = false
 		--local t = minetest.get_us_time()
 		if mem.running then
-			res = signs_bot.run_next_command(pos, mem)
-			if mem.debug_mode then
-				-- In debug mode: update the debugger formspec and pause the
-				-- timer so the user can inspect state before the next step.
-				if mem.running then
-					M(pos):set_string("formspec", formspec_debug(pos, mem))
+			if mem.carrier_freeze then
+				res = true  -- keep timer alive while bot rides a moving platform
+			else
+				res = signs_bot.run_next_command(pos, mem)
+				if mem.debug_mode then
+					-- In debug mode: update the debugger formspec and pause the
+					-- timer so the user can inspect state before the next step.
+					if mem.running then
+						M(pos):set_string("formspec", formspec_debug(pos, mem))
+					end
+					return false
 				end
-				return false
 			end
 		end
 		--t = minetest.get_us_time() - t

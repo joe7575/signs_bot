@@ -37,12 +37,14 @@ return {
     "2,Bot Commands",
     "3,Parameter Notes",
     "3,Techage specific commands",
+    "3,Elevator example using TA4 Move Controller II",
     "3,Flow control commands",
     "3,Further jump commands",
     "3,Flow control Examples",
     "4,Example with jump_if_block / jump_ifnot_block:",
     "4,Example with a function at the beginning:",
     "4,Example with a function at the end:",
+    "2,Debugging",
   },
   texts = {
     "A robot controlled by signs.\n"..
@@ -417,6 +419,7 @@ return {
     "    add_compost <slot>        - Put 2 leaves into the compost barrel\n"..
     "    take_compost <slot>       - Take a compost item from the barrel\n"..
     "    print <text>              - Output chat message for debug purposes\n"..
+    "    debug_mode                - Switch bot into single-step debugger mode (write on a sign placed before the problem spot)\n"..
     "    take_water <slot>         - Take water with empty bucket\n"..
     "    fill_cauldron <slot>      - Fill the xdecor cauldron for a soup\n"..
     "    take_soup <slot>          - Take boiling soup into empty bowl from cauldron\n"..
@@ -470,7 +473,36 @@ return {
     "                                        Receiver is addressed by the techage node number. \n"..
     "                                        For commands with two or more words\\, \n"..
     "                                        use the '*' character instead of spaces\\, e.g.: \n"..
-    "                                        send_cmnd 3465 pull*default:dirt*2\n"..
+    "                                        send_cmnd 3465 pull*default:dirt*2 \n"..
+    "    move_platform <ctrl_num> <x\\,y\\,z>  - Move a TA4 Move Controller II platform to the\n"..
+    "                                        given absolute position and ride on top of it.\n"..
+    "                                        The bot must be standing on a platform node.\n"..
+    "                                        The position must be given as x\\,y\\,z without spaces.\n"..
+    "                                        Requires techage v1.25 or newer.\n"..
+    "                                        Example: move_platform 84 751\\,14\\,-308\n"..
+    "\n"..
+    "\n"..
+    "\n",
+    "This example shows how a bot can use a TA4 Move Controller II as an elevator.\n"..
+    "At each level there is a \"command\" sign that the bot reads when it arrives.\n"..
+    "The bot starts on the platform at the lower position.\n"..
+    "\n"..
+    "*Lower \"command\" sign* (placed where the bot stands at the bottom\\, read when the bot starts):\n"..
+    "\n"..
+    "    -- Move the platform (and bot) up to the upper position\n"..
+    "    move_platform 84 751\\,14\\,-308\n"..
+    "\n"..
+    "*Upper \"command\" sign* (placed where the bot arrives at the top\\,\n"..
+    "read after the platform has moved up):\n"..
+    "\n"..
+    "    -- Do some work at the upper level\\, then turn around\n"..
+    "    -- and walk back onto the platform\n"..
+    "    turn_around\n"..
+    "    move 2\n"..
+    "    -- Move the platform (and bot) back down to the lower position\n"..
+    "    move_platform 84 751\\,8\\,-308\n"..
+    "\n"..
+    "The bot then walks back to its box automatically.\n"..
     "\n"..
     "\n"..
     "\n",
@@ -563,6 +595,34 @@ return {
     "    -- end of 'foo'. Jump back\n"..
     "    return\n"..
     "\n",
+    "Two commands are available to help debug bot scripts:\n"..
+    "\n"..
+    "*'print <text>'*\n"..
+    "Sends a chat message to the box owner during script execution.\n"..
+    "Use '*' instead of spaces in the text (e.g. 'print Hello*world').\n"..
+    "Useful to trace which branch of a conditional was taken.\n"..
+    "\n"..
+    "*'debug_mode'*\n"..
+    "Switches the bot into the single-step debugger.\n"..
+    "The bot pauses immediately after this command and the box formspec\n"..
+    "changes to the debugger view\\, which shows:\n"..
+    "\n"..
+    "  - The full script with a '►' marker on the *next* line to be executed\n"..
+    "  - The current program counter (PC) and the call/repeat stack\n"..
+    "  - Four buttons: *Step* (execute one command)\\, *Run* (continue at normal speed)\\, *Stop* (turn off)\\, *Debug Off* (close debugger\\, keep running)\n"..
+    "\n"..
+    "The typical workflow is to write 'debug_mode' on a sign and place it\n"..
+    "just before the section you want to inspect. When the bot reads the sign\\,\n"..
+    "it activates the debugger automatically – no need to open the box formspec first.\n"..
+    "\n"..
+    "    -- normal commands ...\n"..
+    "    move 3\n"..
+    "    turn_left\n"..
+    "    -- HERE: activate debugger for the lines that follow\n"..
+    "    debug_mode\n"..
+    "    dig_front 1 0\n"..
+    "    place_front 2 0\n"..
+    "\n",
   },
   images = {
     "signs_bot_bot_inv.png",
@@ -604,12 +664,16 @@ return {
     "signs_bot_bot_inv.png",
     "signs_bot_bot_inv.png",
     "signs_bot_bot_inv.png",
+    "signs_bot_bot_inv.png",
+    "",
     "",
     "",
     "",
     "",
   },
   plans = {
+    "",
+    "",
     "",
     "",
     "",

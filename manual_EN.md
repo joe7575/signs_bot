@@ -502,6 +502,37 @@ that item type and the bot will only use or fill that slot with that specific it
                                         For commands with two or more words, 
                                         use the '*' character instead of spaces, e.g.: 
                                         send_cmnd 3465 pull*default:dirt*2 
+    move_platform <ctrl_num> <x,y,z>  - Move a TA4 Move Controller II platform to the
+                                        given absolute position and ride on top of it.
+                                        The bot must be standing on a platform node.
+                                        The position must be given as x,y,z without spaces.
+                                        Requires techage v1.25 or newer.
+                                        Example: move_platform 84 751,14,-308
+
+[signs_bot_bot_inv.png|image]
+
+### Elevator example using TA4 Move Controller II
+
+This example shows how a bot can use a TA4 Move Controller II as an elevator.
+At each level there is a "command" sign that the bot reads when it arrives.
+The bot starts on the platform at the lower position.
+
+**Lower "command" sign** (placed where the bot stands at the bottom, read when the bot starts):
+
+    -- Move the platform (and bot) up to the upper position
+    move_platform 84 751,14,-308
+
+**Upper "command" sign** (placed where the bot arrives at the top,
+read after the platform has moved up):
+
+    -- Do some work at the upper level, then turn around
+    -- and walk back onto the platform
+    turn_around
+    move 2
+    -- Move the platform (and bot) back down to the lower position
+    move_platform 84 751,8,-308
+
+The bot then walks back to its box automatically.
 
 [signs_bot_bot_inv.png|image]
 

@@ -364,6 +364,156 @@ send_cmnd 3465 pull*default:dirt*2]]),
 	end)
 
 	techage.disable_block_for_assembly_tool("signs_bot:box")
+
+	-- Integration with TA4 Move Controller II: bot rides a moving platform like a player
+	-- Requires techage v1.25+ (on_move_begin hook)
+	if techage.flylib2 and techage.flylib2.on_move_begin then
+		-- Register signs_bot mod so attach_objects() picks up our carrier entity
+		techage.register_mobs_mods("signs_bot")
+
+		-- Find the bot box that owns the robot at robot_pos
+		local function find_base_pos(robot_pos)
+			local nearby = minetest.find_nodes_in_area(
+				vector.offset(robot_pos, -200, -20, -200),
+				vector.offset(robot_pos,  200,  20,  200),
+				"signs_bot:box")
+			for _, bpos in ipairs(nearby) do
+				local mem = tubelib2.get_mem(bpos)
+				if mem.robot_pos and vector.equals(mem.robot_pos, robot_pos) then
+					return bpos
+				end
+			end
+		end
+
+		-- Before the platform moves: scan for signs_bot:robot on top of each platform node.
+		-- Remove the bot node and spawn the invisible carrier entity so attach_objects() picks it up.
+		-- This fires for move_platform botcmnd, Reset button, and manual controller inputs.
+		table.insert(techage.flylib2.on_move_begin, function(lNodes, dests)
+			for idx, node in ipairs(lNodes) do
+				if node and node.curr_pos then
+					local above = vector.offset(node.curr_pos, 0, 1, 0)
+					local n = minetest.get_node(above)
+					if n.name == "signs_bot:robot" then
+						local bpos = find_base_pos(above)
+						if bpos then
+							local mem = tubelib2.get_mem(bpos)
+							local param2 = n.param2						-- Freeze bot timer so it doesn't run commands while bot is riding
+						mem.carrier_freeze = true							signs_bot.remove_robot(mem)
+							mem.robot_pos = nil
+							local ent = minetest.add_entity(above, "signs_bot:bot_carrier")
+							if ent then
+								local e = ent:get_luaentity()
+								e.base_pos = bpos
+								e.robot_param2 = param2
+							end
+						end
+					end
+				end
+			end
+		end)
+
+		-- Invisible carrier entity: spawned in place of the bot node before the platform moves,
+		-- attached automatically to the platform entity, converted back to bot node on landing.
+		minetest.register_entity("signs_bot:bot_carrier", {
+			initial_properties = {
+				visual = "wielditem",
+				visual_size = {x = 0.67, y = 0.67, z = 0.67},
+				wield_item = "signs_bot:robot",
+				physical = false,
+				collisionbox = {-0.3, -0.5, -0.3, 0.3, 0.5, 0.3},
+				static_save = false,
+			},
+			on_activate = function(self, staticdata)
+				if staticdata and staticdata ~= "" then
+					local data = minetest.deserialize(staticdata)
+					if data then
+						self.base_pos = data.base_pos
+						self.robot_param2 = data.robot_param2
+					end
+				end
+				-- After server restart: carrier was never attached in this session.
+				-- Place the bot back at our saved position and remove self.
+				minetest.after(1, function()
+					local obj = self.object
+					if not (obj and obj:get_luaentity()) then return end
+					if not self.was_attached then
+						local new_pos = vector.round(obj:get_pos())
+						if self.base_pos then
+							local mem = tubelib2.get_mem(self.base_pos)
+							mem.robot_pos = new_pos
+							local pos_below = {x = new_pos.x, y = new_pos.y - 1, z = new_pos.z}
+							signs_bot.place_robot(new_pos, pos_below, self.robot_param2 or 0)
+							mem.move_platform_done = true
+							mem.carrier_freeze = nil
+						end
+						obj:remove()
+					end
+				end)
+			end,
+			get_staticdata = function(self)
+				return minetest.serialize({
+					base_pos = self.base_pos,
+					robot_param2 = self.robot_param2,
+				})
+			end,
+			on_step = function(self, dtime)
+				local obj = self.object
+				if obj:get_attach() then
+					if not self.was_attached then
+						-- attach_objects always sets visual_size to 2.9; reset to correct node size
+						obj:set_properties({visual_size = {x = 1.9, y = 1.9}})
+					end
+					self.was_attached = true
+				elseif self.was_attached then
+					-- Just detached from platform: place bot at current (rounded) position
+					local new_pos = vector.round(obj:get_pos())
+					if self.base_pos then
+						local mem = tubelib2.get_mem(self.base_pos)
+						mem.robot_pos = new_pos
+						local pos_below = {x = new_pos.x, y = new_pos.y - 1, z = new_pos.z}
+						signs_bot.place_robot(new_pos, pos_below, self.robot_param2 or 0)
+						mem.move_platform_done = true
+						-- Unfreeze bot timer
+						mem.carrier_freeze = nil
+					end
+					obj:remove()
+				end
+			end,
+		})
+
+		-- Bot command: move_platform <ctrl_num> <x,y,z>
+		-- The platform carries the bot (via carrier entity). Poll mem.move_platform_done
+		-- which is set by the carrier entity's on_step when it detaches after landing.
+		-- Example: move_platform 84 751,14,-308
+		signs_bot.register_botcommand("move_platform", {
+			mod = "techage",
+			params = "<ctrl_num> <x,y,z>",
+			num_param = 2,
+			description = "Move platform via TA4 Move Controller II to absolute position",
+			check = function(num, xyz)
+				if not tonumber(num) then return false end
+				local t = string.split(xyz, ",", false, 2)
+				return #t == 3 and tonumber(t[1]) and tonumber(t[2]) and tonumber(t[3])
+			end,
+			cmnd = function(base_pos, mem, num, xyz)
+				if not mem.move_platform_sent then
+					mem.move_platform_done = false
+					-- Trigger the move. on_move_begin will detect the bot node on top of
+					-- the platform, remove it, and spawn the carrier entity automatically.
+					techage.send_single(base_pos, num, "moveto", xyz)
+					mem.move_platform_sent = true
+					return signs_bot.BUSY
+				end
+				-- Wait until carrier entity signals landing via mem.move_platform_done
+				if not mem.move_platform_done then
+					return signs_bot.BUSY
+				end
+				mem.move_platform_sent = nil
+				mem.move_platform_done = false
+				return signs_bot.DONE
+			end,
+		})
+	end
 else
 	function signs_bot.formspec_battery_capa(max_capa, current_capa)
 		return ""
