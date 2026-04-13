@@ -80,7 +80,10 @@ continues walking in its current direction.
 - One command per line
 - Parameters separated by spaces
 - `<slot>` = bot inventory slot 1–8
-- `<lvl>` = level relative to the bot (0 = same level, 1 = one above, -1 = one below)
+- `<lvl>` = vertical offset of the target block (always in the direction of the command):
+  - `-1` = one level lower than the bot (e.g. floor in front)
+  - `0` = same height as the bot (e.g. wall in front)
+  - `+1` = one level higher than the bot (e.g. above head height in front)
 
 ---
 

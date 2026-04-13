@@ -493,11 +493,14 @@ Alle entfernten Blöcke oder Schilder werden wieder dem Bot-Inventar hinzugefüg
 
 ### Hinweise zu Parametern
 
-**Parameter `<lvl>`** (verwendet bei `place_front/left/right` und `dig_front/left/right`):
+**Parameter `<lvl>`** (verwendet bei `place_front/left/right`, `dig_front/left/right`, `jump_if_block`, `jump_ifnot_block` u.a.):
 
-- `-1` = einen Block *unterhalb* der aktuellen Bot-Ebene
-- `0` = gleiche Ebene wie der Bot
-- `+1` = einen Block *oberhalb* der Bot-Ebene
+`<lvl>` bestimmt die **vertikale Versetzung** des Zielblocks, der sich immer
+in der Richtung des Befehls vor/links/rechts vom Bot befindet:
+
+- `-1` = einen Block *tiefer* als der Bot (z.B. der Boden direkt vor dem Bot)
+- `0` = gleiche Höhe wie der Bot (z.B. die Wand direkt vor dem Bot)
+- `+1` = einen Block *höher* als der Bot (z.B. über Kopfhöhe vor dem Bot)
 
 **`cond_move`**: Der Bot läuft Schritt für Schritt vorwärts, bis er entweder auf ein
 Hindernis trifft (zwei oder mehr Blöcke hoch/runter) oder ein Schild erreicht.
@@ -573,6 +576,15 @@ wird gelesen nachdem die Plattform hochgefahren ist):
     move_platform 84 751,8,-308
 
 Der Bot läuft dann automatisch zurück zu seiner Box.
+
+Hinweis: Folgen nach `move_platform` noch Sprungmarken oder anderer Code, der
+nicht ausgeführt werden soll, `cond_move` direkt danach setzen:
+
+    move_platform 84 751,14,-308
+    cond_move
+
+    ende:
+    turn_around
 
 [signs_bot_bot_inv.png|image]
 

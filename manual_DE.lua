@@ -463,11 +463,14 @@ return {
     "\n"..
     "\n"..
     "\n",
-    "*Parameter '<lvl>'* (verwendet bei 'place_front/left/right' und 'dig_front/left/right'):\n"..
+    "*Parameter '<lvl>'* (verwendet bei 'place_front/left/right'\\, 'dig_front/left/right'\\, 'jump_if_block'\\, 'jump_ifnot_block' u.a.):\n"..
     "\n"..
-    "  - '-1' = einen Block *unterhalb* der aktuellen Bot-Ebene\n"..
-    "  - '0' = gleiche Ebene wie der Bot\n"..
-    "  - '+1' = einen Block *oberhalb* der Bot-Ebene\n"..
+    "'<lvl>' bestimmt die *vertikale Versetzung* des Zielblocks\\, der sich immer\n"..
+    "in der Richtung des Befehls vor/links/rechts vom Bot befindet:\n"..
+    "\n"..
+    "  - '-1' = einen Block *tiefer* als der Bot (z.B. der Boden direkt vor dem Bot)\n"..
+    "  - '0' = gleiche Höhe wie der Bot (z.B. die Wand direkt vor dem Bot)\n"..
+    "  - '+1' = einen Block *höher* als der Bot (z.B. über Kopfhöhe vor dem Bot)\n"..
     "\n"..
     "*'cond_move'*: Der Bot läuft Schritt für Schritt vorwärts\\, bis er entweder auf ein\n"..
     "Hindernis trifft (zwei oder mehr Blöcke hoch/runter) oder ein Schild erreicht.\n"..
@@ -539,6 +542,15 @@ return {
     "    move_platform 84 751\\,8\\,-308\n"..
     "\n"..
     "Der Bot läuft dann automatisch zurück zu seiner Box.\n"..
+    "\n"..
+    "Hinweis: Folgen nach 'move_platform' noch Sprungmarken oder anderer Code\\, der\n"..
+    "nicht ausgeführt werden soll\\, 'cond_move' direkt danach setzen:\n"..
+    "\n"..
+    "    move_platform 84 751\\,14\\,-308\n"..
+    "    cond_move\n"..
+    "    \n"..
+    "    ende:\n"..
+    "    turn_around\n"..
     "\n"..
     "\n"..
     "\n",

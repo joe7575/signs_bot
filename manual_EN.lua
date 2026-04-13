@@ -430,9 +430,12 @@ return {
     "\n",
     "*'<lvl>' parameter* (used with 'place_front/left/right' and 'dig_front/left/right'):\n"..
     "\n"..
-    "  - '-1' = one block *below* the bot's current level\n"..
-    "  - '0' = same level as the bot\n"..
-    "  - '+1' = one block *above* the bot's current level\n"..
+    "'<lvl>' sets the *vertical offset* of the target block\\, which is always located\n"..
+    "in the direction indicated by the command (front/left/right of the bot):\n"..
+    "\n"..
+    "  - '-1' = one level *lower* than the bot (e.g. the floor directly in front)\n"..
+    "  - '0' = same height as the bot (e.g. the wall directly in front)\n"..
+    "  - '+1' = one level *higher* than the bot (e.g. above head height in front)\n"..
     "\n"..
     "*'cond_move'*: The bot moves forward step by step until it either hits an obstacle\n"..
     "(two or more blocks up/down) or reaches a sign. Unlike 'move <steps>'\\, the number\n"..
@@ -503,6 +506,16 @@ return {
     "    move_platform 84 751\\,8\\,-308\n"..
     "\n"..
     "The bot then walks back to its box automatically.\n"..
+    "\n"..
+    "Note: if 'move_platform' is not the last command (e.g. when jump labels follow)\\,\n"..
+    "add 'cond_move' after it so the bot walks to the next sign instead of falling\n"..
+    "through to later code:\n"..
+    "\n"..
+    "    move_platform 84 751\\,14\\,-308\n"..
+    "    cond_move\n"..
+    "    \n"..
+    "    end:\n"..
+    "    turn_around\n"..
     "\n"..
     "\n"..
     "\n",

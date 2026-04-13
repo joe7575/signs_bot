@@ -266,7 +266,12 @@ function signs_bot.start_robot(base_pos)
 		mem.running = true
 		mem.charging = false
 		mem.error = false
+		mem.debug_mode = false
 		mem.stored_node = nil
+		-- Clear any leftover move_platform state from a previous run.
+		mem.move_platform_sent = nil
+		mem.move_platform_done = nil
+		mem.carrier_freeze = nil
 		if minetest.global_exists("techage") then
 			mem.capa = mem.capa or 0 -- enable power consumption
 		else
@@ -389,6 +394,21 @@ local function on_receive_fields(pos, formname, fields, player)
 	elseif fields.step then
 		-- Execute exactly one bot command and refresh the debug view.
 		if mem.running and mem.debug_mode then
+			-- Log state BEFORE the step so you can see what is about to run.
+			local script = mem.script or ""
+			local cur_line = signs_bot.get_source_line(script, mem.pc or 1)
+			local lines = string.split(script, "\n", true)
+			local cmd_text = (lines[cur_line] or "?"):match("^%s*(.-)%s*$")
+			local rpos = mem.robot_pos or {x="?", y="?", z="?"}
+			local dir_names = {[0]="S", [1]="W", [2]="N", [3]="E"}
+			local dir = dir_names[mem.robot_param2] or tostring(mem.robot_param2)
+			minetest.log("action", string.format(
+				"[signs_bot DBG] pos=(%s,%s,%s) dir=%s  PC=%s line=%s  cmd='%s'" ..
+				"  freeze=%s  move_platform_sent=%s  move_platform_done=%s",
+				tostring(rpos.x), tostring(rpos.y), tostring(rpos.z), dir,
+				tostring(mem.pc or 1), tostring(cur_line), cmd_text,
+				tostring(mem.carrier_freeze), tostring(mem.move_platform_sent),
+				tostring(mem.move_platform_done)))
 			signs_bot.run_next_command(pos, mem)
 			if mem.running then
 				meta:set_string("formspec", formspec_debug(pos, mem))
@@ -415,7 +435,11 @@ end
 
 local function on_rightclick(pos)
 	local mem = tubelib2.get_mem(pos)
-	M(pos):set_string("formspec", formspec(pos, mem))
+	if mem.debug_mode then
+		M(pos):set_string("formspec", formspec_debug(pos, mem))
+	else
+		M(pos):set_string("formspec", formspec(pos, mem))
+	end
 end
 
 local function allow_metadata_inventory_put(pos, listname, index, stack, player)

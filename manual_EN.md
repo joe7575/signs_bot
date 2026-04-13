@@ -456,9 +456,12 @@ Any blocks or signs removed will be added back to the Bot Inventory.
 
 **`<lvl>` parameter** (used with `place_front/left/right` and `dig_front/left/right`):
 
-- `-1` = one block *below* the bot's current level
-- `0` = same level as the bot
-- `+1` = one block *above* the bot's current level
+`<lvl>` sets the **vertical offset** of the target block, which is always located
+in the direction indicated by the command (front/left/right of the bot):
+
+- `-1` = one level *lower* than the bot (e.g. the floor directly in front)
+- `0` = same height as the bot (e.g. the wall directly in front)
+- `+1` = one level *higher* than the bot (e.g. above head height in front)
 
 **`cond_move`**: The bot moves forward step by step until it either hits an obstacle
 (two or more blocks up/down) or reaches a sign. Unlike `move <steps>`, the number
@@ -533,6 +536,16 @@ read after the platform has moved up):
     move_platform 84 751,8,-308
 
 The bot then walks back to its box automatically.
+
+Note: if `move_platform` is not the last command (e.g. when jump labels follow),
+add `cond_move` after it so the bot walks to the next sign instead of falling
+through to later code:
+
+    move_platform 84 751,14,-308
+    cond_move
+
+    end:
+    turn_around
 
 [signs_bot_bot_inv.png|image]
 
