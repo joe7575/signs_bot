@@ -253,6 +253,8 @@ local function reset_robot(pos, mem)
 	mem.robot_pos = lib.next_pos(pos, mem.robot_param2, 1)
 	local pos_below = {x=mem.robot_pos.x, y=mem.robot_pos.y-1, z=mem.robot_pos.z}
 	signs_bot.place_robot(mem.robot_pos, pos_below, mem.robot_param2)
+	-- Store box position in robot node metadata so the carrier entity can find it without an area scan.
+	minetest.get_meta(mem.robot_pos):set_string("box_pos", minetest.pos_to_string(pos))
 	mem.error = false
 end
 

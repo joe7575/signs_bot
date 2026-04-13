@@ -371,17 +371,13 @@ send_cmnd 3465 pull*default:dirt*2]]),
 		-- Register signs_bot mod so attach_objects() picks up our carrier entity
 		techage.register_mobs_mods("signs_bot")
 
-		-- Find the bot box that owns the robot at robot_pos
+		-- Find the bot box that owns the robot at robot_pos.
+		-- The box position is stored in the robot node's metadata by reset_robot(),
+		-- so no area scan is needed.
 		local function find_base_pos(robot_pos)
-			local nearby = minetest.find_nodes_in_area(
-				vector.offset(robot_pos, -200, -20, -200),
-				vector.offset(robot_pos,  200,  20,  200),
-				"signs_bot:box")
-			for _, bpos in ipairs(nearby) do
-				local mem = tubelib2.get_mem(bpos)
-				if mem.robot_pos and vector.equals(mem.robot_pos, robot_pos) then
-					return bpos
-				end
+			local s = minetest.get_meta(robot_pos):get_string("box_pos")
+			if s and s ~= "" then
+				return minetest.string_to_pos(s)
 			end
 		end
 
