@@ -236,8 +236,14 @@ signs_bot.register_botcommand("jump", {
 })
 
 local function move(mem, any_sensor)
+	local old_pos = mem.robot_pos
 	local new_pos = signs_bot.move_robot(mem)
 	if new_pos then  -- not blocked?
+		-- Propagate box_pos metadata so techage move_platform works after bot moves around
+		local bp = minetest.get_meta(old_pos):get_string("box_pos")
+		if bp ~= "" then
+			minetest.get_meta(new_pos):set_string("box_pos", bp)
+		end
 		mem.robot_pos = new_pos
 		if any_sensor then
 			activate_sensor(mem.robot_pos, (mem.robot_param2 + 1) % 4)

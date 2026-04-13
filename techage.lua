@@ -372,12 +372,27 @@ send_cmnd 3465 pull*default:dirt*2]]),
 		techage.register_mobs_mods("signs_bot")
 
 		-- Find the bot box that owns the robot at robot_pos.
-		-- The box position is stored in the robot node's metadata by reset_robot(),
-		-- so no area scan is needed.
+		-- The box position is stored in the robot node's metadata by reset_robot().
+		-- Falls back to a small area scan for bots started before this metadata was introduced,
+		-- and writes the metadata so the next call is O(1).
 		local function find_base_pos(robot_pos)
 			local s = minetest.get_meta(robot_pos):get_string("box_pos")
 			if s and s ~= "" then
 				return minetest.string_to_pos(s)
+			end
+			-- Fallback: scan ±30 blocks for a signs_bot:box whose mem.robot_pos matches.
+			local r = 30
+			local boxes = minetest.find_nodes_in_area(
+				vector.offset(robot_pos, -r, -r, -r),
+				vector.offset(robot_pos,  r,  r,  r),
+				{"signs_bot:box"})
+			for _, bpos in ipairs(boxes) do
+				local mem = tubelib2.get_mem(bpos)
+				if mem.robot_pos and vector.equals(mem.robot_pos, robot_pos) then
+					-- Cache for future calls
+					minetest.get_meta(robot_pos):set_string("box_pos", minetest.pos_to_string(bpos))
+					return bpos
+				end
 			end
 		end
 
@@ -439,6 +454,8 @@ send_cmnd 3465 pull*default:dirt*2]]),
 							mem.robot_pos = new_pos
 							local pos_below = {x = new_pos.x, y = new_pos.y - 1, z = new_pos.z}
 							signs_bot.place_robot(new_pos, pos_below, self.robot_param2 or 0)
+							-- Write box_pos so find_base_pos works O(1) on the next ride
+							minetest.get_meta(new_pos):set_string("box_pos", minetest.pos_to_string(self.base_pos))
 							mem.move_platform_done = true
 							mem.carrier_freeze = nil
 						end
@@ -468,6 +485,8 @@ send_cmnd 3465 pull*default:dirt*2]]),
 						mem.robot_pos = new_pos
 						local pos_below = {x = new_pos.x, y = new_pos.y - 1, z = new_pos.z}
 						signs_bot.place_robot(new_pos, pos_below, self.robot_param2 or 0)
+						-- Write box_pos so find_base_pos works O(1) on the next ride
+						minetest.get_meta(new_pos):set_string("box_pos", minetest.pos_to_string(self.base_pos))
 						mem.move_platform_done = true
 						-- Unfreeze bot timer
 						mem.carrier_freeze = nil
