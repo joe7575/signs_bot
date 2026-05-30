@@ -504,7 +504,7 @@ minetest.register_node("signs_bot:torch", {
 		"signs_bot_torch_top.png",
 		"signs_bot_torch_bottom.png",
 		{
-			image = "signs_bot_torch_animated.png",
+			name = "signs_bot_torch_animated.png",
 			backface_culling = false,
 			animation = {
 				type = "vertical_frames",
