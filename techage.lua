@@ -507,7 +507,7 @@ send_cmnd 3465 pull*default:dirt*2]]),
 			description = "Move platform via TA4 Move Controller II to absolute position",
 			check = function(num, xyz)
 				if not tonumber(num) then return false end
-				local t = string.split(xyz, ",", false, 2)
+				local t = string.split(xyz or "", ",", false, 2)
 				return #t == 3 and tonumber(t[1]) and tonumber(t[2]) and tonumber(t[3])
 			end,
 			cmnd = function(base_pos, mem, num, xyz)
