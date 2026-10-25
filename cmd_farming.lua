@@ -20,12 +20,14 @@ local not_farming_redo = farming.mod ~= "redo"
 local bot_inv_put_item = signs_bot.bot_inv_put_item
 local bot_inv_take_item = signs_bot.bot_inv_take_item
 
-local function soil_availabe(pos, trellis)
+local function soil_availabe(pos, trellis, special_soil)
 	local node = minetest.get_node_or_nil(pos)
 	if node.name == (trellis or "air") then
 		node = minetest.get_node_or_nil({x=pos.x, y=pos.y-1, z=pos.z})
-		if node and minetest.get_item_group(node.name, "soil") >= 1 then
-			return true
+		if special_soil then
+			return node and node.name == special_soil
+		else
+			return node and minetest.get_item_group(node.name, "soil") >= 1
 		end
 	end
 	return false
@@ -40,7 +42,7 @@ local function planting(base_pos, mem, slot)
 			local plant = stack:get_name()
 			if plant then
 				local item = signs_bot.FarmingSeed[plant]
-				if item and soil_availabe(pos, signs_bot.FarmingNeedTrellis[item]) then
+				if item and soil_availabe(pos, signs_bot.FarmingNeedTrellis[item], signs_bot.FarmingSpecialSoil[item]) then
 					if minetest.registered_nodes[item] then
 						local p2 = minetest.registered_nodes[item].place_param2 or 1
 						minetest.set_node(pos, {name = item, param2 = p2})

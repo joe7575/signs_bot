@@ -16,17 +16,21 @@ signs_bot.FarmingSeed = {}
 signs_bot.FarmingCrop = {}
 signs_bot.FarmingNeedTrellis = {}
 signs_bot.FarmingKeepTrellis = {}
+signs_bot.FarmingSpecialSoil = {}
 signs_bot.TreeSaplings = {}
 
 -- inv_seed is the seed inventory name
 -- plantlet is what has to be placed on the ground (stage 1)
 -- crop is the farming crop in the final stage
-function signs_bot.register_farming_plant(inv_seed, plantlet, crop, trellis)
+function signs_bot.register_farming_plant(inv_seed, plantlet, crop, trellis, special_soil)
 	signs_bot.FarmingCrop[crop] = true
 	signs_bot.FarmingSeed[inv_seed] = plantlet
 	if trellis then
 		signs_bot.FarmingNeedTrellis[plantlet] = trellis
 		signs_bot.FarmingKeepTrellis[crop] = trellis
+	end
+	if special_soil then
+		signs_bot.FarmingSpecialSoil[plantlet] = special_soil
 	end
 end
 
@@ -53,19 +57,34 @@ if farming.mod == "redo" then
 	local fp_grows = function(def, step)
 		local crop = def.crop .. "_" .. step
 		local node = minetest.registered_nodes[crop]
+
+		-- The farming redo mod has two types of trellis:
+		-- 1. The plant node is placed inside the trellis node and replaces it (e.g. trellis for grapes and pole for beans).
+		-- 2. The plant node is placed adjacent to the trellis node (e.g. jungle tree for cocoa beans)
+		-- The trellis handling of the signs bot is only appropriate for the first type.
+		-- For the second type, it's more suitable to treat the trellis as a special soil requirement.
+		-- Unfortunately, the farming redo API has no way to differentiate between the two.
+		-- Thus, we have to rely on the drawtype instead:
+		-- The assumption is that node with drawtype "normal", i.e. a full block, is used as a trellis of the second type.
+		local trellis = def.trellis
+		local special_soil = nil
+		if trellis then
+			local trellis_def = minetest.registered_nodes[trellis]
+			if trellis_def and trellis_def.drawtype == "normal" then
+				special_soil = trellis
+				trellis = nil
+			end
+		end
 		if node then
-			fp(def.seed, def.crop .. "_1", crop, def.trellis)
+			fp(def.seed, def.crop .. "_1", crop, trellis, special_soil)
 			return node.groups and node.groups.growing
 		end
 	end
 
 	for name, def in pairs(farming.registered_plants) do
-		-- everything except cocoa (these can only be placed on jungletree)
-		if name ~= "farming:cocoa_beans" then
-			local step = def.steps
-			if step then
-				while fp_grows(def, step) do step = step + 1 end
-			end
+		local step = def.steps
+		if step then
+			while fp_grows(def, step) do step = step + 1 end
 		end
 	end
 end
